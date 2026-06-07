@@ -3,828 +3,704 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RL Studio — Command Center</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>RL Studio Command Center · v5</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Merriweather:ital,wght@0,700;1,400&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --slate:#3B5A7D;--slate-l:#4e7aad;--slate-bg:#eef2f7;
-  --gold:#D4A051;--gold-bg:#fdf6ec;--gold-dk:#b8893e;
+  --slate:#3B5A7D;--slate-light:#4e7aad;--slate-bg:#eef2f7;
+  --gold:#D4A051;--gold-bg:#fdf6ec;--gold-dark:#b8893e;
   --text:#1a1a1a;--muted:#666;--border:#e2e2e2;
-  --bg:#f8f7f4;--white:#fff;
-  --done-bg:#eaf3de;--done:#3b6d11;
-  --warn:#c0392b;--warn-bg:#fce8e8;
-  --edit-bg:#fffdf7;--navy:#1a2740;
+  --bg:#f8f7f4;--white:#ffffff;
+  --done-bg:#eaf3de;--done-text:#3b6d11;
+  --edit-bg:#fffdf7;
+  --pain-bg:#fdecec;--pain-text:#8B2020;
+  --sol-bg:#eaf3de;--sol-text:#3b6d11;
 }
-body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:13px}
-.topbar{background:var(--navy);border-bottom:2px solid var(--gold);padding:0 24px;display:flex;align-items:stretch;position:sticky;top:0;z-index:200;height:50px}
-.tb-brand{display:flex;flex-direction:column;justify-content:center;padding-right:20px;border-right:1px solid rgba(255,255,255,.1)}
-.tb-brand .bm{font-family:'Merriweather',serif;font-size:14px;color:#fff;font-weight:700}
-.tb-brand .bs{font-size:8px;font-weight:600;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
-.tb-nav{display:flex;align-items:stretch;flex:1;padding:0 6px}
-.nb{display:flex;align-items:center;gap:6px;padding:0 14px;font-size:11px;font-weight:500;color:rgba(255,255,255,.5);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
-.nb:hover{color:rgba(255,255,255,.85)}.nb.active{color:#fff;border-bottom-color:var(--gold)}
-.tb-right{display:flex;align-items:center;gap:10px;padding-left:14px;border-left:1px solid rgba(255,255,255,.1)}
-.pr-label{font-size:10px;color:rgba(255,255,255,.45);white-space:nowrap}
-.pr-bar{width:70px;height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}
-.pr-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .4s}
-.data-badge{font-size:9px;font-weight:600;padding:2px 8px;border-radius:20px;background:rgba(212,160,81,.2);color:var(--gold);border:1px solid rgba(212,160,81,.3);letter-spacing:.06em}
-.panel{display:none;min-height:calc(100vh - 50px)}.panel.active{display:block}
-/* LOADING SCREEN */
-.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 50px);gap:12px}
-.ls-spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--slate);border-radius:50%;animation:spin .8s linear infinite}
-.ls-text{font-size:12px;color:var(--muted)}
-.ls-error{font-size:12px;color:var(--warn);max-width:400px;text-align:center;line-height:1.7;background:var(--warn-bg);padding:16px 20px;border-radius:10px;border:1px solid #e8c0c0}
-.ls-error code{font-family:'IBM Plex Mono',monospace;font-size:11px;display:block;margin-top:8px;color:var(--text);background:#f5f5f5;padding:8px;border-radius:6px}
-@keyframes spin{to{transform:rotate(360deg)}}
-/* DASHBOARD */
-.dash{padding:24px}
-.dash-hero{margin-bottom:20px}
-.dash-hero h1{font-family:'Merriweather',serif;font-size:20px;color:var(--slate)}
-.dash-hero p{font-size:11px;color:var(--muted);margin-top:3px}
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
-.kpi{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;border-top:3px solid var(--border)}
-.kpi.kg{border-top-color:var(--gold)}.kpi.ks{border-top-color:var(--slate)}.kpi.kgr{border-top-color:var(--done)}.kpi.kw{border-top-color:var(--warn)}
-.kpi-val{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500;color:var(--slate)}
-.kpi-lab{font-size:10px;color:var(--muted);margin-top:2px}
-.kpi-sub{font-size:10px;font-weight:600;margin-top:4px}
-.kpi-sub.warn{color:var(--warn)}.kpi-sub.ok{color:var(--done)}.kpi-sub.g{color:var(--gold-dk)}
-.dash-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-.dc{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.dc-head{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.dc-title{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--slate)}
-.dc-body{padding:14px 16px}
-.dash-link{font-size:10px;color:var(--slate);cursor:pointer;font-weight:500}
-.dash-link:hover{text-decoration:underline}
-.phase-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
-.phase-item:last-child{border-bottom:none}
-.pd{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
-.pd-active{background:var(--gold)}.pd-upcoming{background:var(--border)}
-.pi-name{font-size:12px;font-weight:600}.pi-period{font-size:10px;color:var(--muted)}
-.pi-tag{display:inline-block;font-size:9px;font-weight:600;padding:1px 7px;border-radius:20px;margin-top:3px}
-.pt-active{background:var(--gold-bg);color:var(--gold-dk)}.pt-upcoming{background:var(--border);color:var(--muted)}
-.prod-item-d{margin-bottom:12px}.prod-item-d:last-child{margin-bottom:0}
-.prod-row-d{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-.prod-name-d{font-size:12px;font-weight:600}
-.prod-st{font-size:10px;font-weight:600}
-.ps-build{color:var(--gold-dk)}.ps-plan{color:var(--muted)}.ps-ship{color:var(--done)}
-.mini-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
-.mini-fill{height:100%;border-radius:2px;transition:width .4s}
-.mf-gold{background:var(--gold)}.mf-slate{background:var(--slate)}.mf-green{background:var(--done)}
-.action-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer}
+body{font-family:'Poppins','Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* HEADER */
+.header{background:var(--white);border-bottom:2px solid var(--slate);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:16px}
+.header-left .brand{font-size:10px;font-weight:600;letter-spacing:0.18em;color:var(--slate);text-transform:uppercase}
+.header-left .htitle{font-family:'Merriweather',serif;font-size:18px;color:var(--slate);margin-top:1px}
+.header-left .vtag{font-size:10px;color:var(--gold-dark);font-weight:500;margin-top:2px}
+.header-right{display:flex;align-items:center;gap:14px}
+.btn-export{font-size:11px;font-weight:500;padding:7px 12px;border-radius:20px;background:transparent;color:var(--slate);border:1.5px solid var(--slate);cursor:pointer;white-space:nowrap}
+.btn-export:hover{background:var(--slate-bg)}
+
+/* TABS */
+.tabs{background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;display:flex;gap:0;position:sticky;top:65px;z-index:99}
+.tab{padding:14px 22px;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);border-bottom:3px solid transparent;transition:all 0.15s;display:flex;align-items:center;gap:8px}
+.tab:hover{color:var(--text);background:var(--bg)}
+.tab.active{color:var(--slate);border-bottom-color:var(--gold);font-weight:600}
+.tab-count{font-size:10px;background:var(--slate-bg);color:var(--slate);padding:1px 7px;border-radius:10px;font-weight:600}
+
+/* PANELS */
+.panel{display:none;padding:28px 32px;max-width:1400px}
+.panel.active{display:block}
+
+/* CHECKPOINT BANNER */
+.cp-banner{background:linear-gradient(90deg,var(--slate-bg),var(--gold-bg));border:1px solid var(--gold);border-radius:10px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.cp-icon{font-size:20px}
+.cp-text{flex:1;font-size:12px;color:var(--slate)}
+.cp-text b{color:var(--slate);font-weight:600}
+.cp-date{font-size:11px;font-weight:600;color:var(--gold-dark);padding:4px 10px;background:var(--white);border-radius:14px;border:1px solid var(--gold)}
+
+/* DASHBOARD GRID */
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.stat-val{font-size:24px;font-weight:600;color:var(--slate);line-height:1.1}
+.stat-lab{font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:0.04em}
+
+.dash-row{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-bottom:16px}
+.dash-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.dash-card h3{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.dash-card h3 .acc{color:var(--gold-dark)}
+
+.next-post{padding:12px 14px;background:var(--gold-bg);border-left:3px solid var(--gold);border-radius:6px;margin-bottom:10px}
+.np-title{font-size:13px;font-weight:600;color:var(--slate);margin-bottom:3px}
+.np-meta{font-size:11px;color:var(--muted)}
+.np-pair{display:inline-block;font-size:10px;font-weight:600;padding:1px 8px;border-radius:10px;margin-right:6px}
+.pair-pain{background:var(--pain-bg);color:var(--pain-text)}
+.pair-sol{background:var(--sol-bg);color:var(--sol-text)}
+
+.action-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;cursor:pointer}
 .action-item:last-child{border-bottom:none}
-.action-item.done .ai-text{text-decoration:line-through;color:var(--muted)}
-.ai-check{width:14px;height:14px;border:1.5px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.action-item.done .ai-check{background:var(--done);border-color:var(--done)}
-.ai-text{font-size:11px;line-height:1.5}
-.ai-tag{font-size:9px;font-weight:600;padding:1px 6px;border-radius:10px;margin-top:2px;display:inline-block}
-.at-li{background:var(--slate-bg);color:var(--slate)}.at-prod{background:var(--gold-bg);color:var(--gold-dk)}.at-skill{background:var(--done-bg);color:var(--done)}
-.np-card{background:var(--slate-bg);border-radius:8px;padding:10px 12px;margin-bottom:8px}
-.np-week{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:3px}
-.np-title{font-size:12px;font-weight:600;color:var(--slate)}
-.np-date{font-size:10px;color:var(--muted);margin-top:2px}
-.np-preview{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5;border-top:1px solid #d0dcea;padding-top:6px}
-.pillar{padding:8px 0;border-bottom:1px solid var(--border)}.pillar:last-child{border-bottom:none}
-.pil-name{font-size:11px;font-weight:600;color:var(--slate)}
-.pil-desc{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5}
+.action-item input{margin-top:3px;cursor:pointer}
+.action-item.done{color:var(--muted);text-decoration:line-through}
+
+.diff-stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.diff-chip{font-size:11px;font-weight:500;padding:4px 10px;border-radius:14px;background:var(--slate-bg);color:var(--slate);border:1px solid #ccd8e8}
+
+.product-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px}
+.product-row:last-child{border-bottom:none}
+.product-row .pname{flex:1;font-weight:500;color:var(--text)}
+.product-row .prole{font-size:10px;color:var(--muted);background:var(--bg);padding:2px 8px;border-radius:10px}
+
 /* ROADMAP */
-.rm{padding:24px;max-width:900px}
-.rm h2{font-family:'Merriweather',serif;font-size:18px;color:var(--slate);margin-bottom:4px}
-.rm .sub{font-size:12px;color:var(--muted);margin-bottom:20px}
-.phase-block{background:var(--white);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden}
-.pb-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
-.pb-hdr.active-ph{background:linear-gradient(135deg,var(--slate),var(--slate-l))}
-.pb-hdr.active-ph .ph-name,.pb-hdr.active-ph .ph-period,.pb-hdr.active-ph .ph-badge{color:#fff !important}
-.ph-left{display:flex;align-items:center;gap:12px}
-.ph-badge{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.15);color:var(--muted)}
-.ph-name{font-size:14px;font-weight:600}.ph-period{font-size:11px;color:var(--muted)}
-.pb-body{display:grid;grid-template-columns:1fr 1fr}
-.pb-col{padding:16px 18px}.pb-col:first-child{border-right:1px solid var(--border)}
-.col-label{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.ms-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12px}
-.ms-dot{width:6px;height:6px;border-radius:50%;background:var(--slate);margin-top:4px;flex-shrink:0}
-.ms-dot.gold{background:var(--gold)}
-.gap-block{background:var(--white);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;padding:18px}
-.gap-title{font-size:12px;font-weight:600;color:var(--slate);margin-bottom:12px}
-.gap-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
-.gap-item:last-child{border-bottom:none}
-.risk-tag{font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
-.rt-crit{background:var(--warn-bg);color:var(--warn)}.rt-mod{background:var(--gold-bg);color:var(--gold-dk)}.rt-low{background:var(--done-bg);color:var(--done)}
-.gap-text{font-size:12px;line-height:1.6}
-.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.diff-card{background:var(--slate-bg);border-radius:8px;padding:12px}
-.diff-icon{font-size:18px;margin-bottom:6px}
-.diff-name{font-size:11px;font-weight:600;color:var(--slate)}
-.diff-desc{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5}
+.phase-block{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:14px}
+.phase-block.active{border-left:4px solid var(--gold)}
+.phase-block.upcoming{border-left:4px solid var(--border);opacity:0.85}
+.phase-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.phase-label{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--slate);background:var(--slate-bg);padding:3px 10px;border-radius:12px}
+.phase-name{font-size:15px;font-weight:600;color:var(--slate)}
+.phase-period{font-size:11px;color:var(--muted)}
+.phase-status{font-size:10px;font-weight:600;padding:3px 9px;border-radius:12px;text-transform:uppercase;letter-spacing:0.06em}
+.status-active{background:var(--done-bg);color:var(--done-text)}
+.status-upcoming{background:var(--bg);color:var(--muted)}
+.phase-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
+.phase-col h4{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.phase-col ul{list-style:none;padding:0}
+.phase-col li{font-size:12px;color:var(--text);padding:4px 0;padding-left:14px;position:relative;line-height:1.5}
+.phase-col li::before{content:"•";position:absolute;left:0;color:var(--gold)}
+
+.scalable-card{background:linear-gradient(135deg,var(--slate-bg),var(--gold-bg));border:1px solid var(--gold);border-radius:10px;padding:16px 20px;margin-top:16px}
+.scalable-card h3{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--slate);margin-bottom:10px}
+.sc-row{display:flex;gap:12px;margin:6px 0;font-size:12px}
+.sc-row .sc-label{font-weight:600;color:var(--slate);min-width:80px}
+.hardline{background:var(--pain-bg);border:1.5px solid var(--pain-text);border-radius:8px;padding:12px 16px;margin-top:14px;font-size:12px;color:var(--pain-text);font-weight:500}
+.hardline b{font-weight:700}
+
 /* PRODUCTS */
-.prod-panel{padding:24px}
-.prod-panel h2{font-family:'Merriweather',serif;font-size:18px;color:var(--slate);margin-bottom:20px}
-.prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
-.pc{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.pc-top{padding:16px 18px;border-bottom:1px solid var(--border)}
-.pc-num{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-.pc-name{font-size:14px;font-weight:600;color:var(--slate)}
-.pc-desc{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}
-.pc-body{padding:14px 18px}
-.pc-sr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.pc-st{font-size:10px;font-weight:600}.pc-pct{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted)}
-.pc-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:12px}
-.pc-fill{height:100%;border-radius:3px;transition:width .4s}
-.pc-items{margin-bottom:12px}
-.pc-item{font-size:11px;color:var(--muted);padding:3px 0;display:flex;gap:7px}
-.pc-item::before{content:"·";color:var(--gold)}
-.pc-btns{display:flex;gap:6px;flex-wrap:wrap}
-.pbt{font-size:10px;font-weight:500;padding:3px 9px;border-radius:20px;border:1px solid var(--border);background:var(--bg);color:var(--muted);cursor:pointer;transition:all .15s}
-.pbt:hover{background:var(--slate-bg);color:var(--slate);border-color:var(--slate)}
-.pc-deadline{font-size:10px;color:var(--warn);font-weight:600;margin-top:8px}
-.sprint-block{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.sprint-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.sprint-title{font-size:12px;font-weight:600;color:var(--slate)}.sprint-period{font-size:11px;color:var(--muted)}
-.sprint-table{width:100%;border-collapse:collapse}
-.sprint-table th{font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px 16px;text-align:left;border-bottom:1px solid var(--border);background:var(--bg)}
-.sprint-table td{padding:8px 16px;font-size:11px;border-bottom:1px solid var(--border);vertical-align:top}
-.sprint-table tr:last-child td{border-bottom:none}
-.sprint-table tr.done-row td{color:var(--muted)}.done-row .sr-task{text-decoration:line-through}
-.sr-check{cursor:pointer;font-size:13px}
-.stag{font-size:9px;font-weight:600;padding:1px 7px;border-radius:20px}
-.st-li{background:var(--slate-bg);color:var(--slate)}.st-prod{background:var(--gold-bg);color:var(--gold-dk)}.st-skill{background:var(--done-bg);color:var(--done)}
-/* LINKEDIN */
-.li-layout{display:grid;grid-template-columns:190px 1fr;min-height:calc(100vh - 50px)}
-.li-sidebar{background:var(--white);border-right:1px solid var(--border);padding:16px 0;position:sticky;top:50px;height:calc(100vh - 50px);overflow-y:auto}
-.sb-label{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:0 13px 5px}
-.sbn{display:flex;align-items:center;gap:6px;padding:6px 13px;cursor:pointer;font-size:11px;color:var(--muted);border-left:3px solid transparent;transition:all .15s}
-.sbn:hover{background:var(--bg);color:var(--text)}.sbn.active{background:var(--slate-bg);color:var(--slate);border-left-color:var(--slate);font-weight:500}
-.sbn-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.d-ready{background:var(--slate)}.d-draft{background:var(--gold)}.d-done{background:var(--done)}
-.sbn-wk{font-size:10px;color:var(--muted);margin-left:auto}
-.sbdiv{height:1px;background:var(--border);margin:7px 13px}
-.li-main{padding:20px 22px}
-.li-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.li-topbar-title{font-family:'Merriweather',serif;font-size:14px;color:var(--slate)}
-.li-search{font-family:'Poppins',sans-serif;font-size:11px;padding:5px 11px;border:1.5px solid var(--border);border-radius:20px;outline:none;width:160px;background:var(--bg)}
-.li-search:focus{border-color:var(--slate)}
-.btn-add{font-size:11px;font-weight:500;padding:5px 11px;border-radius:20px;background:var(--slate);color:#fff;border:none;cursor:pointer}
-.btn-add:hover{background:var(--slate-l)}
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
-.sc{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:center}
-.sc-val{font-size:18px;font-weight:600;color:var(--slate)}.sc-lab{font-size:10px;color:var(--muted)}
-.post-card{background:var(--white);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;transition:box-shadow .2s}
-.post-card:hover{box-shadow:0 3px 14px rgba(59,90,125,.07)}
+.product-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:12px}
+.product-card.live{border-left:4px solid var(--done-text)}
+.product-card.scoped{border-left:4px solid var(--gold)}
+.product-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:8px}
+.product-name{font-size:15px;font-weight:600;color:var(--slate)}
+.product-role-tag{font-size:10px;font-weight:600;padding:3px 10px;border-radius:12px;background:var(--slate-bg);color:var(--slate);text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap}
+.product-status{font-size:11px;color:var(--muted);margin-bottom:6px}
+.product-status b{color:var(--done-text)}
+.product-next{font-size:12px;color:var(--text);background:var(--gold-bg);padding:6px 10px;border-radius:6px;border-left:3px solid var(--gold);margin:6px 0}
+.product-note{font-size:11px;color:var(--muted);font-style:italic;line-height:1.5;margin-top:6px}
+
+/* SPRINT */
+.sprint-phase{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:12px}
+.sprint-phase h4{font-size:12px;font-weight:600;color:var(--slate);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:6px 0;font-size:12px;cursor:pointer}
+.task-item input{margin-top:3px}
+.task-item.done{color:var(--muted);text-decoration:line-through}
+
+/* LINKEDIN PANEL (planner) */
+.li-layout{display:grid;grid-template-columns:240px 1fr;gap:20px}
+.li-sidebar{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 0;position:sticky;top:128px;align-self:flex-start;max-height:calc(100vh - 150px);overflow-y:auto}
+.sb-label{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:0 16px 6px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 16px;cursor:pointer;font-size:12px;color:var(--muted);border-left:3px solid transparent;transition:all 0.15s}
+.nav-item:hover{background:var(--bg);color:var(--text)}
+.nav-item.active{background:var(--slate-bg);color:var(--slate);border-left-color:var(--slate);font-weight:500}
+.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot-done{background:var(--done-text)}
+.dot-ready{background:var(--slate)}
+.dot-draft{background:var(--gold)}
+.nav-text{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-week{font-size:10px;color:var(--muted);margin-left:auto;flex-shrink:0}
+.sb-divider{height:1px;background:var(--border);margin:8px 16px}
+
+.li-main{min-width:0}
+.li-search-row{display:flex;gap:10px;margin-bottom:14px;align-items:center}
+.search-input{font-family:'Poppins',sans-serif;font-size:12px;padding:8px 14px;border:1.5px solid var(--border);border-radius:20px;outline:none;flex:1;color:var(--text);background:var(--white)}
+.search-input:focus{border-color:var(--slate)}
+.btn-add{font-size:12px;font-weight:500;padding:8px 16px;border-radius:20px;background:var(--slate);color:#fff;border:none;cursor:pointer;white-space:nowrap}
+
+.section-header{display:flex;align-items:center;gap:12px;margin:16px 0 10px}
+.section-line{flex:1;height:1px;background:var(--border)}
+.section-title{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+
+/* POST CARD */
+.post-card{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden;transition:box-shadow 0.2s}
+.post-card:hover{box-shadow:0 3px 16px rgba(59,90,125,0.07)}
+.post-card.status-done{border-left:4px solid var(--done-text)}
 .post-card.status-ready{border-left:4px solid var(--slate)}
 .post-card.status-draft{border-left:4px solid var(--gold)}
-.post-card.status-done{border-left:4px solid var(--done)}
 .post-card.hidden{display:none}
-.ch{padding:11px 15px 9px;display:flex;align-items:flex-start;justify-content:space-between;cursor:pointer;user-select:none;gap:9px}
-.cm{display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap}
-.wb{font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px;letter-spacing:.05em;text-transform:uppercase}
-.wr{background:var(--slate-bg);color:var(--slate)}.wd{background:var(--gold-bg);color:#854f0b}.wdn{background:var(--done-bg);color:var(--done)}
-.cd{font-size:10px;color:var(--muted)}.ct{font-size:13px;font-weight:600;color:var(--slate);line-height:1.3}.cty{font-size:10px;color:var(--muted);margin-top:1px}
-.chr{display:flex;align-items:center;gap:6px;flex-shrink:0}
-.ctog{font-size:13px;color:var(--muted);transition:transform .2s}.ctog.open{transform:rotate(180deg)}
-.bdel{font-size:10px;padding:2px 7px;border-radius:10px;background:transparent;color:#c44;border:1px solid #e8c0c0;cursor:pointer}
-.bdel:hover{background:#fce8e8}
-.cb{padding:0 15px;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .2s}
-.cb.open{max-height:3000px;padding:13px 15px 16px}
-.fg{margin-bottom:11px}
-.fl{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;display:flex;align-items:center;justify-content:space-between}
-.fl span{font-size:10px;color:#aaa;font-weight:400;text-transform:none;letter-spacing:0}
-.el{width:100%;font-family:'Poppins',sans-serif;font-size:12px;font-weight:500;color:var(--text);border:1.5px solid var(--border);border-radius:7px;padding:6px 10px;outline:none;background:var(--edit-bg);transition:border-color .15s}
-.el:focus{border-color:var(--slate);background:var(--white)}
-.ea{width:100%;font-family:'Poppins',sans-serif;font-size:12px;line-height:1.8;color:var(--text);border:1.5px solid var(--border);border-radius:7px;padding:9px 11px;outline:none;background:var(--edit-bg);resize:vertical;min-height:160px}
-.ea:focus{border-color:var(--slate);background:var(--white)}
-.ta{width:100%;font-family:'Poppins',sans-serif;font-size:11px;line-height:1.7;color:#633806;border:1.5px solid #f5d9a8;border-radius:7px;padding:8px 10px;outline:none;background:var(--gold-bg);resize:vertical;min-height:50px}
-.ta:focus{border-color:var(--gold)}
-.fr2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.ss{font-family:'Poppins',sans-serif;font-size:11px;font-weight:500;padding:4px 8px;border-radius:20px;border:1.5px solid var(--border);outline:none;background:var(--bg);color:var(--text);cursor:pointer}
-.te{width:100%;font-family:'Poppins',sans-serif;font-size:11px;color:var(--slate);border:1.5px solid var(--border);border-radius:7px;padding:6px 10px;outline:none;background:var(--edit-bg)}
-.te:focus{border-color:var(--slate)}
-.tprev{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
-.tag{font-size:10px;font-weight:500;padding:1px 7px;border-radius:20px;background:var(--slate-bg);color:var(--slate);border:1px solid #ccd8e8}
-.ca{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:11px;padding-top:11px;border-top:1px solid var(--border)}
-.btn-cp{font-size:11px;font-weight:500;padding:5px 11px;border-radius:20px;background:var(--slate);color:#fff;border:none;cursor:pointer}
-.btn-cp:hover{background:var(--slate-l)}.btn-cp.copied{background:var(--done)}
-.btn-sv{font-size:11px;font-weight:500;padding:5px 11px;border-radius:20px;background:var(--gold);color:#fff;border:none;cursor:pointer}
-.btn-sv:hover{background:var(--gold-dk)}.btn-sv.saved{background:var(--done)}
-.btn-exp{font-size:11px;font-weight:500;padding:5px 11px;border-radius:20px;background:transparent;color:var(--slate);border:1.5px solid var(--slate);cursor:pointer}
-.btn-exp:hover{background:var(--slate-bg)}
-.btn-think{font-size:11px;font-weight:500;padding:5px 11px;border-radius:20px;background:transparent;color:var(--slate);border:1.5px solid var(--slate);cursor:pointer;display:inline-flex;align-items:center;gap:4px}
-.btn-think:hover{background:var(--slate-bg)}.btn-think:disabled{opacity:.5;cursor:not-allowed}
-.cc{font-size:10px;color:var(--muted);margin-left:auto}
-.sec-hdr{display:flex;align-items:center;gap:9px;margin:16px 0 11px}
-.sec-line{flex:1;height:1px;background:var(--border)}
-.sec-title{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
-/* EXPORT PANEL */
-.export-panel{background:var(--navy);border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.ep-text{font-size:11px;color:rgba(255,255,255,.7);line-height:1.5}
-.ep-text strong{color:var(--gold)}
-.ep-btn{font-size:11px;font-weight:600;padding:6px 14px;border-radius:20px;background:var(--gold);color:#fff;border:none;cursor:pointer;white-space:nowrap}
-.ep-btn:hover{background:var(--gold-dk)}
-/* MODAL */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:300;display:none;align-items:center;justify-content:center}
-.modal.open{display:flex}
-.md{background:var(--white);border-radius:14px;padding:22px;width:400px;max-width:90vw}
-.mt{font-size:14px;font-weight:600;color:var(--slate);margin-bottom:14px}
-.ma{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
-.btn-cancel{font-size:12px;padding:6px 14px;border-radius:20px;background:transparent;color:var(--muted);border:1.5px solid var(--border);cursor:pointer}
-.btn-create{font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;background:var(--slate);color:#fff;border:none;cursor:pointer}
-.toast{position:fixed;bottom:20px;right:20px;background:var(--navy);color:#fff;font-size:11px;padding:8px 14px;border-radius:20px;z-index:400;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;border:1px solid var(--gold)}
+.card-header{padding:12px 18px;display:flex;align-items:flex-start;justify-content:space-between;cursor:pointer;user-select:none;gap:12px}
+.card-meta{display:flex;align-items:center;gap:7px;margin-bottom:5px;flex-wrap:wrap}
+.week-badge{font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap}
+.badge-done{background:var(--done-bg);color:var(--done-text)}
+.badge-ready{background:var(--slate-bg);color:var(--slate)}
+.badge-draft{background:var(--gold-bg);color:#854f0b}
+.pair-badge{font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px;white-space:nowrap}
+.card-date-display{font-size:11px;color:var(--muted)}
+.card-title-display{font-size:13.5px;font-weight:600;color:var(--slate);line-height:1.35}
+.card-type-display{font-size:11px;color:var(--muted);margin-top:2px}
+.card-header-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.card-toggle{font-size:15px;color:var(--muted);transition:transform 0.2s}
+.card-toggle.open{transform:rotate(180deg)}
+.btn-del{font-size:11px;padding:3px 9px;border-radius:12px;background:transparent;color:#c44;border:1px solid #e8c0c0;cursor:pointer}
+.btn-think{font-size:11px;padding:3px 9px;border-radius:12px;background:transparent;color:var(--gold-dark);border:1px solid var(--gold);cursor:pointer;font-weight:500}
+.btn-think:hover{background:var(--gold-bg)}
+.card-body{padding:0 18px;max-height:0;overflow:hidden;transition:max-height 0.35s ease,padding 0.2s}
+.card-body.open{max-height:5000px;padding:14px 18px 18px}
+
+/* Think Panel */
+.think-panel{background:var(--slate-bg);border-radius:8px;padding:14px 16px;margin-bottom:14px;border-left:3px solid var(--slate)}
+.think-load{font-size:12px;color:var(--muted);font-style:italic}
+.tb{margin-bottom:10px}
+.tb:last-child{margin-bottom:0}
+.tbl{font-size:11px;font-weight:600;color:var(--slate);margin-bottom:3px}
+.tbc{font-size:12px;color:var(--text);line-height:1.5;background:var(--white);padding:8px 10px;border-radius:6px}
+
+.field-group{margin-bottom:12px}
+.field-label{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:flex;align-items:center;justify-content:space-between}
+.field-label span{font-size:10px;color:#aaa;font-weight:400;text-transform:none;letter-spacing:0}
+.editable-line{width:100%;font-family:'Poppins','Noto Sans TC',sans-serif;font-size:13px;font-weight:500;color:var(--text);border:1.5px solid var(--border);border-radius:8px;padding:7px 12px;outline:none;background:var(--edit-bg)}
+.editable-line:focus{border-color:var(--slate);background:var(--white)}
+.editable-area{width:100%;font-family:'Poppins','Noto Sans TC',sans-serif;font-size:13px;line-height:1.75;color:var(--text);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;outline:none;background:var(--edit-bg);resize:vertical;min-height:180px}
+.editable-area:focus{border-color:var(--slate);background:var(--white)}
+.tip-area{width:100%;font-family:'Poppins','Noto Sans TC',sans-serif;font-size:12px;line-height:1.65;color:#633806;border:1.5px solid #f5d9a8;border-radius:8px;padding:9px 12px;outline:none;background:var(--gold-bg);resize:vertical;min-height:60px}
+.fields-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.status-select{font-family:'Poppins',sans-serif;font-size:12px;font-weight:500;padding:5px 10px;border-radius:20px;border:1.5px solid var(--border);outline:none;background:var(--bg);color:var(--text);cursor:pointer}
+.tags-edit{width:100%;font-family:'Poppins','Noto Sans TC',sans-serif;font-size:12px;color:var(--slate);border:1.5px solid var(--border);border-radius:8px;padding:7px 12px;outline:none;background:var(--edit-bg)}
+.tags-preview{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.tag{font-size:11px;font-weight:500;padding:2px 9px;border-radius:20px;background:var(--slate-bg);color:var(--slate);border:1px solid #ccd8e8}
+.card-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.btn-copy{font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;background:var(--slate);color:#fff;border:none;cursor:pointer}
+.btn-copy.copied{background:#3b6d11}
+.btn-save{font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;background:var(--gold);color:#fff;border:none;cursor:pointer}
+.btn-save.saved{background:#3b6d11}
+.char-count{font-size:11px;color:var(--muted);margin-left:auto}
+
+/* MODAL + TOAST */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:200;display:none;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:14px;padding:28px;width:480px;max-width:90vw}
+.modal-title{font-size:15px;font-weight:600;color:var(--slate);margin-bottom:20px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.btn-cancel{font-size:13px;padding:8px 18px;border-radius:20px;background:transparent;color:var(--muted);border:1.5px solid var(--border);cursor:pointer}
+.btn-create{font-size:13px;font-weight:500;padding:8px 18px;border-radius:20px;background:var(--slate);color:#fff;border:none;cursor:pointer}
+.toast{position:fixed;bottom:28px;right:28px;background:#1a1a1a;color:#fff;font-size:12px;padding:10px 18px;border-radius:20px;z-index:300;opacity:0;transform:translateY(8px);transition:all 0.25s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
-/* THINK PANEL */
-.think-panel{margin-top:11px;border:1.5px solid var(--slate);border-radius:10px;overflow:hidden;display:none}
-.think-panel.open{display:block}
-.tph{background:var(--slate);padding:7px 12px;display:flex;align-items:center;justify-content:space-between}
-.tpt{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#fff}
-.tpc-btn{font-size:13px;color:rgba(255,255,255,.7);cursor:pointer;background:none;border:none;line-height:1}
-.tpc-btn:hover{color:#fff}
-.tpb{padding:11px 13px;background:var(--slate-bg);display:flex;flex-direction:column;gap:9px}
-.tb2{background:var(--white);border-radius:8px;padding:10px 12px;border:1px solid #d0dcea}
-.tbl{font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;margin-bottom:4px}
-.tbl-h{color:var(--slate)}.tbl-b{color:#c0392b}.tbl-r{color:#27ae60}
-.tbc{font-size:11px;line-height:1.7}
-.tload{padding:16px;text-align:center;color:var(--muted);font-size:11px;background:var(--slate-bg)}
-.tspinner{display:inline-block;width:13px;height:13px;border:2px solid var(--border);border-top-color:var(--slate);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:4px}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="tb-brand">
-    <div class="bm">RL Studio</div>
-    <div class="bs">Command Center</div>
+<div class="header">
+  <div class="header-left">
+    <div class="brand">RL Studio</div>
+    <div class="htitle">Command Center</div>
+    <div class="vtag">v5 · Dashboard + Roadmap + Products + LinkedIn · Attract-not-sell</div>
   </div>
-  <div class="tb-nav">
-    <button class="nb active" onclick="sw('dashboard',this)">⬛ Dashboard</button>
-    <button class="nb" onclick="sw('roadmap',this)">◎ Roadmap</button>
-    <button class="nb" onclick="sw('products',this)">◈ Products</button>
-    <button class="nb" onclick="sw('linkedin',this)">◷ LinkedIn</button>
-  </div>
-  <div class="tb-right">
-    <div class="pr-label" id="pr-label">0 / 12 posts</div>
-    <div class="pr-bar"><div class="pr-fill" id="pr-fill" style="width:0%"></div></div>
-    <span class="data-badge" id="data-badge">loading data…</span>
+  <div class="header-right">
+    <button class="btn-export" onclick="exportJSON()">⬇ Export JSON</button>
   </div>
 </div>
 
-<!-- LOADING -->
-<div class="panel active" id="panel-loading">
-  <div class="loading-screen">
-    <div class="ls-spinner"></div>
-    <div class="ls-text">Loading RL Studio…</div>
-  </div>
+<div class="tabs">
+  <div class="tab active" data-panel="dashboard" onclick="showPanel('dashboard')">📊 Dashboard</div>
+  <div class="tab" data-panel="roadmap" onclick="showPanel('roadmap')">🗺 Roadmap</div>
+  <div class="tab" data-panel="products" onclick="showPanel('products')">📦 Products <span class="tab-count" id="tc-prod">0</span></div>
+  <div class="tab" data-panel="linkedin" onclick="showPanel('linkedin')">📝 LinkedIn <span class="tab-count" id="tc-li">0</span></div>
 </div>
 
 <!-- DASHBOARD -->
-<div class="panel" id="panel-dashboard">
-  <div class="dash">
-    <div class="dash-hero">
-      <h1>Good morning, Rosivia.</h1>
-      <p>NZ-trained architect · BIM Coordinator · AI Workflow Builder · New Taipei City · Phase 1: Foundation</p>
+<div class="panel active" id="panel-dashboard">
+  <div class="cp-banner">
+    <div class="cp-icon">🎯</div>
+    <div class="cp-text">
+      <b>Next quarterly checkpoint:</b> Q3 2026 — Posts 2–3 Review. Open this app + LinkedIn analytics. Score G/A/R on each metric. <i>Always trust Tier 3 (conversations) over Tier 1 (reach).</i>
     </div>
-    <div class="kpi-row">
-      <div class="kpi kw"><div class="kpi-val">Sep 30</div><div class="kpi-lab">Hard deadline</div><div class="kpi-sub warn">PM Toolkit v1 ship</div></div>
-      <div class="kpi ks"><div class="kpi-val" id="d-posts-done">0</div><div class="kpi-lab">Posts published</div><div class="kpi-sub" id="d-posts-sub" style="color:var(--muted)">of 12 planned</div></div>
-      <div class="kpi kg"><div class="kpi-val">2×</div><div class="kpi-lab">Income target</div><div class="kpi-sub g">End of 2027</div></div>
-      <div class="kpi kgr"><div class="kpi-val" id="d-next-post">—</div><div class="kpi-lab">Next post</div><div class="kpi-sub ok">Mon 8am TWN</div></div>
+    <div class="cp-date">Sun 27 Sep 2026 · 19:00</div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="stat-card"><div class="stat-val" id="d-total">11</div><div class="stat-lab">Posts planned</div></div>
+    <div class="stat-card"><div class="stat-val" id="d-done">0</div><div class="stat-lab">Published</div></div>
+    <div class="stat-card"><div class="stat-val" id="d-pairs">4</div><div class="stat-lab">Pain/Solution pairs</div></div>
+    <div class="stat-card"><div class="stat-val" id="d-cadence">2–3 wk</div><div class="stat-lab">Cadence</div></div>
+  </div>
+
+  <div class="dash-row">
+    <div class="dash-card">
+      <h3>Next post in pipeline</h3>
+      <div id="d-nextpost"></div>
+      <h3 style="margin-top:18px">Upcoming queue</h3>
+      <div id="d-upcoming"></div>
     </div>
-    <div class="dash-grid">
-      <div class="dc">
-        <div class="dc-head"><div class="dc-title">Career phases</div><span class="dash-link" onclick="sw('roadmap',document.querySelectorAll('.nb')[1])">Full roadmap →</span></div>
-        <div class="dc-body" id="d-phases"></div>
-      </div>
-      <div class="dc">
-        <div class="dc-head"><div class="dc-title">Digital products</div><span class="dash-link" onclick="sw('products',document.querySelectorAll('.nb')[2])">All products →</span></div>
-        <div class="dc-body" id="d-prods"></div>
-      </div>
-      <div class="dc">
-        <div class="dc-head"><div class="dc-title">Next LinkedIn post</div><span class="dash-link" onclick="sw('linkedin',document.querySelectorAll('.nb')[3])">Open planner →</span></div>
-        <div class="dc-body" id="d-nextpost"><div class="np-card"><div class="np-week">Loading…</div></div></div>
-      </div>
-      <div class="dc" style="grid-column:1/3">
-        <div class="dc-head"><div class="dc-title">Phase 1 priority actions</div><span style="font-size:10px;color:var(--muted)">Click to check off</span></div>
-        <div class="dc-body" id="d-actions"></div>
-      </div>
-      <div class="dc">
-        <div class="dc-head"><div class="dc-title">Brand positioning</div></div>
-        <div class="dc-body">
-          <div class="pillar"><div class="pil-name">Core hook</div><div class="pil-desc">AI-enabled architect translating technology into real AEC workflows in Taiwan</div></div>
-          <div class="pillar"><div class="pil-name">Differentiator</div><div class="pil-desc">NZ rigour × Taiwan context × cross-border APAC reach</div></div>
-          <div class="pillar"><div class="pil-name">Audience signal</div><div class="pil-desc">Taiwan AEC + APAC architects + BIM consultants + international firms</div></div>
-          <div class="pillar"><div class="pil-name">Every post must</div><div class="pil-desc">Establish authority · Spark engagement · Attract consulting/product leads</div></div>
-        </div>
-      </div>
+    <div class="dash-card">
+      <h3>Immediate actions <span class="acc" id="d-actions-count"></span></h3>
+      <div id="d-actions"></div>
+    </div>
+  </div>
+
+  <div class="dash-row">
+    <div class="dash-card">
+      <h3>Your differentiation stack</h3>
+      <div class="diff-stack" id="d-diff"></div>
+    </div>
+    <div class="dash-card">
+      <h3>Products (live · 5)</h3>
+      <div id="d-products"></div>
     </div>
   </div>
 </div>
 
 <!-- ROADMAP -->
 <div class="panel" id="panel-roadmap">
-  <div class="rm">
-    <h2>Career &amp; Business Roadmap</h2>
-    <div class="sub">Employee → Hybrid Consultant → Location-Independent Global Operator · Target: 2× income by end of 2027</div>
-    <div id="rm-phases"></div>
-    <div class="gap-block">
-      <div class="gap-title">Differentiation stack</div>
-      <div class="diff-grid" id="rm-diff"></div>
-    </div>
-    <div class="gap-block">
-      <div class="gap-title">Critical gaps to close</div>
-      <div id="rm-gaps"></div>
-    </div>
+  <div id="roadmap-phases"></div>
+  <div class="scalable-card">
+    <h3>Scalable product strategy</h3>
+    <div class="sc-row"><span class="sc-label">Scalable bet:</span> <span id="r-scal-primary"></span></div>
+    <div class="sc-row"><span class="sc-label">Magnet:</span> <span id="r-scal-magnet"></span></div>
+    <div class="sc-row"><span class="sc-label">Deferred:</span> <span id="r-scal-deferred"></span></div>
   </div>
+  <div class="hardline" id="r-hardline"></div>
 </div>
 
 <!-- PRODUCTS -->
 <div class="panel" id="panel-products">
-  <div class="prod-panel">
-    <h2>Digital Products</h2>
-    <div class="prod-grid" id="prod-grid"></div>
-    <div class="sprint-block">
-      <div class="sprint-head"><div class="sprint-title">90-Day Sprint — Phase 1</div><div class="sprint-period">Jun → Sep 2026</div></div>
-      <table class="sprint-table"><thead><tr><th width="32">✓</th><th>Task</th><th>Category</th><th>Target</th></tr></thead><tbody id="sprint-body"></tbody></table>
-    </div>
-  </div>
+  <div id="products-list"></div>
+  <h2 style="font-family:Merriweather,serif;font-size:20px;color:var(--slate);margin:24px 0 14px" id="sprint-title"></h2>
+  <div id="sprint-list"></div>
 </div>
 
 <!-- LINKEDIN -->
 <div class="panel" id="panel-linkedin">
+  <div class="li-search-row">
+    <input class="search-input" type="text" placeholder="🔍  Search posts..." oninput="searchPosts(this.value)">
+    <button class="btn-add" onclick="openModal()">+ New post</button>
+  </div>
   <div class="li-layout">
-    <div class="li-sidebar" id="li-sidebar">
-      <!-- rendered by JS from data -->
-    </div>
+    <div class="li-sidebar" id="li-sidebar"></div>
     <div class="li-main">
-      <div class="export-panel">
-        <div class="ep-text">Data is <strong>embedded in this file</strong>. Works on any device — just open in browser. To save changes: <strong>Export rl_data.json</strong> → send to Claude to get updated rl_app.html. Or paste exported JSON into the EMBEDDED_DATA section of this file directly.</div>
-        <button class="ep-btn" onclick="exportData()">⬇ Export rl_data.json</button>
-      </div>
-      <div class="li-topbar">
-        <div class="li-topbar-title">LinkedIn Content Planner</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <input class="li-search" type="text" placeholder="🔍 Search posts..." oninput="searchP(this.value)">
-          <button class="btn-add" onclick="openModal()">+ New post</button>
-        </div>
-      </div>
-      <div class="stats-row">
-        <div class="sc"><div class="sc-val" id="st-total">12</div><div class="sc-lab">Posts planned</div></div>
-        <div class="sc"><div class="sc-val" id="st-done">0</div><div class="sc-lab">Published</div></div>
-        <div class="sc"><div class="sc-val" id="st-next">—</div><div class="sc-lab">Next post</div></div>
-        <div class="sc"><div class="sc-val">Mon 8am</div><div class="sc-lab">Post time TWN</div></div>
-      </div>
       <div id="posts-container"></div>
     </div>
   </div>
 </div>
 
-<div class="modal" id="modal">
-  <div class="md">
-    <div class="mt">Add new post</div>
-    <div class="fg"><div class="fl">Title</div><input class="el" id="nt" placeholder="Post topic or angle"></div>
-    <div class="fr2">
-      <div class="fg"><div class="fl">Date</div><input class="el" id="nd" type="date"></div>
-      <div class="fg"><div class="fl">Week label</div><input class="el" id="nw" placeholder="e.g. Wk 25"></div>
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title">Add new post</div>
+    <div class="field-group">
+      <div class="field-label">Title</div>
+      <input class="editable-line" id="new-title" placeholder="Post topic or angle">
     </div>
-    <div class="fg"><div class="fl">Post type</div><input class="el" id="ntype" placeholder="e.g. AI tool story"></div>
-    <div class="ma">
+    <div class="fields-row">
+      <div class="field-group"><div class="field-label">Date</div><input class="editable-line" id="new-date" type="date"></div>
+      <div class="field-group"><div class="field-label">Week label</div><input class="editable-line" id="new-week" placeholder="e.g. Wk 25"></div>
+      <div class="field-group"><div class="field-label">Pair</div><input class="editable-line" id="new-pair" placeholder="e.g. ArchiCAD · PAIN"></div>
+    </div>
+    <div class="field-group"><div class="field-label">Post type / notes</div><input class="editable-line" id="new-type" placeholder="e.g. PAIN POST · Pair X of Y · ..."></div>
+    <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
       <button class="btn-create" onclick="createPost()">Create post</button>
     </div>
   </div>
 </div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════
-// STATE — loaded from rl_data.json
-// ══════════════════════════════════════════
-let D = null; // raw data from JSON
-let posts = [];
-let sprintState = [];
-let actState = [];
-let prodState = [];
+// ──────── EMBEDDED DATA ────────
+const EMBEDDED_DATA = {"_meta": {"version": "2.0", "last_updated": "2026-06-07", "note": "v4 roadmap structure: pain/solution pairs, attract-not-sell framing, CTA convention applied. Post 1 published."}, "roadmap": {"phases": [{"id": "phase-1", "label": "Phase 1", "name": "Foundation — Identity & Pairs", "period": "Jun → Aug 2026", "status": "active", "milestones": ["Post 1 origin story published (Jun 2)", "Post 2 façade PAIN (Jun 23) — €50/month decision moment", "Post 3 façade SOLUTION (Jul 7) — show façade prompt studio", "Post 4 ArchiCAD template PAIN (Jul 27)", "Post 5 ArchiCAD template SOLUTION (Aug 10) — recruiter-bait", "Substack account created · Instagram @rlstudio.bim reserved", "Sustainable cadence: every 2–3 weeks"], "linkedin_posts": ["Post 1 — Origin story (Jun 2) · PUBLISHED", "Post 2 — Façade PAIN (Jun 23)", "Post 3 — Façade SOLUTION (Jul 7)", "Post 4 — ArchiCAD PAIN (Jul 27)", "Post 5 — ArchiCAD SOLUTION (Aug 10)"]}, {"id": "phase-2", "label": "Phase 2", "name": "Taiwan Local Authority", "period": "Aug → Oct 2026", "status": "upcoming", "milestones": ["Post 6 建照 PAIN (Aug 31) — local signal flare", "Post 7 建照 SOLUTION (Sep 14) — strongest scalable product candidate", "Q3 2026 Checkpoint (Sep 27) — review G/A/R metrics", "Post 8 建築技術規則 PAIN (Oct 5)", "Post 9 建築技術規則 SOLUTION (Oct 19) — flagship product candidate", "Substack launches with first essay (M3)"], "linkedin_posts": ["Post 6 — 建照 PAIN (Aug 31)", "Post 7 — 建照 SOLUTION (Sep 14)", "Post 8 — 建築技術規則 PAIN (Oct 5)", "Post 9 — 建築技術規則 SOLUTION (Oct 19)"]}, {"id": "phase-3", "label": "Phase 3", "name": "Cross-border & Reflection", "period": "Nov → Dec 2026", "status": "upcoming", "milestones": ["Post 10 NZ vs Taiwan site decision logs (Nov 9)", "Post 11 6-month reflection (Nov 30)", "Q4 2026 Checkpoint (Dec 27)", "Validation signal: which tool gets 'do you sell this?' DMs", "Decision point: which product to make public first"], "linkedin_posts": ["Post 10 — NZ × TW decision logs (Nov 9)", "Post 11 — Reflection (Nov 30)"]}], "differentiation_stack": ["Industrial design training", "Cross-industry PM background", "NZ-trained licensed architecture designer", "BIM coordinator (12+ years APAC)", "AI workflow builder", "Bilingual EN/中文"], "scalable_product_bet": {"primary": "建照流程管理系統 + 建築技術規則 Navigator (Taiwan-local, defensible)", "magnet": "façade prompt studio (proof-of-skill, NOT a SaaS)", "deferred": "ArchiCAD templates (sellable, but ship after validation)"}, "hard_line": "By Q1 2027 (Mar 28, 2027) — at least 2 real conversations (DM → call) with a potential partner, collaborator, or employer. If not, restructure."}, "products": [{"id": "facade-studio", "name": "façade prompt studio", "role": "Proof-of-skill magnet", "status": "Live (internal use)", "next": "Anonymise screenshots for Post 3 (Jul 7)", "progress": 100, "note": "Working tool. AEC AI rendering space too crowded with funded competitors to monetise as SaaS. Use as portfolio centrepiece, not product."}, {"id": "consultant-tracker", "name": "專案顧問追蹤系統 v3", "role": "Internal tool · medium scalability", "status": "Live (internal use)", "next": "Validate via post engagement before any external version", "progress": 100, "note": "Solves real coordination pain. Sellable as template if Post 4/5 generates DMs asking for it."}, {"id": "permit-system", "name": "建照流程管理系統", "role": "Strongest scalable candidate", "status": "Live (internal use)", "next": "Watch Post 7 (Sep 14) response — DMs = green light to make public version", "progress": 100, "note": "Highest defensibility. Too local for global AI players. Most ownable market."}, {"id": "reg-navigator", "name": "建築技術規則 Navigator", "role": "Long-term flagship product candidate", "status": "Live (internal use)", "next": "Watch Post 9 (Oct 19) response. Subscription model possible if pulls strongly.", "progress": 100, "note": "Highest-recurrence pain. Subscription-viable. Same local-defensibility logic."}, {"id": "archicad-template", "name": "ArchiCAD office template", "role": "Recruiter-bait + future Gumroad candidate", "status": "Live (in studio use)", "next": "Post 5 (Aug 10) showcases it. Public Gumroad version deferred to post-validation.", "progress": 100, "note": "Globally relatable. Universal BIM pain. Best post for attracting role/contract conversations."}], "sprint": {"title": "90-Day Foundation Sprint (Jun → Aug 2026)", "phases": [{"name": "Weeks 1–4 · Sequence Pairs 1 & 2", "tasks": ["Confirm calendar checkpoints scheduled (DONE — Q3, Q4, Q1, Q2)", "Save rl-post-writer.md skill to Claude project (DONE)", "Co-write Post 2 (façade PAIN) — Sunday session", "Co-write Post 3 (façade SOLUTION) — Sunday session", "Publish Post 2 (Jun 23). Reply to comments within 24h.", "Publish Post 3 (Jul 7). Same reply discipline.", "Reserve Instagram @rlstudio.bim (dormant)", "Create Substack account (dormant until M3)"]}, {"name": "Weeks 5–9 · Sequence Pairs 3 & validate", "tasks": ["Co-write Post 4 (ArchiCAD PAIN)", "Co-write Post 5 (ArchiCAD SOLUTION)", "Publish Post 4 (Jul 27)", "Publish Post 5 (Aug 10)", "Watch DM volume — first validation signal", "Decide Substack launch trigger (M3 = early Sep)"]}, {"name": "Weeks 10–13 · Local authority phase begins", "tasks": ["Co-write Post 6 (建照 PAIN)", "Publish Post 6 (Aug 31)", "Q3 Checkpoint (Sep 27) — G/A/R review", "Decide which product validates first based on DM signals", "Default = stay course. Adjust only on red flag."]}]}, "actions": [{"id": "a1", "text": "Save rl-post-writer.md skill to Claude project", "done": false}, {"id": "a2", "text": "Reserve Instagram @rlstudio.bim (dormant)", "done": false}, {"id": "a3", "text": "Create Substack account today (dormant until M3)", "done": false}, {"id": "a4", "text": "Upload new index.html to GitHub (replaces v2)", "done": false}, {"id": "a5", "text": "Verify rosivia.github.io/rl-studio shows v4 content", "done": false}, {"id": "a6", "text": "Sunday session: co-write Post 2 (façade PAIN)", "done": false}, {"id": "a7", "text": "Publish Post 2 (target: Jun 23)", "done": false}], "posts": [{"id": "post-1", "week": "Week 1", "date": "Mon 2 Jun 2026", "status": "done", "pair": "", "title": "Origin story — NZ → Taiwan, the gap I saw", "type": "Origin story · Image: NZ→TW infographic attached", "tip": "PUBLISHED. Visual: NZ→TW infographic with NZ (BIM standard, Collaborative, Cross-industry PM) vs Taiwan (Dense urban, Fast-moving, Massive BIM opportunity). Tagline: 'Different contexts. Same purpose.' Keep replying to comments within 24h.", "body": "I moved from New Zealand to Taiwan 18 months ago — traded flat whites and seismic details for bubble tea and 50-storey RC buildings.\n\nI expected a learning curve. New regulations, new language, new building culture.\n\nWhat I didn't expect: the most technologically advanced island in the world running its architecture industry almost entirely on 2D drawings and intuition.\n\nTaiwan has TSMC. It has Nvidia. The island literally powers the world's AI revolution.\n\nBut walk into 95% of architecture firms here? 100% 2D. No BIM. No AI. Not even close.\n\nAfter a year in a BIM consultancy, I watched brilliant engineers sell technology that firms didn't yet know they needed. BIM companies are selling the shovel — but architects aren't mining yet.\n\nSo I stopped selling shovels and picked one up myself.\n\nI'm a licensed architecture designer with 8+ years across NZ and Taiwan, specialising in BIM coordination and AI workflow integration. I joined an architecture studio to close the gap from the inside — bringing NZ methodology and AI-assisted processes into daily project delivery.\n\nTwo months in, I've already automated some of our most repetitive workflows — starting with an AI rendering prompt generator built specifically for our office context. Not a Western off-the-shelf tool. Ours.\n\nSmall tools. Real problems. Compounding over time.\n\nThe opportunity in Taiwan's AEC sector is genuinely huge — for anyone willing to bridge what the technology can do and what practice currently looks like.\n\nI'm documenting the journey here. If you're working on similar gaps across APAC — or you're an AEC firm wondering where to start — I'd like to connect.", "tags": "#Architecture #BIM #AIinAEC #Taiwan #NewZealand #AEC #BIMcoordinator", "image": "NZ→TW infographic (live)"}, {"id": "post-2", "week": "Week 3", "date": "Mon 23 Jun 2026", "status": "draft", "pair": "Façade studio · PAIN", "title": "The €50/month button I nearly clicked — façade rendering brief problem", "type": "PAIN POST · Pair 1 of 2 with Post 3 · Decision-moment hook", "tip": "MARKET-AWARE HOOK: 7 AI rendering tools sit between €27 and €73/month. I almost subscribed to 2. Then I looked at what the prompt defaults actually were. The real pain isn't 'no prompt generator exists' — it's 'none built for the way we design in Taiwan/Asia.' This framing makes you look market-aware, not naive. CTA pattern: signal flare (Taipei architects) + specific question (which tool) + honest reason (collecting notes).", "body": "OUTLINE — co-write Sunday session:\n\nHook: 'Three months ago I had my finger on a €50/month subscription button.'\n\nBody beats:\n— There are 7 AI rendering tools sitting between €27 and €73/month. I almost subscribed to 2.\n— Then I looked properly at what the prompt defaults actually were. American suburban material palettes. Mediterranean atmospherics. Scandinavian minimalism.\n— None of it quite fits how we design in Taipei — the density, the climate, the way light behaves on a 12-storey RC façade.\n— I'd be paying €50/month for prompts I'd have to rewrite anyway.\n— Closed the tab. Spent one Sunday afternoon with Claude instead — not building a tool, just figuring out the structure of a prompt that works for our context.\n\nLesson: 'Most AI tools sold to architects are built for someone else's market. You can either pay the subscription and edit every output, or spend one afternoon understanding why it doesn't fit and build the structure yourself.'\n\nTeaser: 'I'll show you what I built next week.'\n\nCTA (pointed, signal-flare): 'Taipei architects: which off-the-shelf AI tool have you tried that didn't quite fit your market? Genuinely collecting notes.'", "tags": "#AIinAEC #BIM #ArchitectLife #Taipei #Architecture #ArchiCAD #建築 #建築師", "image": "Attach: screenshot of a generic AI tool's default prompt output vs what Taiwan context needs (anonymised)"}, {"id": "post-3", "week": "Week 5", "date": "Mon 7 Jul 2026", "status": "draft", "pair": "Façade studio · SOLUTION", "title": "façade prompt studio — the system I built instead", "type": "SOLUTION POST · Pair 1 of 2 with Post 2 · Show the tool, not the source", "tip": "Show outputs and the thinking, not the full build. Screenshots, not source code. Frame as 'here's how I think,' not 'here's what I'm selling.' This post proves systems-thinking + AI fluency. Reply to every DM. The right people will surface here.", "body": "OUTLINE — co-write after Post 2 lands:\n\nHook: 'Last week I wrote about the €50/month button I didn't press. Here's what I built instead.'\n\nBody beats:\n— Quick recap (1 sentence) of the pain post\n— What façade prompt studio actually does (1 paragraph, not technical)\n— Show 2-3 anonymised before/after screenshots: generic prompt vs Taiwan-context prompt → resulting render\n— The 3 design decisions that mattered: material palette anchored in Taiwan vocabulary; atmospheric defaults reset for sub-tropical climate; camera language matched to dense urban context\n— Total build time: one afternoon. Total ongoing cost: €0. Total adjustment freedom: complete.\n— What this proves (not preachy): generic tools work for generic problems. Specific markets need specific tools.\n\nCTA: 'If you work in AI + AEC anywhere in APAC, I'd love to compare notes. DM me — I'm genuinely curious what you've built for your context.'", "tags": "#AIinAEC #BIM #Architecture #Taipei #ArchitectLife #建築 #建築師", "image": "Attach: 2-3 anonymised before/after prompt output screenshots from façade studio"}, {"id": "post-4", "week": "Week 8", "date": "Mon 27 Jul 2026", "status": "draft", "pair": "ArchiCAD template · PAIN", "title": "Every architect's ArchiCAD setup is different — and that's the problem", "type": "PAIN POST · Pair 2 of 4 with Post 5 · BIM systems builder identity", "tip": "This is the global identity post — every architect knows what a BIM template is. Universally relatable. Most likely to attract recruiters and BIM team leads. Don't name JT. Speak in general terms about 'studios I've worked in.' This is the post that signals 'BIM systems builder' clearly.", "body": "OUTLINE — co-write:\n\nHook: 'Three architects on the same project. Three different ArchiCAD setups. Three different ways of naming the same wall.'\n\nBody beats:\n— Describe the common reality without naming JT: each architect's personal preferences become the studio's de facto standard\n— What it costs: hours lost reconciling files, layer naming arguments, redoing line weights, exporting headaches at print time\n— Why it persists: BIM templates are tedious. No single person wants to be the one who builds the office standard.\n— Why it's actually a leverage problem, not a software problem: a real template is a system, not a file\n— The cost compounds quietly across every project, every architect, every year\n\nCTA: 'BIM coordinators and studio principals: does your firm have a real BIM standard, or is it whatever each architect sets up? Honest answers — no judgement, I'm genuinely mapping how studios handle this.'", "tags": "#BIM #ArchiCAD #Architecture #BIMcoordinator #ArchitectLife #AEC", "image": "Optional: simple comparison graphic — 3 different layer naming conventions side by side"}, {"id": "post-5", "week": "Week 10", "date": "Mon 10 Aug 2026", "status": "draft", "pair": "ArchiCAD template · SOLUTION", "title": "The ArchiCAD office template I built — what it covers, what it doesn't", "type": "SOLUTION POST · Pair 2 of 4 with Post 4 · Recruiter-bait", "tip": "This post is the most likely to attract a job/contract conversation. Be specific about what the template includes (layers, attributes, classifications, view templates) and honest about what it doesn't (project-specific 3D libraries, site-specific constraints). Don't oversell. Specificity > grandiose claims.", "body": "OUTLINE — co-write:\n\nHook: 'Two weeks ago I described the chaos of three architects on one project. Here's the template I built to fix it.'\n\nBody beats:\n— What the template covers (specific): layer system, attribute manager, classifications, view templates, output sets, naming conventions, key 2D libraries\n— What it doesn't cover (honest): project-specific 3D parts, site libraries, render setups\n— Why a template is a system, not a file: the rules behind the file are what scale\n— What I'd do differently if I built it again\n— What's not yet in it that I want to add next\n\nCTA: 'If you're hiring a BIM coordinator or building a BIM team, happy to talk about how this approach scales beyond one studio. DM open.'", "tags": "#BIM #ArchiCAD #BIMcoordinator #ArchitectLife #AEC #Architecture", "image": "Attach: clean screenshot of template structure (layer list / attribute panel) — no client info visible"}, {"id": "post-6", "week": "Week 13", "date": "Mon 31 Aug 2026", "status": "draft", "pair": "建照 process · PAIN", "title": "Taiwan 建照 chaos — why every firm loses days to process tracking", "type": "PAIN POST · Pair 3 of 4 with Post 7 · Local Taiwan signal flare", "tip": "This is where the Taiwan keyword anchors do real work. The 建照 process is universally painful in Taiwan AEC — every architect has war stories. The post should make Taiwan readers feel deeply seen. Don't translate 建照 — leave it as-is. Global readers will follow the English context.", "body": "OUTLINE — co-write closer to date:\n\nHook: 'In Taiwan, the 建照 process is run on WeChat group screenshots, someone's memory, and a spreadsheet last updated three weeks ago.'\n\nBody beats:\n— Why 建照 tracking is hard: multiple stakeholders, multiple government touchpoints, multiple revisions, no single source of truth\n— A specific scenario (not naming firms): days lost because nobody knew which submission round we were on\n— Why it's not a software problem — it's a system problem\n— The hidden cost: not just time, but client trust when timelines slip\n— Why off-the-shelf project management tools don't fix this (built for generic workflows, not Taiwan permit flow)\n\nCTA: 'Taipei architects: how does your firm track the 建照 process today? Spreadsheets? Group chat? Someone's head? Genuinely curious — and not judging any of those answers.'", "tags": "#Architecture #Taipei #建築 #建照 #建築師 #AEC #BIM #台灣建築", "image": "Optional: simple anonymised flow diagram showing the messy reality of 建照 tracking"}, {"id": "post-7", "week": "Week 15", "date": "Mon 14 Sep 2026", "status": "draft", "pair": "建照 process · SOLUTION", "title": "建照流程管理系統 — the system that fixed it for me", "type": "SOLUTION POST · Pair 3 of 4 with Post 6 · Highest defensibility content", "tip": "This is the strongest scalable-product candidate. Show the system without giving away the build. Watch DMs closely after this post — anyone saying 'do you sell this?' is your validation signal for the first sellable Taiwan tool. The skill rule applies: signal flare + specific + honest.", "body": "OUTLINE — co-write after Post 6 lands:\n\nHook: 'Two weeks ago I described 建照 chaos. Here's what I built to track it properly.'\n\nBody beats:\n— What 建照流程管理系統 actually does (high level — stages, owners, deadlines, document state)\n— The principle: one source of truth. Everything else is a view.\n— 2-3 anonymised screenshots showing the dashboard, stage tracking, document state\n— Why this is genuinely Taiwan-specific: built around 建照 workflow stages, not generic project tracking\n— What it would take to make it useful for other firms (signal to anyone watching)\n\nCTA: 'If this pain is familiar and you'd want a tool like this — comment 流程 and let's talk. I'm thinking about who would use it before I think about building it for anyone else.'", "tags": "#Architecture #Taipei #建築 #建照 #建築師 #BIM #台灣建築 #AEC", "image": "Attach: anonymised dashboard screenshots showing 建照 stage tracking"}, {"id": "post-8", "week": "Week 18", "date": "Mon 5 Oct 2026", "status": "draft", "pair": "建築技術規則 · PAIN", "title": "建築技術規則 — no single source of truth", "type": "PAIN POST · Pair 4 of 4 with Post 9 · Highest-recurrence local pain", "tip": "Architects spend disproportionate time confirming one regulation. This is highest-recurrence pain — touches every project. If 建照 post triggered DMs, this one should trigger more. Watch for 'I'd pay for that' signals.", "body": "OUTLINE — co-write closer:\n\nHook: 'How long does it take you to confirm one Taiwan building regulation? Be honest.'\n\nBody beats:\n— The reality: 建築技術規則 spans multiple documents, versions, sub-regulations, local interpretations\n— A specific scenario: you needed to confirm one specific clause, and here's how many steps it took\n— Why this isn't solved by existing tools: regulations update, interpretations vary, search is poor\n— What architects actually want: a confidence answer, not just a search result\n— Why this matters more as projects get more complex (危老, 都更, mixed-use)\n\nCTA: 'How many minutes (or hours) did your last regulation lookup take? Specific stories welcome — I'm building a map of where the search actually breaks down.'", "tags": "#Architecture #Taipei #建築 #建築技術規則 #建築師 #法規 #台灣建築 #AEC", "image": "Optional: screenshot of contradictory regulation search results across sources"}, {"id": "post-9", "week": "Week 20", "date": "Mon 19 Oct 2026", "status": "draft", "pair": "建築技術規則 · SOLUTION", "title": "建築技術規則 Navigator — my structured approach", "type": "SOLUTION POST · Pair 4 of 4 with Post 8 · Long-term flagship product candidate", "tip": "Strongest scalable product candidate. After this post, look at: (a) DM volume from Taiwan-based architects, (b) any 'subscription' or 'how much' questions. Both are signals this becomes a paid tool.", "body": "OUTLINE — co-write after Post 8 lands:\n\nHook: 'Two weeks ago I asked how long your last regulation lookup took. Here's what I built to make mine faster.'\n\nBody beats:\n— What 建築技術規則 Navigator does (the structured approach, not the tech)\n— The principle: regulations as a structured database, not a search problem\n— How I use it personally for projects\n— Show 1-2 anonymised screenshots\n— Honest limitations: this is what I built for me; what would it take to make it useful for other firms?\n\nCTA: 'If you'd use a tool like this regularly — tell me. I'm deciding what to build next, and want to know whether this should be the one. Comment 法規 or DM.'", "tags": "#Architecture #Taipei #建築 #建築技術規則 #建築師 #法規 #台灣建築 #BIM", "image": "Attach: anonymised Navigator interface screenshot showing structured regulation lookup"}, {"id": "post-10", "week": "Week 23", "date": "Mon 9 Nov 2026", "status": "draft", "pair": "", "title": "One thing NZ firms do that Taiwan firms don't — site decision logs", "type": "CROSS-BORDER · Frames you as the bridge between two practice cultures", "tip": "Specificity beats breadth. ONE specific contrast — not a list. This positions you for cross-border conversations (NZ firms expanding into APAC, Taiwan firms wanting NZ standards). Watch for international DMs.", "body": "OUTLINE:\n\nHook: 'In New Zealand, architects go to site meetings with a decision log.'\n\nBody beats:\n— What NZ practice looks like: every decision logged, owned, deadlined, before anyone leaves the meeting\n— What Taiwan practice often looks like: meeting ends, voice messages three days later about what was decided (or not)\n— Why I'm not criticising: Taiwan's construction speed is extraordinary\n— But the decision trail is where things get expensive — insurance, consent issues, scope creep\n— The fix is a one-page template, not a culture change\n— I've been testing this approach. Results are measurable.\n\nCTA: 'Anyone running site meetings with a structured decision log — what format works for your team? I'm curious whether the NZ approach is also common elsewhere in APAC.'", "tags": "#Architecture #SiteManagement #AEC #NewZealand #Taiwan #ProjectManagement #APAC", "image": "Optional: two-column graphic — NZ site meeting vs TW site meeting"}, {"id": "post-11", "week": "Week 26", "date": "Mon 30 Nov 2026", "status": "draft", "pair": "", "title": "What building tools inside a working studio actually taught me", "type": "REFLECTION · ~6 months in · Q4 checkpoint content", "tip": "Reference Post 1 explicitly — full circle. Be honest about what worked, what surprised you, what didn't. Vulnerability + specificity is the most trusted combination. This post is where consulting conversations often begin.", "body": "OUTLINE — write closer to date, informed by what's resonated:\n\nHook: 'Six months ago I wrote a first post about moving from NZ to Taiwan. Here's what actually happened.'\n\nBody beats:\n— What I set out to do (BIM + AI inside a working studio)\n— 3 things that surprised me\n— 1 thing that was harder than expected\n— 1 concrete result (a tool that works, a conversation that mattered, a learning that stuck)\n— What's next — without overpromising\n\nCTA: 'If you're an AEC firm wondering where to start with AI, or you've been working on similar gaps quietly — let's talk. The interesting conversations happen in DMs.'", "tags": "#Architecture #BIM #AIinAEC #Taipei #NewZealand #AEC #APAC", "image": "Optional: simple collage of the year's outputs / tools / moments"}]};
 
-// ══════════════════════════════════════════
-// PANEL SWITCHING
-// ══════════════════════════════════════════
-function sw(id, btn) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nb').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-' + id).classList.add('active');
-  btn.classList.add('active');
+// ──────── ANTHROPIC API KEY (FOR THINK PANEL) ────────
+// IMPORTANT: This file is uploaded to a PUBLIC GitHub repo.
+// DO NOT put a real API key in the version pushed to GitHub.
+// Keep your key only in your LOCAL copy of this file for Think Panel to work locally.
+// Strip the key before every git commit, or accept that Think won't work on the live URL.
+const API_KEY = "";
+
+// ──────── STATE ────────
+let dataset = JSON.parse(localStorage.getItem('rl-data-v5') || 'null');
+if (!dataset) dataset = JSON.parse(JSON.stringify(EMBEDDED_DATA));
+let posts = dataset.posts;
+
+function save() {
+  dataset.posts = posts;
+  dataset._meta.last_updated = new Date().toISOString().split('T')[0];
+  localStorage.setItem('rl-data-v5', JSON.stringify(dataset));
 }
 
-// ══════════════════════════════════════════
-// DATA EMBEDDED INLINE — no server or network needed
-// To update: export JSON from app → paste updated data here between the backticks
-// ══════════════════════════════════════════
-const EMBEDDED_DATA = {"_meta": {"version": "1.0", "last_updated": "2026-06-03", "note": "This is your data file. Edit this to update content. Never edit rl_app.html manually."}, "roadmap": {"phases": [{"id": "phase-1", "label": "Phase 1", "name": "Foundation", "period": "May → Sep 2026", "status": "active", "milestones": ["Post Wk 1 origin story (Jun 2)", "Post Wk 3 AI tool story (Jun 16)", "PM Toolkit v1 shipped — Sep 30 hard deadline", "ArchiCAD template v1 internal use", "建築法規 DB MVP scoped", "Master Claude + GPT core workflows", "LinkedIn cadence: 1 post / 2 weeks"], "linkedin_posts": ["Wk 1 — Origin story (Jun 2)", "Wk 3 — AI tool story (Jun 16)", "Wk 5 — Taiwan 12hr day observation (Jun 30)", "Wk 7 — NZ vs TW site meeting (Jul 14)", "Wk 9 — BIM myth-bust (Aug 11)"]}, {"id": "phase-2", "label": "Phase 2", "name": "Activation", "period": "Oct → Dec 2026", "status": "upcoming", "milestones": ["First paid consulting project (external)", "2nd digital product launch (法規 DB or templates)", "Cross-border NZ/APAC outreach initiated", "Revenue stream #2 activated", "Personal brand momentum measurable (followers, DMs)"], "linkedin_posts": ["Wk 11 — PM habit from tech (Sep 8)", "Wk 13 — AI experiment result (Sep 22)", "Wk 15 — Client/firm POV (Oct 6)", "Wk 17 — 建築法規 pain point (Oct 20)", "Wk 19 — PM Toolkit launch (Nov 3)"]}, {"id": "phase-3", "label": "Phase 3", "name": "Scale", "period": "2027", "status": "upcoming", "milestones": ["Location-independent consulting model live", "3+ digital products in suite", "APAC consulting pipeline (SG, HK, NZ, AU)", "2× income target achieved", "NZ client reactivation"], "linkedin_posts": ["Wk 21 — APAC angle (Nov 17)", "Wk 23 — 6-month reflection (Dec 1)", "2027 series TBD based on Phase 1–2 traction"]}], "gaps": [{"level": "critical", "title": "Nothing ships in Phase 1", "body": "PM Toolkit v1 must ship by Sep 30. No product = no revenue signal = Phase 2 delays. Set a non-negotiable internal deadline now."}, {"level": "critical", "title": "Taiwan 法規 credibility gap", "body": "If a consulting lead asks a technical regulatory question and you can't answer, the NZ differentiation pivot collapses. 1hr/week structured study — 建築法、都審、危老. Start now, not Phase 2."}, {"level": "moderate", "title": "LinkedIn without a locked POV", "body": "Every post must reinforce one sentence: 'I'm the architect translating AI tools into real AEC workflows in Taiwan.' Don't drift from this."}, {"level": "moderate", "title": "Full-time job energy drain", "body": "JT Studio is your learning lab but also your biggest time cost. Protect 3×1hr/week business-build blocks. Don't let project urgency bleed in."}, {"level": "low", "title": "AI rendering tools commoditize", "body": "Rendering prompt product has 12–18 month window. Position as a workflow product, not just prompts — or deprioritise entirely in favour of PM Toolkit."}], "differentiators": [{"icon": "🇳🇿", "name": "NZ Rigour", "desc": "Systematic practice, decision logs, paper trail culture, insurance-grade documentation"}, {"icon": "🤖", "name": "AI-first workflow", "desc": "Claude + GPT integrated into real daily tasks — not theory, not demos"}, {"icon": "🏗️", "name": "BIM methodology", "desc": "Federated models, clash detection, consultant coordination — cross-border context"}, {"icon": "🌏", "name": "APAC positioning", "desc": "Taiwan base, NZ credential, APAC regional fluency — rare combination"}, {"icon": "📦", "name": "Product builder", "desc": "Converting practice pain into sellable systems — PM toolkit, 法規 DB, templates"}, {"icon": "🔁", "name": "Insider operator", "desc": "Inside JT Studio daily — building and testing tools in production, not in theory"}]}, "products": [{"id": "p1", "priority": "Product 01 · Priority", "name": "PM Workflow Toolkit", "desc": "Project management templates adapted from tech PM practice for Taiwan architecture firms. Bilingual (EN/ZH). Solves the 'everything in someone's head' problem.", "progress": 20, "deadline": "⚠ Hard deadline: Sep 30, 2026", "color": "mf-gold", "status_class": "ps-build", "status_label": "Building", "items": ["Site meeting decision log template", "Weekly status standup format", "Consultant coordination log", "Programme tracker (bilingual)", "Scope change request form"]}, {"id": "p2", "priority": "Product 02 · High leverage", "name": "建築法規 Database", "desc": "Single searchable source for Taiwan building regulations. Solves the multi-source, multi-version problem that costs every firm time daily. Highest pain-point in local AEC.", "progress": 5, "deadline": "", "color": "mf-slate", "status_class": "ps-plan", "status_label": "Planning", "items": ["建築法 — current version mapped", "都市設計審議 reference", "危老重建 regulations", "Searchable interface (web or Notion)", "Version-change alerts"]}, {"id": "p3", "priority": "Product 03 · In progress", "name": "ArchiCAD Templates", "desc": "Office-standard ArchiCAD template system built for Taiwan residential/commercial practice. Includes layer structure, attribute sets, and workflow documentation.", "progress": 30, "deadline": "", "color": "mf-green", "status_class": "ps-build", "status_label": "Building", "items": ["Layer naming convention (EN/ZH)", "Building element library", "Sheet set templates", "Workflow SOP document", "AI rendering prompt generator (done ✓)"]}], "sprint": [{"task": "Write & schedule Wk 1 Origin Story post", "cat": "li", "target": "Jun 2", "done": false}, {"task": "Write & schedule Wk 3 AI Tool post", "cat": "li", "target": "Jun 16", "done": false}, {"task": "PM Toolkit: Define 5 template structure", "cat": "prod", "target": "Jun 30", "done": false}, {"task": "ArchiCAD: Complete layer naming convention", "cat": "prod", "target": "Jun 30", "done": false}, {"task": "Start 建築法 structured study (1hr/wk)", "cat": "skill", "target": "Ongoing", "done": false}, {"task": "Write & schedule Wk 5 Taiwan observation post", "cat": "li", "target": "Jun 30", "done": false}, {"task": "PM Toolkit: Draft decision log template", "cat": "prod", "target": "Jul 14", "done": false}, {"task": "Write & schedule Wk 7 NZ vs TW post", "cat": "li", "target": "Jul 14", "done": false}, {"task": "PM Toolkit: Draft standup format", "cat": "prod", "target": "Jul 31", "done": false}, {"task": "Write & schedule Wk 9 Myth-bust post", "cat": "li", "target": "Aug 11", "done": false}, {"task": "PM Toolkit: Complete all 5 templates", "cat": "prod", "target": "Aug 31", "done": false}, {"task": "PM Toolkit: Bilingual (EN/ZH) pass", "cat": "prod", "target": "Sep 15", "done": false}, {"task": "PM Toolkit: Price, package, list for sale", "cat": "prod", "target": "Sep 30", "done": false}, {"task": "法規 DB: Scope data sources and MVP format", "cat": "skill", "target": "Sep 30", "done": false}, {"task": "ArchiCAD: Building element library draft", "cat": "prod", "target": "Sep 30", "done": false}], "actions": [{"task": "Post Wk 1 — Origin Story on Jun 2", "cat": "li", "done": false}, {"task": "Post Wk 3 — AI Tool story on Jun 16", "cat": "li", "done": false}, {"task": "PM Toolkit: define 5 template structure", "cat": "prod", "done": false}, {"task": "Start 建築法 study — 1hr this week", "cat": "skill", "done": false}, {"task": "Run 🧠 Think on every post before publishing", "cat": "li", "done": false}, {"task": "ArchiCAD: complete layer naming convention", "cat": "prod", "done": false}], "posts": [{"id": "post-1", "week": "Week 1", "date": "Mon 2 Jun 2026", "status": "ready", "title": "Origin story — NZ → Taiwan, the gap I saw", "type": "Personal origin story · Attach: NZ→TW graphic", "tip": "Attach the NZ→TW infographic. This is your highest-reach post — it introduces everything. Reply to every comment within 24 hours.", "body": "I moved from New Zealand to Taiwan 18 months ago — traded flat whites and seismic details for bubble tea and 50-storey RC buildings.\n\nWhat I didn't expect: the most technologically advanced island in the world running its architecture industry almost entirely on 2D drawings and intuition.\n\nTaiwan has TSMC. It has Nvidia. The island literally powers the world's AI revolution.\n\nBut walk into 95% of architecture firms here? 100% 2D. No BIM. No AI. Not even close.\n\nBIM companies are selling the shovel — but architects aren't mining yet.\n\nSo I stopped selling shovels and picked one up myself.\n\nI'm a licensed architect with 8+ years across NZ and Taiwan, specialising in BIM coordination and AI workflow integration. I joined an architecture studio to close the gap from the inside.\n\nTwo months in, I've already automated some of our most repetitive workflows — starting with an AI rendering prompt generator built specifically for our office context. Not a Western off-the-shelf tool. Ours.\n\nSmall tools. Real problems. Compounding over time.\n\nThe opportunity in Taiwan's AEC sector is genuinely huge — for anyone willing to bridge what the technology can do and what practice currently looks like.\n\nI'm documenting the journey here. If you're working on similar gaps across APAC — I'd like to connect.", "tags": "#Architecture #BIM #AIinAEC #Taiwan #NewZealand #AEC #BIMcoordinator", "image": "Attach: NZ→TW infographic (final version)"}, {"id": "post-2", "week": "Week 3", "date": "Mon 16 Jun 2026", "status": "ready", "title": "AI tool in practice — rendering prompt generator story", "type": "AI tool before/after · Attach: screenshot (anonymised)", "tip": "Lead with the €50 detail. Before/after posts with a visual get 2× reach.", "body": "Three months ago I was about to spend €50/month on a rendering prompt subscription tool.\n\nGlad I didn't.\n\nAs an architect, every render brief starts the same way — style, materials, atmosphere, camera angle, lighting. Different project, same mental gymnastics, rewritten from scratch every single time.\n\nI looked at the branded prompt tools online. Polished. Marketed well. €50/month.\n\nBut they're built for Western aesthetics. The material palettes, the atmospheric references. None of it quite fits how we design in Taiwan. Wrong context, wrong defaults.\n\nSo I spent an afternoon with Claude instead.\n\nOne afternoon of fine-tuning the right formula — testing combinations, adjusting for our office's preferences, building in the Asian context that the off-the-shelf tools missed.\n\nNow? Two minutes. Every time. Consistent results.\n\n€0/month. Fully adjustable. Owned by us.\n\nThis is what AI adoption actually looks like — not a big transformation announcement. Just one frustrating afternoon that quietly eliminated a repetitive task forever.\n\nWhat repetitive task in your workflow is still waiting to be automated?", "tags": "#Architecture #AIinAEC #BIM #ArchitectLife #Taiwan", "image": "Attach: screenshot of prompt generator (crop out client info)"}, {"id": "post-3", "week": "Week 5", "date": "Mon 30 Jun 2026", "status": "draft", "title": "Taiwan AEC observation — why architects work 12-hour days and still feel behind", "type": "Industry observation · Attach: simple quote graphic or none", "tip": "Frame as \"here's what I noticed\" not \"here's what's wrong.\" Taiwanese AEC professionals will share this if they feel seen, not attacked.", "body": "Something I noticed after 18 months in Taiwan's architecture industry:\n\nSenior architects here work 10–12 hour days. Routinely. Without complaint.\n\nThey're not lazy. They're not disorganised. Most of them are genuinely brilliant.\n\nSo why does every project feel like it's running on improvisation?\n\nTaiwan's architecture firms are built around individual expertise — not systems. The project schedule lives in the principal's head. The consultant list is in someone's WeChat.\n\nWhen that person is in the room, everything moves. When they're not — everything stops.\n\nIn NZ, we'd call this a single point of failure. In Taiwan's AEC, it's called Tuesday.\n\nThis isn't a skills problem. It's a systems problem. And systems problems are solvable.\n\nThe firms that build transferable processes instead of irreplaceable people will have an enormous advantage in the next five years.\n\nIs this pattern familiar to you? I'd be curious whether it's specific to Taiwan or common across APAC.", "tags": "#Architecture #AEC #Taiwan #ProjectManagement #BIM", "image": "Optional: \"Single point of failure ≠ expertise. It's a systems problem.\""}, {"id": "post-4", "week": "Week 7", "date": "Mon 14 Jul 2026", "status": "draft", "title": "NZ vs Taiwan — one thing NZ firms do on site that Taiwan firms don't", "type": "Cross-border contrast · Attach: side-by-side graphic", "tip": "Pick ONE specific contrast — not a list. Specificity beats breadth.", "body": "In New Zealand, architects go to site meetings with a decision log.\n\nEvery item that needs a resolution gets logged, assigned an owner, and given a deadline. Before anyone leaves the room.\n\nIn Taiwan? The meeting ends. Everyone goes back to their desk. Three days later someone sends a WeChat voice message about a decision that was made. Or wasn't.\n\nI'm not criticising — I'm observing. Taiwan's construction pace is extraordinary.\n\nBut the decision trail? That's where things get expensive.\n\nIn NZ we learned this lesson through insurance claims and consent issues. The paper trail isn't bureaucracy — it's protection.\n\nThe good news: this is a one-page template fix. A structured meeting minutes format that takes 10 minutes and saves weeks of confusion downstream.\n\nI've been testing this in our current projects. The results are measurable.\n\nDo you run site meetings with a formal decision log? I'd be curious what format works for your team.", "tags": "#Architecture #SiteManagement #AEC #NewZealand #Taiwan #ProjectManagement", "image": "Optional: two-column — NZ site meeting vs TW site meeting"}, {"id": "post-5", "week": "Week 9", "date": "Mon 11 Aug 2026", "status": "draft", "title": "Myth-bust — BIM is not a software problem", "type": "Opinion / myth-bust · Attach: quote graphic", "tip": "Opinion posts get the most comments. Engagement is engagement. End with a direct question.", "body": "Unpopular opinion in AEC:\n\nBIM is not a software problem.\n\nI've seen firms spend six figures on Revit licenses and still produce coordination drawings that clash on every floor.\n\nAnd I've seen small teams with basic ArchiCAD setups deliver cleaner models than firms ten times their size.\n\nThe difference isn't the software. It's the workflow discipline behind it.\n\nBIM is a methodology. The software is just where it lives.\n\nWhen a firm 'does BIM' but still emails PDF drawings to consultants, still runs coordination meetings without a live federated model, still resolves clashes on site — they're not doing BIM. They're doing CAD with a 3D view.\n\nThe firms that get real value from BIM have done one thing differently: they've decided what BIM means for their specific workflow, and they've held that standard consistently.\n\nThat's not a software feature. That's a leadership decision.\n\nWhat's the biggest BIM implementation mistake you've seen — or made?", "tags": "#BIM #Architecture #AEC #ArchiCAD #Revit #DigitalConstruction", "image": "Optional: quote card — \"BIM is a methodology. The software is just where it lives.\""}, {"id": "post-6", "week": "Week 11", "date": "Mon 8 Sep 2026", "status": "draft", "title": "PM habit from tech industry that works in architecture", "type": "Process tip · weekly standup adapted for architecture studios", "tip": "Write from your own experience at JT Studio. Don't write from theory. Soft signal for PM Toolkit.", "body": "OUTLINE — write from your own experience:\n\nHook: \"I ran standups for hardware product teams before I ever managed an architecture project. Here's the one habit that crossed over perfectly.\"\n\nBody:\n— The habit (15-min weekly status: what's done, what's blocked, what's next)\n— How it looks in a tech PM context\n— How you adapted it for architecture\n— Specific result you saw at JT Studio\n\nClose: \"The best project management tools aren't industry-specific. They're discipline-specific. What PM habit have you imported from another industry?\"", "tags": "#ProjectManagement #Architecture #AEC #Taiwan #Productivity", "image": "Optional: simple process diagram"}, {"id": "post-7", "week": "Week 13", "date": "Mon 22 Sep 2026", "status": "draft", "title": "AI experiment result — what I tried, what worked, what didn't", "type": "AI tool in practice · Write from a real experiment that month", "tip": "Document it that week — don't reconstruct it later. Honest failures are more engaging than polished wins.", "body": "OUTLINE — fill in from your actual experiment:\n\nHook: \"I tried [specific AI tool/workflow] this month. Here's what actually happened.\"\n\nStructure:\n— What I was trying to solve\n— What I tried (tool + approach)\n— What worked (specific, with numbers if possible)\n— What didn't work (be honest)\n— What I'd do differently\n\nClose: \"AI adoption in AEC isn't about finding the perfect tool. It's about running enough experiments to find what sticks. What have you tried recently?\"", "tags": "#AIinAEC #Architecture #BIM #Automation #Taiwan", "image": "Attach: screenshot or before/after"}, {"id": "post-8", "week": "Week 15", "date": "Mon 6 Oct 2026", "status": "draft", "title": "Client/firm POV — what a senior architect needs vs what BIM vendors sell", "type": "Industry insight · Write from a real conversation (anonymised)", "tip": "Write from a specific conversation. \"A senior principal told me...\" is a powerful frame. Go have that conversation first.", "body": "OUTLINE:\n\nHook: \"I asked a senior architect with 30 years of Taiwan practice what he actually needed from BIM. His answer surprised me.\"\n\nBody:\n— What vendors typically promise\n— What he actually said he needed\n— The gap between those two things\n— Why that gap exists\n\nClose: \"The firms winning the BIM conversation in Asia aren't selling software. They're solving the problems principals actually lose sleep over. What do you think those problems are?\"", "tags": "#BIM #Architecture #AEC #Taiwan #DigitalTransformation", "image": "Optional: none — let the story carry it"}, {"id": "post-9", "week": "Week 17", "date": "Mon 20 Oct 2026", "status": "draft", "title": "建築法規 pain point — the regulation search problem in Taiwan AEC", "type": "Local insight · High local reach · Bilingual angle optional", "tip": "Don't write this until you've had genuine frustration with multi-source regulation search. DMs from this post = first 法規 DB customers.", "body": "OUTLINE:\n\nHook: \"There is no single source of truth for Taiwan building regulations. And it's costing every architecture firm time they don't have.\"\n\nBody:\n— The specific problem (multi-source, multi-version 法規)\n— A real scenario: you needed to find X regulation, here's how many steps it took\n— Why this hasn't been solved yet\n— What a solution would look like\n\nClose: \"I'm building something to address this. If you've felt this pain — I'd like to talk to you. DM me.\"", "tags": "#Architecture #Taiwan #建築法規 #AEC #BIM #RegTech", "image": "Optional: screenshot showing multiple contradictory sources"}, {"id": "post-10", "week": "Week 19", "date": "Mon 3 Nov 2026", "status": "draft", "title": "Product launch — PM Workflow Toolkit is live", "type": "Product announcement · ONLY post after product is live and has 1 sale", "tip": "Do NOT post until live and you have at least 1 paid sale. Link goes in FIRST COMMENT — not the post body.", "body": "OUTLINE:\n\nHook: \"Eight months ago I wrote about the PM gap in Taiwan's architecture industry. Today I shipped something about it.\"\n\nBody:\n— What the PM Workflow Toolkit is (one sentence)\n— Who it's for\n— What's in it (5 templates, bilingual, built from real project friction)\n— The origin story (reference back to Week 5 post — full circle)\n— Price\n\nClose: \"If you've ever lost a week to a decision that should have taken 10 minutes — this is for you. Link in comments.\"", "tags": "#Architecture #ProjectManagement #AEC #Taiwan #DigitalProduct #BIM", "image": "Attach: product preview / cover image"}, {"id": "post-11", "week": "Week 21", "date": "Mon 17 Nov 2026", "status": "draft", "title": "APAC angle — what architecture firms across the region share", "type": "Regional insight · Target: Singapore, HK, AU, NZ audiences", "tip": "Write to attract international consulting conversations. Signal that your positioning is regional.", "body": "OUTLINE:\n\nHook: \"I've worked in NZ, Australia, and now Taiwan. The AEC industry problems across the region are more similar than anyone admits.\"\n\nBody:\n— 3 patterns you've seen across multiple APAC markets\n— Why these patterns exist\n— What the outliers are doing differently\n— Your thesis on what changes in the next 5 years\n\nClose: \"If you're working on AEC practice improvement anywhere in APAC — I'd like to compare notes. Where are you based and what's your biggest practice gap right now?\"", "tags": "#Architecture #APAC #BIM #AEC #NewZealand #Taiwan #Singapore", "image": "Optional: simple APAC map graphic"}, {"id": "post-12", "week": "Week 23", "date": "Mon 1 Dec 2026", "status": "draft", "title": "6-month reflection — what I learned, what surprised me, what's next", "type": "Milestone reflection · Highest authenticity post of the year", "tip": "Reference Week 1 explicitly — full circle. Share real numbers: followers, product sales, consulting enquiries.", "body": "OUTLINE:\n\nHook: \"Six months ago I posted my first LinkedIn post about moving from NZ to Taiwan. Here's what actually happened.\"\n\nBody:\n— What you set out to do\n— 3 things that surprised you\n— 1 thing that was harder than expected\n— 1 concrete result (product sold, consulting enquiry, connection made)\n— What you're building in 2027\n\nClose: \"If you've been following along — thank you. And if you've been quietly working on similar problems in your own market — I'd like to hear from you.\"", "tags": "#Architecture #BIM #AIinAEC #Taiwan #NewZealand #Year1", "image": "Optional: collage of milestones"}]};
-
-async function loadData() {
-  try {
-    D = JSON.parse(JSON.stringify(EMBEDDED_DATA));
-    // deep clone into working state
-    posts = JSON.parse(JSON.stringify(D.posts));
-    sprintState = JSON.parse(JSON.stringify(D.sprint));
-    actState = JSON.parse(JSON.stringify(D.actions));
-    prodState = JSON.parse(JSON.stringify(D.products));
-    // render everything
-    renderAll();
-    document.getElementById('data-badge').textContent = '✓ ' + D._meta.last_updated;
-    // switch from loading to dashboard
-    document.getElementById('panel-loading').classList.remove('active');
-    document.getElementById('panel-dashboard').classList.add('active');
-  } catch(e) {
-    showLoadError(e.message);
-  }
+// ──────── TABS ────────
+function showPanel(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.panel === name));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + name));
 }
 
-function showLoadError(msg) {
-  document.querySelector('.loading-screen').innerHTML = `
-    <div class="ls-error">
-      <strong>Could not load data from Google Drive</strong><br>
-      The file may not be shared correctly, or you may be offline.<br><br>
-      Check that <strong>rl_data.json</strong> in your Google Drive is set to:<br>
-      <code>Share → Anyone with the link → Viewer</code>
-      If sharing is correct, try refreshing the page.<br><br>
-      Error: ${msg}
+// ──────── DASHBOARD ────────
+function renderDashboard() {
+  const total = posts.length;
+  const done = posts.filter(p => p.status === 'done').length;
+  const pairs = new Set(posts.filter(p => p.pair).map(p => p.pair.split('·')[0].trim())).size;
+  document.getElementById('d-total').textContent = total;
+  document.getElementById('d-done').textContent = done;
+  document.getElementById('d-pairs').textContent = pairs;
+
+  // Next post
+  const next = posts.find(p => p.status !== 'done');
+  const npEl = document.getElementById('d-nextpost');
+  if (next) {
+    let pairBadge = '';
+    if (next.pair) {
+      const isPain = next.pair.toLowerCase().includes('pain');
+      pairBadge = `<span class="np-pair ${isPain ? 'pair-pain' : 'pair-sol'}">${esc(next.pair)}</span>`;
+    }
+    npEl.innerHTML = `<div class="next-post">
+      <div class="np-title">${esc(next.title)}</div>
+      <div class="np-meta">${pairBadge}${esc(next.week)} · ${esc(next.date)} · <i>${esc(next.type)}</i></div>
     </div>`;
+  } else {
+    npEl.innerHTML = '<div class="np-meta">All posts published! 🎉</div>';
+  }
+
+  // Upcoming
+  const upcoming = posts.filter(p => p.status !== 'done').slice(1, 5);
+  document.getElementById('d-upcoming').innerHTML = upcoming.map(p => {
+    let pb = '';
+    if (p.pair) {
+      const isPain = p.pair.toLowerCase().includes('pain');
+      pb = `<span class="np-pair ${isPain ? 'pair-pain' : 'pair-sol'}">${esc(p.pair)}</span>`;
+    }
+    return `<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
+      ${pb}<b style="color:var(--slate)">${esc(p.week)}</b> · ${esc(p.title.length > 50 ? p.title.substring(0,50)+'…' : p.title)}
+    </div>`;
+  }).join('') || '<div class="np-meta">No more upcoming.</div>';
+
+  // Actions
+  const acts = dataset.actions || [];
+  const undone = acts.filter(a => !a.done).length;
+  document.getElementById('d-actions-count').textContent = `· ${undone} open`;
+  document.getElementById('d-actions').innerHTML = acts.map(a => `
+    <div class="action-item ${a.done ? 'done' : ''}" onclick="toggleAction('${a.id}')">
+      <input type="checkbox" ${a.done ? 'checked' : ''} onclick="event.stopPropagation();toggleAction('${a.id}')">
+      <span>${esc(a.text)}</span>
+    </div>
+  `).join('');
+
+  // Differentiation stack
+  document.getElementById('d-diff').innerHTML = (dataset.roadmap.differentiation_stack || []).map(d => `<span class="diff-chip">${esc(d)}</span>`).join('');
+
+  // Products mini list
+  document.getElementById('d-products').innerHTML = (dataset.products || []).map(p => `
+    <div class="product-row">
+      <span class="pname">${esc(p.name)}</span>
+      <span class="prole">${esc(p.role.split('·')[0])}</span>
+    </div>
+  `).join('');
+
+  // Tab counts
+  document.getElementById('tc-prod').textContent = (dataset.products || []).length;
+  document.getElementById('tc-li').textContent = total;
 }
 
-// ══════════════════════════════════════════
-// RENDER ALL
-// ══════════════════════════════════════════
-function renderAll() {
-  renderDashPhases();
-  renderDashProds();
-  renderActions();
-  renderRoadmap();
-  renderProducts();
-  renderSprint();
-  renderPosts();
-  renderSidebar();
+function toggleAction(id) {
+  const a = (dataset.actions || []).find(x => x.id === id);
+  if (a) { a.done = !a.done; save(); renderDashboard(); }
 }
 
-// ══════════════════════════════════════════
-// DASHBOARD
-// ══════════════════════════════════════════
-function renderDashPhases() {
-  const c = document.getElementById('d-phases');
-  c.innerHTML = D.roadmap.phases.map(ph => `
-    <div class="phase-item">
-      <div class="pd ${ph.status==='active'?'pd-active':'pd-upcoming'}"></div>
-      <div>
-        <div class="pi-name">${ph.name}</div>
-        <div class="pi-period">${ph.period}</div>
-        <div class="pi-tag ${ph.status==='active'?'pt-active':'pt-upcoming'}">${ph.status==='active'?'Active now':'Upcoming'}</div>
-      </div>
-    </div>`).join('');
-}
-
-function renderDashProds() {
-  const c = document.getElementById('d-prods');
-  c.innerHTML = prodState.map((p,i) => `
-    <div class="prod-item-d">
-      <div class="prod-row-d"><span class="prod-name-d">${p.name}</span><span class="prod-st ${p.status_class}" id="dp${i}-s">${p.status_label}</span></div>
-      <div class="mini-bar"><div class="mini-fill ${p.color}" id="dp${i}-bar" style="width:${p.progress}%"></div></div>
-    </div>`).join('');
-}
-
-function renderActions() {
-  const c = document.getElementById('d-actions');
-  c.innerHTML = '';
-  actState.forEach((a, i) => {
-    const div = document.createElement('div');
-    div.className = 'action-item' + (a.done ? ' done' : '');
-    div.onclick = () => { actState[i].done = !actState[i].done; renderActions(); };
-    const cats = {li:'at-li', prod:'at-prod', skill:'at-skill'};
-    const catL = {li:'LinkedIn', prod:'Product', skill:'Skill'};
-    div.innerHTML = `<div class="ai-check">${a.done ? '<span style="color:#fff;font-size:10px">✓</span>' : ''}</div>
-      <div><div class="ai-text">${a.task}</div><span class="ai-tag ${cats[a.cat]}">${catL[a.cat]}</span></div>`;
-    c.appendChild(div);
-  });
-}
-
-// ══════════════════════════════════════════
-// ROADMAP
-// ══════════════════════════════════════════
+// ──────── ROADMAP ────────
 function renderRoadmap() {
-  // Phases
-  document.getElementById('rm-phases').innerHTML = D.roadmap.phases.map(ph => `
-    <div class="phase-block">
-      <div class="pb-hdr ${ph.status==='active'?'active-ph':''}">
-        <div class="ph-left">
-          <span class="ph-badge">${ph.label} ${ph.status==='active'?'· Active':''}</span>
-          <div class="ph-name">${ph.name}</div>
-        </div>
-        <div class="ph-period">${ph.period}</div>
+  const phases = dataset.roadmap.phases || [];
+  document.getElementById('roadmap-phases').innerHTML = phases.map(ph => `
+    <div class="phase-block ${ph.status === 'active' ? 'active' : 'upcoming'}">
+      <div class="phase-head">
+        <span class="phase-label">${esc(ph.label)}</span>
+        <span class="phase-name">${esc(ph.name)}</span>
+        <span class="phase-period">${esc(ph.period)}</span>
+        <span class="phase-status ${ph.status === 'active' ? 'status-active' : 'status-upcoming'}">${ph.status}</span>
       </div>
-      <div class="pb-body">
-        <div class="pb-col">
-          <div class="col-label">Milestones</div>
-          ${ph.milestones.map(m=>`<div class="ms-item"><div class="ms-dot ${ph.status==='active'?'gold':''}"></div>${m}</div>`).join('')}
+      <div class="phase-cols">
+        <div class="phase-col">
+          <h4>Milestones</h4>
+          <ul>${(ph.milestones || []).map(m => `<li>${esc(m)}</li>`).join('')}</ul>
         </div>
-        <div class="pb-col">
-          <div class="col-label">LinkedIn posts this phase</div>
-          ${ph.linkedin_posts.map(m=>`<div class="ms-item"><div class="ms-dot ${ph.status==='active'?'gold':''}"></div>${m}</div>`).join('')}
+        <div class="phase-col">
+          <h4>LinkedIn posts in phase</h4>
+          <ul>${(ph.linkedin_posts || []).map(m => `<li>${esc(m)}</li>`).join('')}</ul>
         </div>
-      </div>
-    </div>`).join('');
-
-  // Differentiators
-  document.getElementById('rm-diff').innerHTML = D.roadmap.differentiators.map(d => `
-    <div class="diff-card">
-      <div class="diff-icon">${d.icon}</div>
-      <div class="diff-name">${d.name}</div>
-      <div class="diff-desc">${d.desc}</div>
-    </div>`).join('');
-
-  // Gaps
-  const lvlMap = {critical:'rt-crit', moderate:'rt-mod', low:'rt-low'};
-  const lvlLabel = {critical:'Critical', moderate:'Moderate', low:'Low'};
-  document.getElementById('rm-gaps').innerHTML = D.roadmap.gaps.map(g => `
-    <div class="gap-item">
-      <span class="risk-tag ${lvlMap[g.level]}">${lvlLabel[g.level]}</span>
-      <div class="gap-text"><strong>${g.title}.</strong> ${g.body}</div>
-    </div>`).join('');
-}
-
-// ══════════════════════════════════════════
-// PRODUCTS
-// ══════════════════════════════════════════
-function renderProducts() {
-  document.getElementById('prod-grid').innerHTML = prodState.map((p, i) => `
-    <div class="pc">
-      <div class="pc-top">
-        <div class="pc-num">${p.priority}</div>
-        <div class="pc-name">${p.name}</div>
-        <div class="pc-desc">${p.desc}</div>
-      </div>
-      <div class="pc-body">
-        <div class="pc-sr">
-          <span class="pc-st ${p.status_class}" id="ps${i}-st">${p.status_label}</span>
-          <span class="pc-pct" id="ps${i}-pct">${p.progress}%</span>
-        </div>
-        <div class="pc-bar"><div class="pc-fill ${p.color}" id="ps${i}-fill" style="width:${p.progress}%"></div></div>
-        <div class="pc-items">${p.items.map(x=>`<div class="pc-item">${x}</div>`).join('')}</div>
-        ${p.deadline ? `<div class="pc-deadline">${p.deadline}</div>` : ''}
-        <div class="pc-btns" style="margin-top:10px">
-          <button class="pbt" onclick="setProd(${i},25)">25%</button>
-          <button class="pbt" onclick="setProd(${i},50)">50%</button>
-          <button class="pbt" onclick="setProd(${i},75)">75%</button>
-          <button class="pbt" onclick="setProd(${i},100)">100% ✓</button>
-        </div>
-      </div>
-    </div>`).join('');
-}
-
-function setProd(i, pct) {
-  prodState[i].progress = pct;
-  const s = pct===100?'Shipped ✓':pct>=25?'Building':'Planning';
-  const sc = pct===100?'ps-ship':pct>=25?'ps-build':'ps-plan';
-  prodState[i].status_label = s;
-  prodState[i].status_class = sc;
-  // update product tab
-  document.getElementById('ps'+i+'-fill').style.width = pct+'%';
-  document.getElementById('ps'+i+'-pct').textContent = pct+'%';
-  document.getElementById('ps'+i+'-st').textContent = s;
-  document.getElementById('ps'+i+'-st').className = 'pc-st ' + sc;
-  // update dashboard
-  if(document.getElementById('dp'+i+'-bar')) {
-    document.getElementById('dp'+i+'-bar').style.width = pct+'%';
-    document.getElementById('dp'+i+'-s').textContent = s;
-    document.getElementById('dp'+i+'-s').className = 'prod-st ' + sc;
-  }
-  showToast('Product updated');
-}
-
-function renderSprint() {
-  const tb = document.getElementById('sprint-body');
-  tb.innerHTML = '';
-  const cats = {li:'st-li', prod:'st-prod', skill:'st-skill'};
-  const catL = {li:'LinkedIn', prod:'Product', skill:'Skill'};
-  sprintState.forEach((row, i) => {
-    const tr = document.createElement('tr');
-    if(row.done) tr.classList.add('done-row');
-    tr.innerHTML = `<td><span class="sr-check" onclick="toggleSprint(${i})">${row.done?'✅':'⬜'}</span></td>
-      <td class="sr-task">${row.task}</td>
-      <td><span class="stag ${cats[row.cat]}">${catL[row.cat]}</span></td>
-      <td style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace">${row.target}</td>`;
-    tb.appendChild(tr);
-  });
-}
-
-function toggleSprint(i) {
-  sprintState[i].done = !sprintState[i].done;
-  renderSprint();
-}
-
-// ══════════════════════════════════════════
-// LINKEDIN SIDEBAR
-// ══════════════════════════════════════════
-function renderSidebar() {
-  const phases = [
-    {label:'Phase 1 · Jun–Aug', ids:['post-1','post-2','post-3','post-4']},
-    {label:'Phase 2 · Sep–Nov', ids:['post-5','post-6','post-7','post-8']},
-    {label:'Phase 3 · Nov–Dec', ids:['post-9','post-10','post-11','post-12']}
-  ];
-  const sb = document.getElementById('li-sidebar');
-  sb.innerHTML = '';
-  phases.forEach((ph, pi) => {
-    sb.innerHTML += `<div class="sb-label">${ph.label}</div>`;
-    ph.ids.forEach(id => {
-      const p = posts.find(x => x.id===id);
-      if(!p) return;
-      const dot = p.status==='done'?'d-done':p.status==='ready'?'d-ready':'d-draft';
-      const wk = p.week.replace('Week ','Wk ');
-      const dt = p.date.replace('Mon ','').replace(' 2026','');
-      const shortTitle = p.title.split('—')[0].trim().substring(0,18);
-      const isFirst = ph.ids.indexOf(id)===0 && pi===0;
-      sb.innerHTML += `<div class="sbn ${isFirst?'active':''}" onclick="snc(this,'${id}')"><span class="sbn-dot ${dot}"></span>${wk} · ${shortTitle}<span class="sbn-wk">${dt}</span></div>`;
-    });
-    if(pi < phases.length-1) sb.innerHTML += `<div class="sbdiv"></div>`;
-  });
-}
-
-// ══════════════════════════════════════════
-// POSTS
-// ══════════════════════════════════════════
-const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const eH = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-const tH = t => (t||'').split(' ').filter(x=>x.startsWith('#')).map(x=>`<span class="tag">${x}</span>`).join('');
-
-function renderPosts() {
-  const c = document.getElementById('posts-container');
-  c.innerHTML = '';
-  const phases = [
-    {l:'Phase 1 — Foundation', ids:['post-1','post-2','post-3','post-4']},
-    {l:'Phase 2 — Building authority', ids:['post-5','post-6','post-7','post-8']},
-    {l:'Phase 3 — Product launch + scale', ids:['post-9','post-10','post-11','post-12']}
-  ];
-  const cp = posts.filter(p => !D.posts.find(d => d.id===p.id));
-  phases.forEach(ph => {
-    const d = document.createElement('div');
-    d.innerHTML = `<div class="sec-hdr"><div class="sec-line"></div><div class="sec-title">${ph.l}</div><div class="sec-line"></div></div>`;
-    c.appendChild(d);
-    ph.ids.forEach(id => { const p=posts.find(x=>x.id===id); if(p) c.appendChild(mkCard(p)); });
-  });
-  if(cp.length) {
-    const d = document.createElement('div');
-    d.innerHTML = `<div class="sec-hdr"><div class="sec-line"></div><div class="sec-title">Your additions</div><div class="sec-line"></div></div>`;
-    c.appendChild(d);
-    cp.forEach(p => c.appendChild(mkCard(p)));
-  }
-  updateStats();
-}
-
-function mkCard(p) {
-  const card = document.createElement('div');
-  card.className = `post-card status-${p.status}`; card.id = p.id;
-  const bc = p.status==='ready'?'wr':p.status==='done'?'wdn':'wd';
-  const bl = p.status==='ready'?`${p.week} · Ready`:p.status==='done'?`${p.week} · Published`:`${p.week} · Draft`;
-  card.innerHTML = `
-    <div class="ch" onclick="togCard('${p.id}')">
-      <div style="flex:1;min-width:0">
-        <div class="cm"><span class="wb ${bc}">${bl}</span><span class="cd">${p.date}</span></div>
-        <div class="ct">${p.title}</div><div class="cty">${p.type}</div>
-      </div>
-      <div class="chr">
-        <button class="bdel" onclick="event.stopPropagation();delPost('${p.id}')">✕</button>
-        <div class="ctog" id="ctog-${p.id}">▾</div>
       </div>
     </div>
-    <div class="cb" id="cb-${p.id}">
-      <div class="fg"><div class="fl">Title</div><input class="el" value="${esc(p.title)}" oninput="uf('${p.id}','title',this.value)"></div>
-      <div class="fr2">
-        <div class="fg"><div class="fl">Date</div><input class="el" value="${esc(p.date)}" oninput="uf('${p.id}','date',this.value)"></div>
-        <div class="fg"><div class="fl">Status</div>
-          <select class="ss" onchange="us('${p.id}',this.value)">
+  `).join('');
+
+  const sc = dataset.roadmap.scalable_product_bet || {};
+  document.getElementById('r-scal-primary').textContent = sc.primary || '';
+  document.getElementById('r-scal-magnet').textContent = sc.magnet || '';
+  document.getElementById('r-scal-deferred').textContent = sc.deferred || '';
+  document.getElementById('r-hardline').innerHTML = '<b>HARD LINE:</b> ' + esc(dataset.roadmap.hard_line || '');
+}
+
+// ──────── PRODUCTS + SPRINT ────────
+function renderProducts() {
+  document.getElementById('products-list').innerHTML = (dataset.products || []).map(p => `
+    <div class="product-card live">
+      <div class="product-head">
+        <div>
+          <div class="product-name">${esc(p.name)}</div>
+          <div class="product-status">Status: <b>${esc(p.status)}</b></div>
+        </div>
+        <span class="product-role-tag">${esc(p.role)}</span>
+      </div>
+      <div class="product-next"><b>Next:</b> ${esc(p.next)}</div>
+      <div class="product-note">${esc(p.note)}</div>
+    </div>
+  `).join('');
+
+  // Sprint
+  const s = dataset.sprint || {};
+  document.getElementById('sprint-title').textContent = s.title || '';
+  document.getElementById('sprint-list').innerHTML = (s.phases || []).map((ph, pi) => `
+    <div class="sprint-phase">
+      <h4>${esc(ph.name)}</h4>
+      ${(ph.tasks || []).map((t, ti) => {
+        const done = (t.includes('(DONE') || t.includes('DONE)'));
+        return `<div class="task-item ${done ? 'done' : ''}">
+          <input type="checkbox" ${done ? 'checked' : ''}>
+          <span>${esc(t)}</span>
+        </div>`;
+      }).join('')}
+    </div>
+  `).join('');
+}
+
+// ──────── LINKEDIN ────────
+function renderLinkedIn() {
+  renderSidebar();
+  renderPosts();
+}
+
+function renderSidebar() {
+  const sb = document.getElementById('li-sidebar');
+  const phases = [
+    { label: 'Phase 1 · Jun–Aug', ids: ['post-1','post-2','post-3','post-4','post-5'] },
+    { label: 'Phase 2 · Aug–Oct', ids: ['post-6','post-7','post-8','post-9'] },
+    { label: 'Phase 3 · Nov', ids: ['post-10','post-11'] }
+  ];
+  let html = '';
+  phases.forEach((phase, i) => {
+    html += `<div class="sb-label">${phase.label}</div>`;
+    phase.ids.forEach(id => {
+      const p = posts.find(x => x.id === id);
+      if (!p) return;
+      const dotClass = p.status === 'done' ? 'dot-done' : (p.status === 'ready' ? 'dot-ready' : 'dot-draft');
+      const dateBit = p.date.replace('Mon ', '').replace(' 2026', '').replace(' 2027', '');
+      const navLabel = p.title.length > 24 ? p.title.substring(0,24) + '…' : p.title;
+      html += `<div class="nav-item" onclick="navClick(this,'${p.id}')"><span class="nav-dot ${dotClass}"></span><span class="nav-text">${esc(navLabel)}</span><span class="nav-week">${dateBit}</span></div>`;
+    });
+    if (i < phases.length - 1) html += '<div class="sb-divider"></div>';
+  });
+  sb.innerHTML = html;
+}
+
+function renderPosts() {
+  const container = document.getElementById('posts-container');
+  container.innerHTML = '';
+  const phases = [
+    { label: 'Phase 1 — Foundation, Façade & ArchiCAD pairs', ids: ['post-1','post-2','post-3','post-4','post-5'] },
+    { label: 'Phase 2 — Taiwan local authority (建照 + 建築技術規則)', ids: ['post-6','post-7','post-8','post-9'] },
+    { label: 'Phase 3 — Cross-border identity & reflection', ids: ['post-10','post-11'] }
+  ];
+  phases.forEach(phase => {
+    const div = document.createElement('div');
+    div.innerHTML = `<div class="section-header"><div class="section-line"></div><div class="section-title">${phase.label}</div><div class="section-line"></div></div>`;
+    container.appendChild(div);
+    phase.ids.forEach(id => {
+      const p = posts.find(x => x.id === id);
+      if (p) container.appendChild(makeCard(p));
+    });
+  });
+  const known = phases.flatMap(p => p.ids);
+  const custom = posts.filter(p => !known.includes(p.id));
+  if (custom.length) {
+    const div = document.createElement('div');
+    div.innerHTML = `<div class="section-header"><div class="section-line"></div><div class="section-title">Your additions</div><div class="section-line"></div></div>`;
+    container.appendChild(div);
+    custom.forEach(p => container.appendChild(makeCard(p)));
+  }
+}
+
+function makeCard(p) {
+  const card = document.createElement('div');
+  card.className = `post-card status-${p.status}`;
+  card.id = p.id;
+  const badgeClass = p.status === 'done' ? 'badge-done' : (p.status === 'ready' ? 'badge-ready' : 'badge-draft');
+  const badgeLabel = p.status === 'done' ? `${p.week} · Published` : (p.status === 'ready' ? `${p.week} · Ready` : `${p.week} · Draft`);
+  let pairBadge = '';
+  if (p.pair) {
+    const isPain = p.pair.toLowerCase().includes('pain');
+    pairBadge = `<span class="pair-badge ${isPain ? 'pair-pain' : 'pair-sol'}">${esc(p.pair)}</span>`;
+  }
+  card.innerHTML = `
+    <div class="card-header" onclick="toggleCard('${p.id}')">
+      <div style="flex:1;min-width:0">
+        <div class="card-meta">
+          <span class="week-badge ${badgeClass}">${badgeLabel}</span>
+          ${pairBadge}
+          <span class="card-date-display">${esc(p.date)}</span>
+        </div>
+        <div class="card-title-display">${esc(p.title)}</div>
+        <div class="card-type-display">${esc(p.type)}</div>
+      </div>
+      <div class="card-header-right">
+        <button class="btn-think" onclick="event.stopPropagation();runThink('${p.id}',this)" title="AI critique">🧠 Think</button>
+        <button class="btn-del" onclick="event.stopPropagation();deletePost('${p.id}')">✕</button>
+        <div class="card-toggle" id="tog-${p.id}">▾</div>
+      </div>
+    </div>
+    <div class="card-body" id="body-${p.id}">
+      <div id="think-${p.id}"></div>
+      <div class="field-group">
+        <div class="field-label">Title</div>
+        <input class="editable-line" value="${esc(p.title)}" oninput="updateField('${p.id}','title',this.value)">
+      </div>
+      <div class="fields-row">
+        <div class="field-group"><div class="field-label">Date</div><input class="editable-line" value="${esc(p.date)}" oninput="updateField('${p.id}','date',this.value)"></div>
+        <div class="field-group">
+          <div class="field-label">Status</div>
+          <select class="status-select" onchange="updateStatus('${p.id}',this.value)">
             <option value="draft" ${p.status==='draft'?'selected':''}>Draft</option>
-            <option value="ready" ${p.status==='ready'?'selected':''}>Ready to post</option>
+            <option value="ready" ${p.status==='ready'?'selected':''}>Ready</option>
             <option value="done" ${p.status==='done'?'selected':''}>Published</option>
           </select>
         </div>
+        <div class="field-group"><div class="field-label">Pair tag</div><input class="editable-line" value="${esc(p.pair||'')}" placeholder="e.g. Façade · PAIN" oninput="updateField('${p.id}','pair',this.value);render()"></div>
       </div>
-      <div class="fg"><div class="fl">Post type</div><input class="el" value="${esc(p.type)}" oninput="uf('${p.id}','type',this.value)"></div>
-      <div class="fg"><div class="fl">💡 Tip <span>editable</span></div><textarea class="ta" oninput="uf('${p.id}','tip',this.value)">${esc(p.tip)}</textarea></div>
-      <div class="fg"><div class="fl">Post body</div><textarea class="ea" oninput="ubody('${p.id}',this.value)">${esc(p.body)}</textarea></div>
-      <div class="fg"><div class="fl">Hashtags <span>space-separated</span></div>
-        <input class="te" value="${esc(p.tags)}" oninput="uf('${p.id}','tags',this.value);rT('${p.id}',this.value)">
-        <div class="tprev" id="tprev-${p.id}">${tH(p.tags)}</div>
+      <div class="field-group"><div class="field-label">Post type / notes</div><input class="editable-line" value="${esc(p.type)}" oninput="updateField('${p.id}','type',this.value)"></div>
+      <div class="field-group"><div class="field-label">💡 Tip / reminder</div><textarea class="tip-area" oninput="updateField('${p.id}','tip',this.value)">${esc(p.tip)}</textarea></div>
+      <div class="field-group">
+        <div class="field-label">Post body <span id="cc-${p.id}">${(p.body||'').length} chars</span></div>
+        <textarea class="editable-area" oninput="updateBody('${p.id}',this.value)">${esc(p.body)}</textarea>
       </div>
-      <div class="fg"><div class="fl">Image note</div><input class="el" value="${esc(p.image||'')}" oninput="uf('${p.id}','image',this.value)"></div>
-      <div class="ca">
-        <button class="btn-cp" onclick="cpPost('${p.id}',this)">Copy post</button>
-        <button class="btn-sv" onclick="svPost(this)">Save</button>
-        <button class="btn-think" id="tbtn-${p.id}" onclick="runThink('${p.id}',this)">🧠 Think</button>
-        <span class="cc" id="cc-${p.id}">${p.body.length} / 3000</span>
+      <div class="field-group">
+        <div class="field-label">Hashtags <span>space-separated</span></div>
+        <input class="tags-edit" value="${esc(p.tags)}" oninput="updateField('${p.id}','tags',this.value);renderTags('${p.id}',this.value)">
+        <div class="tags-preview" id="tags-${p.id}">${renderTagsHTML(p.tags)}</div>
       </div>
-      <div class="think-panel" id="thinkp-${p.id}">
-        <div class="tph"><div class="tpt">🧠 Deep Thinking Partner</div><button class="tpc-btn" onclick="cThink('${p.id}')">✕</button></div>
-        <div class="tpb" id="thinkb-${p.id}"><div class="tload"><span class="tspinner"></span>Analysing…</div></div>
+      <div class="field-group"><div class="field-label">Image note</div><input class="editable-line" value="${esc(p.image||'')}" oninput="updateField('${p.id}','image',this.value)"></div>
+      <div class="card-actions">
+        <button class="btn-copy" onclick="copyPost('${p.id}',this)">Copy post</button>
+        <button class="btn-save" onclick="savePost('${p.id}',this)">Save changes</button>
+        <span class="char-count" id="cc2-${p.id}">${(p.body||'').length} / 3000 chars</span>
       </div>
-    </div>`;
+    </div>
+  `;
   return card;
 }
 
-function togCard(id){document.getElementById('cb-'+id).classList.toggle('open');document.getElementById('ctog-'+id).classList.toggle('open');}
-function uf(id,f,v){const p=posts.find(x=>x.id===id);if(p)p[f]=v;}
-function ubody(id,v){const p=posts.find(x=>x.id===id);if(p){p.body=v;const c=document.getElementById('cc-'+id);if(c)c.textContent=v.length+' / 3000';}}
-function us(id,v){const p=posts.find(x=>x.id===id);if(p){p.status=v;renderPosts();renderSidebar();setTimeout(()=>{const b=document.getElementById('cb-'+id);const t=document.getElementById('ctog-'+id);if(b){b.classList.add('open');t.classList.add('open');}},50);}}
-function rT(id,v){const c=document.getElementById('tprev-'+id);if(c)c.innerHTML=tH(v);}
-function svPost(btn){btn.textContent='Saved ✓';btn.classList.add('saved');setTimeout(()=>{btn.textContent='Save';btn.classList.remove('saved');},2000);showToast('Saved — remember to Export JSON to persist');renderPosts();renderSidebar();}
-function cpPost(id,btn){const p=posts.find(x=>x.id===id);if(!p)return;navigator.clipboard.writeText(p.body+'\n\n'+p.tags).then(()=>{btn.textContent='Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy post';btn.classList.remove('copied');},2000);});}
-function delPost(id){if(!confirm('Delete this post?'))return;posts=posts.filter(p=>p.id!==id);renderPosts();renderSidebar();showToast('Deleted');}
-function snc(el,id){document.querySelectorAll('.sbn').forEach(n=>n.classList.remove('active'));el.classList.add('active');const t=document.getElementById(id);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});}
-function searchP(q){const qr=q.toLowerCase();posts.forEach(p=>{const c=document.getElementById(p.id);if(!c)return;c.classList.toggle('hidden',!(!qr||p.title.toLowerCase().includes(qr)||p.body.toLowerCase().includes(qr)||p.tags.toLowerCase().includes(qr)));});document.querySelectorAll('.sec-hdr').forEach(h=>{const s=h.nextElementSibling;h.style.display=(s&&!s.classList.contains('hidden'))?'':'none';});}
-function openModal(){document.getElementById('modal').classList.add('open');}
-function closeModal(){document.getElementById('modal').classList.remove('open');}
-function createPost(){
-  const title=document.getElementById('nt').value.trim();if(!title){alert('Please enter a title');return;}
-  const id='post-custom-'+Date.now();
-  posts.push({id,week:document.getElementById('nw').value.trim()||'New',date:document.getElementById('nd').value||'TBD',status:'draft',title,type:document.getElementById('ntype').value.trim()||'New post',tip:'Add your tip here.',body:'Write your post here...',tags:'#Architecture #AEC',image:''});
-  renderPosts();renderSidebar();closeModal();showToast('New post created');
-  ['nt','nd','nw','ntype'].forEach(x=>{document.getElementById(x).value='';});
-}
-
-function updateStats(){
-  const total=posts.length,done=posts.filter(p=>p.status==='done').length,pct=total?Math.round(done/total*100):0;
-  document.getElementById('st-total').textContent=total;
-  document.getElementById('st-done').textContent=done;
-  document.getElementById('d-posts-done').textContent=done;
-  document.getElementById('pr-fill').style.width=pct+'%';
-  document.getElementById('pr-label').textContent=done+' / '+total+' posts';
-  const nx=posts.find(p=>p.status!=='done');
-  if(nx){
-    const nd=nx.date.replace('Mon ','').replace(' 2026','');
-    document.getElementById('st-next').textContent=nd;
-    document.getElementById('d-next-post').textContent=nd;
-    document.getElementById('d-nextpost').innerHTML=`<div class="np-card">
-      <div class="np-week">${nx.week} · ${nx.type.split('·')[0].trim()}</div>
-      <div class="np-title">${nx.title}</div>
-      <div class="np-date">${nx.date}</div>
-      <div class="np-preview">${nx.body.substring(0,120).replace(/\n/g,' ')}…</div>
-    </div>`;
-  }
-}
-
-// ══════════════════════════════════════════
-// EXPORT — writes current state back to JSON format
-// ══════════════════════════════════════════
-function exportData() {
-  const today = new Date().toISOString().split('T')[0];
-  const out = {
-    _meta: { version: D._meta.version, last_updated: today, note: D._meta.note },
-    roadmap: D.roadmap,
-    products: prodState,
-    sprint: sprintState,
-    actions: actState,
-    posts: posts
-  };
-  const blob = new Blob([JSON.stringify(out, null, 2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'rl_data.json';
-  a.click();
-  URL.revokeObjectURL(a.href);
-  showToast('Exported — send rl_data.json to Claude to update the app');
-}
-
-// ══════════════════════════════════════════
-// THINK PANEL
-// ══════════════════════════════════════════
-const API_KEY = 'YOUR_API_KEY_HERE';
-
-function cThink(id){const p=document.getElementById('thinkp-'+id);if(p)p.classList.remove('open');}
-
+// ──────── THINK PANEL ────────
 async function runThink(id, btn) {
-  const p=posts.find(x=>x.id===id);if(!p)return;
-  const panel=document.getElementById('thinkp-'+id);
-  const body=document.getElementById('thinkb-'+id);
-  if(!panel||!body)return;
-  if(panel.classList.contains('open')&&!body.querySelector('.tload')){panel.classList.remove('open');return;}
-  btn.disabled=true;panel.classList.add('open');
-  body.innerHTML=`<div class="tload"><span class="tspinner"></span>Analysing post…</div>`;
-  const sys=`You are a sharp, non-sycophantic LinkedIn content strategist for Rosivia Liao — NZ-trained architect in Taiwan building a personal brand around BIM, AI integration in AEC, and cross-border APAC practice. Audience: Taiwan AEC professionals, APAC architects, BIM consultants, international firms. Goal per post: establish authority, spark engagement, attract consulting/product leads. Respond ONLY with valid JSON, no preamble, no markdown fences. Shape: {"hook":"One alternative opening line sharper or more provocative than current hook. Max 2 sentences.","blind_spot":"One honest weakness — logical gap, assumption that might alienate audience, overused framing, or missed angle. Be direct.","reader_test":"Would a senior Taiwan AEC principal (30+ years, no BIM background) understand the core point in 10 seconds? Yes/no then one sentence reasoning."}`;
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  const panel = document.getElementById('think-' + id);
+  if (panel.innerHTML) { panel.innerHTML = ''; return; }
+  if (!API_KEY) {
+    panel.innerHTML = '<div class="think-panel"><div class="think-load" style="color:#c44">⚠️ API key not set. Open this file in your editor and paste your Anthropic API key into the API_KEY constant. Then refresh. (Do not commit the key to GitHub — strip it before each push.)</div></div>';
+    return;
+  }
+  panel.innerHTML = '<div class="think-panel"><div class="think-load">🧠 Thinking…</div></div>';
+  btn.disabled = true;
+  const sys = `You are a sharp LinkedIn editor for Rosivia Liao — NZ-trained licensed architecture designer in Taiwan, building a personal brand RL Studio around BIM coordination, AI workflows, and APAC cross-border consulting. Audience: senior Taiwan AEC principals (often no BIM background), global APAC AEC, and BIM coordinators. Tone: direct, dry, Kiwi-flavoured, no corporate motivational voice. Goal per post: attract partners/collaborators/opportunities — NOT sell. Respond ONLY with valid JSON. No preamble, no markdown, no code fences. Shape: {"hook":"One alternative opening line sharper or more provocative than current hook. Max 2 sentences.","blind_spot":"One honest weakness — logical gap, assumption that might alienate audience, overused framing, or missed angle. Be direct.","reader_test":"Would a senior Taiwan AEC principal (30+ years, no BIM background) understand the core point in 10 seconds? Yes/no then one sentence reasoning."}`;
   try {
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:sys,messages:[{role:'user',content:`Post title: ${p.title}\nPost type: ${p.type}\n\nPost body:\n${p.body}`}]})});
-    const data=await res.json();
-    const raw=data.content?.find(c=>c.type==='text')?.text||'';
-    let parsed;try{parsed=JSON.parse(raw.replace(/```json|```/gi,'').trim());}catch(e){throw new Error('Parse failed');}
-    body.innerHTML=`
-      <div class="tb2"><div class="tbl tbl-h">⚡ Sharper Hook Alternative</div><div class="tbc">${eH(parsed.hook)}</div></div>
-      <div class="tb2"><div class="tbl tbl-b">⚠️ Blind Spot / Weak Point</div><div class="tbc">${eH(parsed.blind_spot)}</div></div>
-      <div class="tb2"><div class="tbl tbl-r">👁 10-Second Reader Test</div><div class="tbc">${eH(parsed.reader_test)}</div></div>`;
-  } catch(err){body.innerHTML=`<div class="tload" style="color:#c44">Error: ${eH(err.message)}</div>`;}
-  btn.disabled=false;
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 800, system: sys, messages: [{ role: 'user', content: `Post title: ${p.title}\nPost type: ${p.type}\n\nPost body:\n${p.body}` }] })
+    });
+    const data = await res.json();
+    const raw = data.content?.find(c => c.type === 'text')?.text || '';
+    const clean = raw.replace(/```json|```/gi, '').trim();
+    let parsed;
+    try { parsed = JSON.parse(clean); } catch (e) { throw new Error('Parse failed: ' + clean.slice(0, 80)); }
+    panel.innerHTML = `<div class="think-panel">
+      <div class="tb"><div class="tbl">⚡ Sharper Hook Alternative</div><div class="tbc">${esc(parsed.hook)}</div></div>
+      <div class="tb"><div class="tbl">⚠️ Blind Spot / Weak Point</div><div class="tbc">${esc(parsed.blind_spot)}</div></div>
+      <div class="tb"><div class="tbl">👁 10-Second Reader Test</div><div class="tbc">${esc(parsed.reader_test)}</div></div>
+    </div>`;
+  } catch (err) {
+    panel.innerHTML = `<div class="think-panel"><div class="think-load" style="color:#c44">Error: ${esc(err.message)}</div></div>`;
+  }
+  btn.disabled = false;
 }
 
-// ══════════════════════════════════════════
-// TOAST
-// ══════════════════════════════════════════
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+// ──────── HELPERS ────────
+function esc(s) { return (s || '').toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function renderTagsHTML(tags) { return (tags || '').split(' ').filter(t => t.startsWith('#')).map(t => `<span class="tag">${t}</span>`).join(''); }
+function toggleCard(id) { document.getElementById('body-' + id).classList.toggle('open'); document.getElementById('tog-' + id).classList.toggle('open'); }
+function updateField(id, field, val) { const p = posts.find(x => x.id === id); if (p) p[field] = val; }
+function updateBody(id, val) { const p = posts.find(x => x.id === id); if (p) { p.body = val; const cc = document.getElementById('cc2-' + id); if (cc) cc.textContent = val.length + ' / 3000 chars'; } }
+function updateStatus(id, val) { const p = posts.find(x => x.id === id); if (p) { p.status = val; save(); render(); setTimeout(() => { const body = document.getElementById('body-' + id); const tog = document.getElementById('tog-' + id); if (body) { body.classList.add('open'); tog.classList.add('open'); } }, 50); } }
+function renderTags(id, val) { const c = document.getElementById('tags-' + id); if (c) c.innerHTML = renderTagsHTML(val); }
+function savePost(id, btn) { save(); btn.textContent = 'Saved ✓'; btn.classList.add('saved'); setTimeout(() => { btn.textContent = 'Save changes'; btn.classList.remove('saved'); }, 2000); showToast('Changes saved'); render(); }
+function copyPost(id, btn) { const p = posts.find(x => x.id === id); if (!p) return; navigator.clipboard.writeText(p.body + '\n\n' + p.tags).then(() => { btn.textContent = 'Copied!'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = 'Copy post'; btn.classList.remove('copied'); }, 2000); }); }
+function deletePost(id) { if (!confirm('Delete this post?')) return; posts = posts.filter(p => p.id !== id); save(); render(); showToast('Post deleted'); }
+function searchPosts(q) {
+  const query = q.toLowerCase();
+  posts.forEach(p => { const card = document.getElementById(p.id); if (!card) return; const match = !query || p.title.toLowerCase().includes(query) || (p.body || '').toLowerCase().includes(query) || (p.tags || '').toLowerCase().includes(query) || (p.pair || '').toLowerCase().includes(query); card.classList.toggle('hidden', !match); });
+  document.querySelectorAll('#posts-container .section-header').forEach(h => { let next = h.nextElementSibling; let anyVisible = false; while (next && !next.classList.contains('section-header')) { if (next.classList.contains('post-card') && !next.classList.contains('hidden')) { anyVisible = true; break; } next = next.nextElementSibling; } h.style.display = anyVisible ? '' : 'none'; });
+}
+function openModal() { document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function createPost() {
+  const title = document.getElementById('new-title').value.trim();
+  const date = document.getElementById('new-date').value;
+  const week = document.getElementById('new-week').value.trim();
+  const pair = document.getElementById('new-pair').value.trim();
+  const type = document.getElementById('new-type').value.trim();
+  if (!title) { alert('Please enter a title'); return; }
+  const id = 'post-custom-' + Date.now();
+  posts.push({ id, week: week || 'New', date: date || 'TBD', status: 'draft', pair: pair || '', title, type: type || 'New post', tip: 'Add your tip here.', body: 'Write your post here…', tags: '#Architecture #AEC', image: '' });
+  save(); render(); closeModal(); showToast('New post created');
+  ['new-title', 'new-date', 'new-week', 'new-pair', 'new-type'].forEach(id => { document.getElementById(id).value = ''; });
+}
+function navClick(el, id) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); el.classList.add('active'); const target = document.getElementById(id); if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
+function exportJSON() {
+  dataset.posts = posts;
+  dataset._meta.last_updated = new Date().toISOString().split('T')[0];
+  const blob = new Blob([JSON.stringify(dataset, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'rl_data_' + new Date().toISOString().split('T')[0] + '.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  showToast('JSON exported');
+}
 
-// ══════════════════════════════════════════
-// START
-// ══════════════════════════════════════════
-loadData();
+function render() {
+  renderDashboard();
+  renderRoadmap();
+  renderProducts();
+  renderLinkedIn();
+}
+
+render();
 </script>
 </body>
 </html>
