@@ -367,367 +367,375 @@ body{font-family:'Poppins','Noto Sans TC',sans-serif;background:var(--bg);color:
 <div class="toast" id="toast"></div>
 
 <script>
-const EMBEDDED_DATA = {"_meta": {"version": "3.0", "last_updated": "2026-06-08", "note": "v6 schema: import block parser, response notes, publish dates, last-edited timestamps, GitHub sync indicator. Post 2 content locked. 5 products + v4 roadmap.", "last_github_sync": "2026-06-08"}, "roadmap": {"phases": [{"id": "phase-1", "label": "Phase 1", "name": "Foundation — Identity & Pairs", "period": "Jun → Aug 2026", "status": "active", "milestones": ["Post 1 origin story published (Jun 2)", "Post 2 façade PAIN (Jun 23) — €50/month decision moment", "Post 3 façade SOLUTION (Jul 7) — show façade prompt studio", "Post 4 ArchiCAD template PAIN (Jul 27)", "Post 5 ArchiCAD template SOLUTION (Aug 10) — recruiter-bait", "Substack account created · Instagram @rlstudio.bim reserved", "Sustainable cadence: every 2–3 weeks"], "linkedin_posts": ["Post 1 — Origin story (Jun 2) · PUBLISHED", "Post 2 — Façade PAIN (Jun 23)", "Post 3 — Façade SOLUTION (Jul 7)", "Post 4 — ArchiCAD PAIN (Jul 27)", "Post 5 — ArchiCAD SOLUTION (Aug 10)"]}, {"id": "phase-2", "label": "Phase 2", "name": "Taiwan Local Authority", "period": "Aug → Oct 2026", "status": "upcoming", "milestones": ["Post 6 建照 PAIN (Aug 31) — local signal flare", "Post 7 建照 SOLUTION (Sep 14) — strongest scalable product candidate", "Q3 2026 Checkpoint (Sep 27) — review G/A/R metrics", "Post 8 建築技術規則 PAIN (Oct 5)", "Post 9 建築技術規則 SOLUTION (Oct 19) — flagship product candidate", "Substack launches with first essay (M3)"], "linkedin_posts": ["Post 6 — 建照 PAIN (Aug 31)", "Post 7 — 建照 SOLUTION (Sep 14)", "Post 8 — 建築技術規則 PAIN (Oct 5)", "Post 9 — 建築技術規則 SOLUTION (Oct 19)"]}, {"id": "phase-3", "label": "Phase 3", "name": "Cross-border & Reflection", "period": "Nov → Dec 2026", "status": "upcoming", "milestones": ["Post 10 NZ vs Taiwan site decision logs (Nov 9)", "Post 11 6-month reflection (Nov 30)", "Q4 2026 Checkpoint (Dec 27)", "Validation signal: which tool gets 'do you sell this?' DMs", "Decision point: which product to make public first"], "linkedin_posts": ["Post 10 — NZ × TW decision logs (Nov 9)", "Post 11 — Reflection (Nov 30)"]}], "differentiation_stack": ["Industrial design training", "Cross-industry PM background", "NZ-trained licensed architecture designer", "BIM coordinator (12+ years APAC)", "AI workflow builder", "Bilingual EN/中文"], "scalable_product_bet": {"primary": "建照流程管理系統 + 建築技術規則 Navigator (Taiwan-local, defensible)", "magnet": "façade prompt studio (proof-of-skill, NOT a SaaS)", "deferred": "ArchiCAD templates (sellable, but ship after validation)"}, "hard_line": "By Q1 2027 (Mar 28, 2027) — at least 2 real conversations (DM → call) with a potential partner, collaborator, or employer. If not, restructure."}, "products": [{"id": "facade-studio", "name": "façade prompt studio", "role": "Proof-of-skill magnet", "status": "Live (internal use)", "next": "Anonymise screenshots for Post 3 (Jul 7)", "progress": 100, "note": "Working tool. AEC AI rendering space too crowded with funded competitors to monetise as SaaS. Use as portfolio centrepiece, not product."}, {"id": "consultant-tracker", "name": "專案顧問追蹤系統 v3", "role": "Internal tool · medium scalability", "status": "Live (internal use)", "next": "Validate via post engagement before any external version", "progress": 100, "note": "Solves real coordination pain. Sellable as template if Post 4/5 generates DMs asking for it."}, {"id": "permit-system", "name": "建照流程管理系統", "role": "Strongest scalable candidate", "status": "Live (internal use)", "next": "Watch Post 7 (Sep 14) response — DMs = green light to make public version", "progress": 100, "note": "Highest defensibility. Too local for global AI players. Most ownable market."}, {"id": "reg-navigator", "name": "建築技術規則 Navigator", "role": "Long-term flagship product candidate", "status": "Live (internal use)", "next": "Watch Post 9 (Oct 19) response. Subscription model possible if pulls strongly.", "progress": 100, "note": "Highest-recurrence pain. Subscription-viable. Same local-defensibility logic."}, {"id": "archicad-template", "name": "ArchiCAD office template", "role": "Recruiter-bait + future Gumroad candidate", "status": "Live (in studio use)", "next": "Post 5 (Aug 10) showcases it. Public Gumroad version deferred to post-validation.", "progress": 100, "note": "Globally relatable. Universal BIM pain. Best post for attracting role/contract conversations."}], "sprint": {"title": "90-Day Foundation Sprint (Jun → Aug 2026)", "phases": [{"name": "Weeks 1–4 · Sequence Pairs 1 & 2", "tasks": ["Confirm calendar checkpoints scheduled (DONE — Q3, Q4, Q1, Q2)", "Save rl-post-writer.md skill to Claude project (DONE)", "Co-write Post 2 (façade PAIN) — Sunday session (DONE)", "Lock Post 2 graphic — building anatomy ↔ prompt structure (DONE)", "Publish Post 2 (target: Jun 14). Reply to comments within 24h.", "Co-write Post 3 (façade SOLUTION) — after Post 2 lands", "Publish Post 3 (Jul 7). Same reply discipline.", "Reserve Instagram @rlstudio.bim (dormant)", "Create Substack account (dormant until M3)"]}, {"name": "Weeks 5–9 · Sequence Pairs 3 & validate", "tasks": ["Co-write Post 4 (ArchiCAD PAIN)", "Co-write Post 5 (ArchiCAD SOLUTION)", "Publish Post 4 (Jul 27)", "Publish Post 5 (Aug 10)", "Watch DM volume — first validation signal", "Decide Substack launch trigger (M3 = early Sep)"]}, {"name": "Weeks 10–13 · Local authority phase begins", "tasks": ["Co-write Post 6 (建照 PAIN)", "Publish Post 6 (Aug 31)", "Q3 Checkpoint (Sep 27) — G/A/R review", "Decide which product validates first based on DM signals", "Default = stay course. Adjust only on red flag."]}]}, "actions": [{"id": "a1", "text": "Save rl-post-writer.md skill to Claude project (DONE)", "done": true}, {"id": "a2", "text": "Reserve Instagram @rlstudio.bim (dormant)", "done": false}, {"id": "a3", "text": "Create Substack account (dormant until M3)", "done": false}, {"id": "a4", "text": "Upload index.html v6 to GitHub", "done": false}, {"id": "a5", "text": "Verify rosivia.github.io/rl-studio shows v6 content", "done": false}, {"id": "a6", "text": "Publish Post 2 (target: Sun Jun 14)", "done": false}, {"id": "a7", "text": "Reply to every Post 2 comment within 24h", "done": false}], "posts": [{"id": "post-1", "week": "Week 1", "date": "Mon 2 Jun 2026", "status": "done", "pair": "", "title": "Origin story — NZ → Taiwan, the gap I saw", "type": "Origin story · Image: NZ→TW infographic attached", "tip": "PUBLISHED. Visual: NZ→TW infographic with NZ (BIM standard, Collaborative, Cross-industry PM) vs Taiwan (Dense urban, Fast-moving, Massive BIM opportunity). Tagline: 'Different contexts. Same purpose.' Keep replying to comments within 24h.", "body": "I moved from New Zealand to Taiwan 18 months ago — traded flat whites and seismic details for bubble tea and 50-storey RC buildings.\n\nI expected a learning curve. New regulations, new language, new building culture.\n\nWhat I didn't expect: the most technologically advanced island in the world running its architecture industry almost entirely on 2D drawings and intuition.\n\nTaiwan has TSMC. It has Nvidia. The island literally powers the world's AI revolution.\n\nBut walk into 95% of architecture firms here? 100% 2D. No BIM. No AI. Not even close.\n\nAfter a year in a BIM consultancy, I watched brilliant engineers sell technology that firms didn't yet know they needed. BIM companies are selling the shovel — but architects aren't mining yet.\n\nSo I stopped selling shovels and picked one up myself.\n\nI'm a licensed architecture designer with 8+ years across NZ and Taiwan, specialising in BIM coordination and AI workflow integration. I joined an architecture studio to close the gap from the inside — bringing NZ methodology and AI-assisted processes into daily project delivery.\n\nTwo months in, I've already automated some of our most repetitive workflows — starting with an AI rendering prompt generator built specifically for our office context. Not a Western off-the-shelf tool. Ours.\n\nSmall tools. Real problems. Compounding over time.\n\nThe opportunity in Taiwan's AEC sector is genuinely huge — for anyone willing to bridge what the technology can do and what practice currently looks like.\n\nI'm documenting the journey here. If you're working on similar gaps across APAC — or you're an AEC firm wondering where to start — I'd like to connect.", "tags": "#Architecture #BIM #AIinAEC #Taiwan #NewZealand #AEC #BIMcoordinator", "image": "NZ→TW infographic (live)", "threads_echo": "", "publish_date": "2026-06-02", "response_notes": "", "last_edited": "2026-06-02"}, {"id": "post-2", "week": "Week 3", "date": "Mon 23 Jun 2026", "status": "ready", "pair": "Façade studio · PAIN", "title": "The €50/month button I almost clicked — façade rendering pain", "type": "PAIN POST · Pair 1 of 2 with Post 3 · Decision-moment hook", "tip": "LOCKED · Ready to publish Sun 14 Jun (or earlier).\n\nWhen publishing:\n- Single image attached: RL_Studio_prompt_as_building_diagram_v3_2026-06-08.png\n- Hashtags pasted at end of post body\n- Reply to every comment within 24h\n- Watch DMs/comments for 72h — note which of the 3 pains triggered strongest reaction (informs Post 3 lead)\n- Then update status to Published + fill Response Notes field\n- Then Export JSON and push to GitHub", "body": "The €50/month button I almost clicked\n\nAs architects, we spend a massive chunk of every week exploring exterior and interior design — chasing the right architectural style, material composition, colour and texture palette. We're already lucky we don't have to lose nights to Photoshop, Illustrator and InDesign the way we used to. AI rendering tools have given us back hours. We've been spoiled.\n\nBut three quieter pains crept in, and I reckon I'm not the only one with them.\n\nOne: the prompt itself. Every render starts the same way. I retype the site environment, the project brief, the architectural style, the material composition, texture and colour palette, camera setting, atmosphere, landscape language. Same scaffolding, every time, from scratch. Which is mad — because a prompt should have a structure, the same way a building does. Foundations, frame, envelope, finishes, context. Once you see it, you can't unsee it.\n\nTwo: the artist–builder problem. Sometimes I want the AI to think freely with me — surprise me, brainstorm, push the concept. Sometimes I want it to shut up and follow the 3D model exactly — same massing, same floor count, same geometry. The tools I tried gave me one brain or the other. Never both, never on demand.\n\nThree: the market mismatch. Seven AI rendering tools sit between €27 and €73 a month. I almost subscribed to two. Then I looked at what their defaults actually were — American suburban material palettes, Mediterranean atmospherics, Scandinavian minimalism. None of it fits how we design in Taipei. I'd be paying €50/month for prompts I'd have to rewrite anyway.\n\nClosed the tab. Spent one sweet Sunday afternoon with Claude instead — not building a tool, just figuring out the structure of a prompt that actually fits how we design here.\n\nThree months in, I'm still using it. I'll show you what came out next week.\n\nAnd if you're solving the same problem in Hong Kong, Singapore, or anywhere else in Asia where Western defaults break — I'd love to hear from you too.\n\nTaipei architects: which AI rendering tool have you tried that didn't quite fit our market? Genuinely collecting notes — I want to know which ones felt closest before they went sideways.", "tags": "#AIinAEC #BIM #ArchitectLife #Taipei #Architecture #ArchiCAD #建築 #建築師", "image": "RL_Studio_prompt_as_building_diagram_v3_2026-06-08.png (Gemini v3 — exploded axonometric, building anatomy ↔ prompt structure, 5 layers, RL Studio palette)", "threads_echo": "三個月前，我差點按下一個 €50/月 的 AI 渲染訂閱按鈕。\n\n七、八個工具都在 €27–€73 之間，看起來都不錯。但仔細一看 — 材料、氛圍、相機語言、景觀預設，全是西方市場的設定。台灣的密度、氣候、立面語彙，沒有一個工具真正理解。\n\n真正的痛點不是「沒有 prompt 生成器」。是「沒有一個為亞洲市場設計的」。\n\n關掉分頁，花一個下午自己搞清楚對的結構。三個月過去了，還在用。\n\n各位台北建築人：你們有沒有遇過類似的工具，差一點就買了？", "publish_date": "", "response_notes": "", "last_edited": "2026-06-08"}, {"id": "post-3", "week": "Week 5", "date": "Mon 7 Jul 2026", "status": "draft", "pair": "Façade studio · SOLUTION", "title": "façade prompt studio — the system I built instead", "type": "SOLUTION POST · Pair 1 of 2 with Post 2 · Show the tool, not the source", "tip": "Show outputs and the thinking, not the full build. Screenshots, not source code. Frame as 'here's how I think,' not 'here's what I'm selling.' This post proves systems-thinking + AI fluency. Reply to every DM. The right people will surface here.", "body": "OUTLINE — co-write after Post 2 lands:\n\nHook: 'Last week I wrote about the €50/month button I didn't press. Here's what I built instead.'\n\nBody beats:\n— Quick recap (1 sentence) of the pain post\n— What façade prompt studio actually does (1 paragraph, not technical)\n— Show 2-3 anonymised before/after screenshots: generic prompt vs Taiwan-context prompt → resulting render\n— The 3 design decisions that mattered: material palette anchored in Taiwan vocabulary; atmospheric defaults reset for sub-tropical climate; camera language matched to dense urban context\n— Total build time: one afternoon. Total ongoing cost: €0. Total adjustment freedom: complete.\n— What this proves (not preachy): generic tools work for generic problems. Specific markets need specific tools.\n\nCTA: 'If you work in AI + AEC anywhere in APAC, I'd love to compare notes. DM me — I'm genuinely curious what you've built for your context.'", "tags": "#AIinAEC #BIM #Architecture #Taipei #ArchitectLife #建築 #建築師", "image": "Attach: 2-3 anonymised before/after prompt output screenshots from façade studio", "threads_echo": "", "publish_date": "", "response_notes": "", "last_edited": ""}, {"id": "post-4", "week": "Week 8", "date": "Mon 27 Jul 2026", "status": "draft", "pair": "ArchiCAD template · PAIN", "title": "Every architect's ArchiCAD setup is different — and that's the problem", "type": "PAIN POST · Pair 2 of 4 with Post 5 · BIM systems builder identity", "tip": "This is the global identity post — every architect knows what a BIM template is. Universally relatable. Most likely to attract recruiters and BIM team leads. Don't name JT. Speak in general terms about 'studios I've worked in.' This is the post that signals 'BIM systems builder' clearly.", "body": "OUTLINE — co-write:\n\nHook: 'Three architects on the same project. Three different ArchiCAD setups. Three different ways of naming the same wall.'\n\nBody beats:\n— Describe the common reality without naming JT: each architect's personal preferences become the studio's de facto standard\n— What it costs: hours lost reconciling files, layer naming arguments, redoing line weights, exporting headaches at print time\n— Why it persists: BIM templates are tedious. No single person wants to be the one who builds the office standard.\n— Why it's actually a leverage problem, not a software problem: a real template is a system, not a file\n— The cost compounds quietly across every project, every architect, every year\n\nCTA: 'BIM coordinators and studio principals: does your firm have a real BIM standard, or is it whatever each architect sets up? Honest answers — no judgement, I'm genuinely mapping how studios handle this.'", "tags": "#BIM #ArchiCAD #Architecture #BIMcoordinator #ArchitectLife #AEC", "image": "Optional: simple comparison graphic — 3 different layer naming conventions side by side", "threads_echo": "", "publish_date": "", "response_notes": "", "last_edited": ""}, {"id": "post-5", "week": "Week 10", "date": "Mon 10 Aug 2026", "status": "draft", "pair": "ArchiCAD template · SOLUTION", "title": "The ArchiCAD office template I built — what it covers, what it doesn't", "type": "SOLUTION POST · Pair 2 of 4 with Post 4 · Recruiter-bait", "tip": "This post is the most likely to attract a job/contract conversation. Be specific about what the template includes (layers, attributes, classifications, view templates) and honest about what it doesn't (project-specific 3D libraries, site-specific constraints). Don't oversell. Specificity > grandiose claims.", "body": "OUTLINE — co-write:\n\nHook: 'Two weeks ago I described the chaos of three architects on one project. Here's the template I built to fix it.'\n\nBody beats:\n— What the template covers (specific): layer system, attribute manager, classifications, view templates, output sets, naming conventions, key 2D libraries\n— What it doesn't cover (honest): project-specific 3D parts, site libraries, render setups\n— Why a template is a system, not a file: the rules behind the file are what scale\n— What I'd do differently if I built it again\n— What's not yet in it that I want to add next\n\nCTA: 'If you're hiring a BIM coordinator or building a BIM team, happy to talk about how this approach scales beyond one studio. DM open.'", "tags": "#BIM #ArchiCAD #BIMcoordinator #ArchitectLife #AEC #Architecture", "image": "Attach: clean screenshot of template structure (layer list / attribute panel) — no client info visible", "threads_echo": "", "publish_date": "", "response_notes": "", "last_edited": ""}, {"id": "post-6", "week": "Week 13", "date": "Mon 31 Aug 2026", "status": "draft", "pair": "建照 process · PAIN", "title": "Taiwan 建照 chaos — why every firm loses days to process tracking", "type": "PAIN POST · Pair 3 of 4 with Post 7 · Local Taiwan signal flare", "tip": "This is where the Taiwan keyword anchors do real work. The 建照 process is universally painful in Taiwan AEC — every architect has war stories. The post should make Taiwan readers feel deeply seen. Don't translate 建照 — leave it as-is. Global readers will follow the English context.", "body": "OUTLINE — co-write closer to date:\n\nHook: 'In Taiwan, the 建照 process is run on WeChat group screenshots, someone's memory, and a spreadsheet last updated three weeks ago.'\n\nBody beats:\n— Why 建照 tracking is hard: multiple stakeholders, multiple government touchpoints, multiple revisions, no single source of truth\n— A specific scenario (not naming firms): days lost because nobody knew which submission round we were on\n— Why it's not a software problem — it's a system problem\n— The hidden cost: not just time, but client trust when timelines slip\n— Why off-the-shelf project management tools don't fix this (built for generic workflows, not Taiwan permit flow)\n\nCTA: 'Taipei architects: how does your firm track the 建照 process today? Spreadsheets? Group chat? Someone's head? Genuinely curious — and not judging any of those answers.'", "tags": "#Architecture #Taipei #建築 #建照 #建築師 #AEC #BIM #台灣建築", "image": "Optional: simple anonymised flow diagram showing the messy reality of 建照 tracking", "threads_echo": "", "publish_date": "", "response_notes": "", "last_edited": ""}, {"id": "post-7", "week": "Week 15", "date": "Mon 14 Sep 2026", "status": "draft", "pair": "建照 process · SOLUTION", "title": "建照流程管理系統 — the system that fixed it for me", "type": "SOLUTION POST · Pair 3 of 4 with Post 6 · Highest defensibility content", "tip": "This is the strongest scalable-product candidate. Show the system without giving away the build. Watch DMs closely after this post — anyone saying 'do you sell this?' is your validation signal for the first sellable Taiwan tool. The skill rule applies: signal flare + specific + honest.", "body": "OUTLINE — co-write after Post 6 lands:\n\nHook: 'Two weeks ago I described 建照 chaos. Here's what I built to track it properly.'\n\nBody beats:\n— What 建照流程管理系統 actually does (high level — stages, owners, deadlines, document state)\n— The principle: one source of truth. Everything else is a view.\n— 2-3 anonymised screenshots showing the dashboard, stage tracking, document state\n— Why this is genuinely Taiwan-specific: built around 建照 workflow stages, not generic project tracking\n— What it would take to make it useful for other firms (signal to anyone watching)\n\nCTA: 'If this pain is familiar and you'd want a tool like this — comment 流程 and let's talk. I'm thinking about who would use it before I think about building it for anyone else.'", "tags": "#Architecture #Taipei #建築 #建照 #建築師 #BIM #台灣建築 #AEC", "image": "Attach: anonymised dashboard screenshots showing 建照 stage tracking", "threads_echo": "", "publish_date": "", "response_notes": "", "last_edited": ""}, {"id": "post-8", "week": "Week 18", "date": "Mon 5 Oct 2026", "status": "draft", "pair": "建築技術規則 · PAIN", "title": "建築技術規則 — no single source of truth", "type": "PAIN POST · Pair 4 of 4 with Post 9 · Highest-recurrence local pain", "tip": "Architects spend disproportionate time confirming one regulation. This is highest-recurrence pain — touches every project. If 建照 post triggered DMs, this one should trigger more. Watch for 'I'd pay for that' signals.", "body": "OUTLINE — co-write closer:\n\nHook: 'How long does it take you to confirm one Taiwan building regulation? Be honest.'\n\nBody beats:\n— The reality: 建築技術規則 spans multiple documents, versions, sub-regulations, local interpretations\n— A specific scenario: you needed to confirm one specific clause, and here's how many steps it took\n— Why this isn't solved by existing tools: regulations update, interpretations vary, search is poor\n— What architects actually want: a confidence answer, not just a search result\n— Why this matters more as projects get more complex (危老, 都更, mixed-use)\n\nCTA: 'How many minutes (or hours) did your last regulation lookup take? Specific stories welcome — I'm building a map of where the search actually breaks down.'", "tags": "#Architecture #Taipei #建築 #建築技術規則 #建築師 #法規 #台灣建築 #AEC", "image": "Optional: screenshot of contradictory regulation search results across sources", "threads_echo": "", "publish_date": "", "response_notes": "", "last_edited": ""}, {"id": "post-9", "week": "Week 20", "date": "Mon 19 Oct 2026", "status": "draft", "pair": "建築技術規則 · SOLUTION", "title": "建築技術規則 Navigator — my structured approach", "type": "SOLUTION POST · Pair 4 of 4 with Post 8 · Long-term flagship product candidate", "tip": "Strongest scalable product candidate. After this post, look at: (a) DM volume from Taiwan-based architects, (b) any 'subscription' or 'how much' questions. Both are signals this becomes a paid tool.", "body": "OUTLINE — co-write after Post 8 lands:\n\nHook: 'Two weeks ago I asked how long your last regulation lookup took. Here's what I built to make mine faster.'\n\nBody beats:\n— What 建築技術規則 Navigator does (the structured approach, not the tech)\n— The principle: regulations as a structured database, not a search problem\n— How I use it personally for projects\n— Show 1-2 anonymised screenshots\n— Honest limitations: this is what I built for me; what would it take to make it useful for other firms?\n\nCTA: 'If you'd use a tool like this regularly — tell me. I'm deciding what to build next, and want to know whether this should be the one. Comment 法規 or DM.'", "tags": "#Architecture #Taipei #建築 #建築技術規則 #建築師 #法規 #台灣建築 #BIM", "image": "Attach: anonymised Navigator interface screenshot showing structured regulation lookup", "threads_echo": "", "publish_date": "", "response_notes": "", "last_edited": ""}, {"id": "post-10", "week": "Week 23", "date": "Mon 9 Nov 2026", "status": "draft", "pair": "", "title": "One thing NZ firms do that Taiwan firms don't — site decision logs", "type": "CROSS-BORDER · Frames you as the bridge between two practice cultures", "tip": "Specificity beats breadth. ONE specific contrast — not a list. This positions you for cross-border conversations (NZ firms expanding into APAC, Taiwan firms wanting NZ standards). Watch for international DMs.", "body": "OUTLINE:\n\nHook: 'In New Zealand, architects go to site meetings with a decision log.'\n\nBody beats:\n— What NZ practice looks like: every decision logged, owned, deadlined, before anyone leaves the meeting\n— What Taiwan practice often looks like: meeting ends, voice messages three days later about what was decided (or not)\n— Why I'm not criticising: Taiwan's construction speed is extraordinary\n— But the decision trail is where things get expensive — insurance, consent issues, scope creep\n— The fix is a one-page template, not a culture change\n— I've been testing this approach. Results are measurable.\n\nCTA: 'Anyone running site meetings with a structured decision log — what format works for your team? I'm curious whether the NZ approach is also common elsewhere in APAC.'", "tags": "#Architecture #SiteManagement #AEC #NewZealand #Taiwan #ProjectManagement #APAC", "image": "Optional: two-column graphic — NZ site meeting vs TW site meeting", "threads_echo": "", "publish_date": "", "response_notes": "", "last_edited": ""}, {"id": "post-11", "week": "Week 26", "date": "Mon 30 Nov 2026", "status": "draft", "pair": "", "title": "What building tools inside a working studio actually taught me", "type": "REFLECTION · ~6 months in · Q4 checkpoint content", "tip": "Reference Post 1 explicitly — full circle. Be honest about what worked, what surprised you, what didn't. Vulnerability + specificity is the most trusted combination. This post is where consulting conversations often begin.", "body": "OUTLINE — write closer to date, informed by what's resonated:\n\nHook: 'Six months ago I wrote a first post about moving from NZ to Taiwan. Here's what actually happened.'\n\nBody beats:\n— What I set out to do (BIM + AI inside a working studio)\n— 3 things that surprised me\n— 1 thing that was harder than expected\n— 1 concrete result (a tool that works, a conversation that mattered, a learning that stuck)\n— What's next — without overpromising\n\nCTA: 'If you're an AEC firm wondering where to start with AI, or you've been working on similar gaps quietly — let's talk. The interesting conversations happen in DMs.'", "tags": "#Architecture #BIM #AIinAEC #Taipei #NewZealand #AEC #APAC", "image": "Optional: simple collage of the year's outputs / tools / moments", "threads_echo": "", "publish_date": "", "response_notes": "", "last_edited": ""}]};
-const API_KEY = "";
-
-let dataset = JSON.parse(localStorage.getItem('rl-data-v6-1') || 'null');
-if (!dataset) dataset = JSON.parse(JSON.stringify(EMBEDDED_DATA));
-let posts = dataset.posts;
-
-// ──── SYNC INDICATOR ─────────────────────────────────────────────
-function updateSyncIndicator() {
-  const pill = document.getElementById('sync-pill');
-  const text = document.getElementById('sync-text');
-  const syncDate = dataset._meta.last_github_sync || '';
-  const localDate = dataset._meta.last_updated || '';
-  if (syncDate !== localDate && localDate) {
-    pill.classList.add('stale');
-    text.textContent = 'Unsynced changes · ' + localDate;
-    pill.title = 'You have local edits made on ' + localDate + ' that have not yet been pushed to GitHub. Export JSON and upload to keep all devices in sync.';
-  } else {
-    pill.classList.remove('stale');
-    text.textContent = 'Synced ' + (syncDate || 'never');
-    pill.title = 'All local edits are in sync with GitHub. Safe to switch devices.';
-  }
-}
-
-function save() {
-  dataset.posts = posts;
-  dataset._meta.last_updated = new Date().toISOString().split('T')[0];
-  localStorage.setItem('rl-data-v6-1', JSON.stringify(dataset));
-  updateSyncIndicator();
-}
-
-function markEdited(post) {
-  post.last_edited = new Date().toISOString().split('T')[0];
-}
-
-// ──── TABS ────────────────────────────────────────────────────────
-function showPanel(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.panel === name));
-  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + name));
-}
-
-// ──── DASHBOARD ───────────────────────────────────────────────────
-function renderDashboard() {
-  const total = posts.length;
-  const done = posts.filter(p => p.status === 'done').length;
-  const ready = posts.filter(p => p.status === 'ready').length;
-  document.getElementById('d-total').textContent = total;
-  document.getElementById('d-done').textContent = done;
-  document.getElementById('d-ready').textContent = ready;
-
-  const next = posts.find(p => p.status !== 'done');
-  const npEl = document.getElementById('d-nextpost');
-  if (next) {
-    let pairBadge = '';
-    if (next.pair) {
-      const isPain = next.pair.toLowerCase().includes('pain');
-      pairBadge = `<span class="np-pair ${isPain ? 'pair-pain' : 'pair-sol'}">${esc(next.pair)}</span>`;
+const EMBEDDED_DATA = {
+  "_meta": {
+    "version": "3.1",
+    "last_updated": "2026-06-16",
+    "note": "Post 2 published Jun 15. Analytics logged. ArchiCAD AI: Option A (Post 5 tip) + Option C (Substack/Post 10 note) locked.",
+    "last_github_sync": "2026-06-08"
+  },
+  "roadmap": {
+    "phases": [
+      {
+        "id": "phase-1",
+        "label": "Phase 1",
+        "name": "Foundation — Identity & Pairs",
+        "period": "Jun to Aug 2026",
+        "status": "active",
+        "milestones": [
+          "Post 1 origin story published (Jun 2)",
+          "Post 2 facade PAIN published (Jun 15) — 60 impressions, 32 reached",
+          "Post 3 facade SOLUTION (Jul 7) — show facade prompt studio",
+          "Post 4 ArchiCAD template PAIN (Jul 27)",
+          "Post 5 ArchiCAD template SOLUTION (Aug 10) — recruiter-bait + ArchiCAD AI observation",
+          "Substack account created · Instagram @rlstudio.bim reserved",
+          "Sustainable cadence: every 2-3 weeks"
+        ],
+        "linkedin_posts": [
+          "Post 1 — Origin story (Jun 2) · PUBLISHED",
+          "Post 2 — Facade PAIN (Jun 15) · PUBLISHED",
+          "Post 3 — Facade SOLUTION (Jul 7)",
+          "Post 4 — ArchiCAD PAIN (Jul 27)",
+          "Post 5 — ArchiCAD SOLUTION (Aug 10)"
+        ]
+      },
+      {
+        "id": "phase-2",
+        "label": "Phase 2",
+        "name": "Taiwan Local Authority",
+        "period": "Aug to Oct 2026",
+        "status": "upcoming",
+        "milestones": [
+          "Post 6 PAIN (Aug 31) — local signal flare",
+          "Post 7 SOLUTION (Sep 14) — strongest scalable product candidate",
+          "Q3 2026 Checkpoint (Sep 27) — review G/A/R metrics",
+          "Post 8 PAIN (Oct 5)",
+          "Post 9 SOLUTION (Oct 19) — flagship product candidate",
+          "Substack launches with first essay — ArchiCAD AI 3-week run (M3)"
+        ],
+        "linkedin_posts": [
+          "Post 6 — PAIN (Aug 31)",
+          "Post 7 — SOLUTION (Sep 14)",
+          "Post 8 — PAIN (Oct 5)",
+          "Post 9 — SOLUTION (Oct 19)"
+        ]
+      },
+      {
+        "id": "phase-3",
+        "label": "Phase 3",
+        "name": "Cross-border & Reflection",
+        "period": "Nov to Dec 2026",
+        "status": "upcoming",
+        "milestones": [
+          "Post 10 NZ vs Taiwan decision logs (Nov 9) — teaser to Substack ArchiCAD AI essay",
+          "Post 11 6-month reflection (Nov 30)",
+          "Q4 2026 Checkpoint (Dec 27)",
+          "Validation signal: which tool gets DMs",
+          "Decision point: which product to make public first"
+        ],
+        "linkedin_posts": [
+          "Post 10 — NZ x TW decision logs (Nov 9)",
+          "Post 11 — Reflection (Nov 30)"
+        ]
+      }
+    ],
+    "differentiation_stack": [
+      "Industrial design training",
+      "Cross-industry PM background",
+      "NZ-trained licensed architecture designer",
+      "BIM coordinator (12+ years APAC)",
+      "AI workflow builder",
+      "Bilingual EN/Chinese"
+    ],
+    "scalable_product_bet": {
+      "primary": "BIM permit system + regulation navigator (Taiwan-local, defensible)",
+      "magnet": "facade prompt studio (proof-of-skill, NOT a SaaS)",
+      "deferred": "ArchiCAD templates (sellable, but ship after validation)"
+    },
+    "hard_line": "By Q1 2027 (Mar 28) — at least 2 real conversations (DM to call). If not, restructure."
+  },
+  "products": [
+    {
+      "id": "facade-studio",
+      "name": "facade prompt studio",
+      "role": "Proof-of-skill magnet",
+      "status": "Live (internal use)",
+      "next": "Anonymise screenshots for Post 3 (Jul 7)",
+      "progress": 100,
+      "note": "Working tool. Too crowded to monetise as SaaS. Use as portfolio centrepiece."
+    },
+    {
+      "id": "consultant-tracker",
+      "name": "project consultant tracker v3",
+      "role": "Internal tool · medium scalability",
+      "status": "Live (internal use)",
+      "next": "Validate via post engagement before any external version",
+      "progress": 100,
+      "note": "Solves real coordination pain. Sellable as template if Post 4/5 generates DMs."
+    },
+    {
+      "id": "permit-system",
+      "name": "BIM permit management system",
+      "role": "Strongest scalable candidate",
+      "status": "Live (internal use)",
+      "next": "Watch Post 7 (Sep 14) response — DMs = green light",
+      "progress": 100,
+      "note": "Highest defensibility. Too local for global AI players."
+    },
+    {
+      "id": "reg-navigator",
+      "name": "Building regulation navigator",
+      "role": "Long-term flagship product candidate",
+      "status": "Live (internal use)",
+      "next": "Watch Post 9 (Oct 19) response. Subscription model if pulls strongly.",
+      "progress": 100,
+      "note": "Highest-recurrence pain. Subscription-viable."
+    },
+    {
+      "id": "archicad-template",
+      "name": "ArchiCAD office template",
+      "role": "Recruiter-bait + future Gumroad candidate",
+      "status": "Live (in studio use)",
+      "next": "Post 5 (Aug 10) showcases it. Public Gumroad version deferred.",
+      "progress": 100,
+      "note": "Globally relatable. Best post for attracting role/contract conversations."
     }
-    const statusTag = next.status === 'ready' ? ' <b style="color:var(--slate)">[READY]</b>' : '';
-    npEl.innerHTML = `<div class="next-post">
-      <div class="np-title">${esc(next.title)}${statusTag}</div>
-      <div class="np-meta">${pairBadge}${esc(next.week)} · ${esc(next.date)} · <i>${esc(next.type)}</i></div>
-    </div>`;
-  } else {
-    npEl.innerHTML = '<div class="np-meta">All posts published! 🎉</div>';
-  }
-
-  const upcoming = posts.filter(p => p.status !== 'done').slice(1, 5);
-  document.getElementById('d-upcoming').innerHTML = upcoming.map(p => {
-    let pb = '';
-    if (p.pair) {
-      const isPain = p.pair.toLowerCase().includes('pain');
-      pb = `<span class="np-pair ${isPain ? 'pair-pain' : 'pair-sol'}">${esc(p.pair)}</span>`;
+  ],
+  "sprint": {
+    "title": "90-Day Foundation Sprint (Jun to Aug 2026)",
+    "phases": [
+      {
+        "name": "Weeks 1-4 · Sequence Pairs 1 & 2",
+        "tasks": [
+          "Confirm calendar checkpoints scheduled (DONE)",
+          "Save rl-post-writer.md skill to Claude project (DONE)",
+          "Co-write Post 2 facade PAIN (DONE)",
+          "Lock Post 2 graphic (DONE)",
+          "Publish Post 2 (DONE — Jun 15). Reply to comments within 24h.",
+          "Check Post 2 Day 7 analytics — note which pain resonated",
+          "Co-write Post 3 facade SOLUTION — lead angle from Day 7 data",
+          "Publish Post 3 (Jul 7). Same reply discipline.",
+          "Reserve Instagram @rlstudio.bim (dormant)",
+          "Create Substack account (dormant until M3)"
+        ]
+      },
+      {
+        "name": "Weeks 5-9 · Sequence Pairs 3 & validate",
+        "tasks": [
+          "Run 3-week ArchiCAD AI Assistant practice (Scenarios 1-3) — private",
+          "Co-write Post 4 (ArchiCAD PAIN)",
+          "Co-write Post 5 (ArchiCAD SOLUTION) — fold in 1 ArchiCAD AI observation",
+          "Publish Post 4 (Jul 27)",
+          "Publish Post 5 (Aug 10)",
+          "Watch DM volume — first validation signal",
+          "Decide Substack launch trigger (M3 = early Sep)"
+        ]
+      },
+      {
+        "name": "Weeks 10-13 · Local authority phase begins",
+        "tasks": [
+          "Draft Substack essay from ArchiCAD AI 3-week practice run",
+          "Launch Substack — essay 1: ArchiCAD AI 3-week test (Sep)",
+          "Co-write Post 6 (permit PAIN)",
+          "Publish Post 6 (Aug 31)",
+          "Q3 Checkpoint (Sep 27) — G/A/R review",
+          "Decide which product validates first based on DM signals",
+          "Default = stay course. Adjust only on red flag."
+        ]
+      }
+    ]
+  },
+  "posts": [
+    {
+      "id": "post-1",
+      "week": "Week 1",
+      "date": "Mon 2 Jun 2026",
+      "status": "done",
+      "pair": "Origin · STORY",
+      "title": "Why I am building tools, not just using them",
+      "type": "ORIGIN STORY · Sets the frame for everything that follows",
+      "tip": "Published Jun 2 2026. Anchor post — refer back in future posts.",
+      "body": "Published Jun 2 2026.",
+      "tags": "#Architecture #BIM #AIinAEC #Taiwan #NewZealand #AEC #BIMcoordinator",
+      "image": "NZ to TW infographic (live)",
+      "threads_echo": "",
+      "publish_date": "2026-06-02",
+      "response_notes": "",
+      "last_edited": "2026-06-02"
+    },
+    {
+      "id": "post-2",
+      "week": "Week 3",
+      "date": "Mon 15 Jun 2026",
+      "status": "done",
+      "pair": "Facade studio · PAIN",
+      "title": "The 50/month button I almost clicked — facade rendering pain",
+      "type": "PAIN POST · Pair 1 of 2 with Post 3 · Decision-moment hook",
+      "tip": "PUBLISHED Jun 15 2026.\n\nDay 1 analytics:\n60 impressions / 32 members reached / 0 profile viewers / 0 followers gained\n\nThis is expected at current audience size. Check again at Day 7. Key question: which of the 3 pains (prompt structure / artist-builder split / market mismatch) triggered comments or DMs? That informs Post 3 lead angle.\n\nLinkedIn will nudge you to post weekly. Ignore it. Cadence stays 2-3 weeks.",
+      "body": "The 50/month button I almost clicked — published Jun 15 2026. See post body in platform.",
+      "tags": "#AIinAEC #BIM #ArchitectLife #Taipei #Architecture #ArchiCAD",
+      "image": "RL_Studio_prompt_as_building_diagram_v3_2026-06-08.png",
+      "threads_echo": "",
+      "publish_date": "2026-06-15",
+      "response_notes": "Day 1: 60 impressions / 32 reached / 0 profile viewers / 0 followers. Check Day 7. Watch which pain resonates.",
+      "last_edited": "2026-06-16"
+    },
+    {
+      "id": "post-3",
+      "week": "Week 5",
+      "date": "Mon 7 Jul 2026",
+      "status": "draft",
+      "pair": "Facade studio · SOLUTION",
+      "title": "facade prompt studio — the system I built instead",
+      "type": "SOLUTION POST · Pair 1 of 2 with Post 2 · Show the tool not the source",
+      "tip": "Show outputs and the thinking, not the full build. Screenshots, not source code.\n\nBEFORE CO-WRITING: check Post 2 Day 7 analytics. Lead hook from whichever pain landed strongest.",
+      "body": "OUTLINE — co-write after Post 2 Day 7 data in:\n\nHook: Last week I wrote about the 50/month button I did not press. Here is what I built instead.\n\nBody beats:\n- Quick recap of the pain post (1 sentence)\n- What facade prompt studio actually does (1 paragraph, not technical)\n- 2-3 anonymised before/after screenshots\n- 3 design decisions that mattered: Taiwan material palette, sub-tropical atmosphere, dense urban camera language\n- Total build time: one afternoon. Cost: zero. Freedom: complete.\n- Generic tools work for generic problems. Specific markets need specific tools.\n\nCTA: If you work in AI plus AEC anywhere in APAC, I would love to compare notes. DM me.",
+      "tags": "#AIinAEC #BIM #Architecture #Taipei #ArchitectLife",
+      "image": "2-3 anonymised before/after prompt output screenshots from facade studio",
+      "threads_echo": "",
+      "publish_date": "",
+      "response_notes": "",
+      "last_edited": ""
+    },
+    {
+      "id": "post-4",
+      "week": "Week 8",
+      "date": "Mon 27 Jul 2026",
+      "status": "draft",
+      "pair": "ArchiCAD template · PAIN",
+      "title": "Every architect's ArchiCAD setup is different — and that is the problem",
+      "type": "PAIN POST · Pair 2 of 4 with Post 5 · BIM systems builder identity",
+      "tip": "Global identity post. Every architect knows BIM template pain. Most likely to attract recruiters and BIM team leads. Do not name JT. Speak in general terms about studios I have worked in.",
+      "body": "OUTLINE — co-write:\n\nHook: Three architects on the same project. Three different ArchiCAD setups. Three different ways of naming the same wall.\n\nBody beats:\n- Common reality: personal preferences become studio de facto standard\n- What it costs: hours lost reconciling files, layer naming, line weights, print chaos\n- Why it persists: templates are tedious. Nobody owns them.\n- Cascade: every new person onboards to chaos and extends it\n- Not a people problem. A systems problem.\n\nCTA: How does your studio handle this? Spreadsheet? Copy last file? Someone's head? Tell me which camp you are in.",
+      "tags": "#BIM #ArchiCAD #BIMcoordinator #ArchitectLife #AEC #Architecture",
+      "image": "Screenshot showing layer naming inconsistency (anonymised)",
+      "threads_echo": "",
+      "publish_date": "",
+      "response_notes": "",
+      "last_edited": ""
+    },
+    {
+      "id": "post-5",
+      "week": "Week 10",
+      "date": "Mon 10 Aug 2026",
+      "status": "draft",
+      "pair": "ArchiCAD template · SOLUTION",
+      "title": "The ArchiCAD office template I built — and one thing I noticed testing the AI alongside it",
+      "type": "SOLUTION POST · Pair 2 of 4 with Post 4 · Recruiter-bait plus ArchiCAD AI observation",
+      "tip": "ARCHICAD AI STRATEGY — Option A integrated here:\n\nPrimary story: the ArchiCAD office template. What it covers, what it proves, what you would do differently.\n\nSecondary (one short section only — do not let it hijack the post): While building this, I have been testing Archicad 29 AI Assistant in beta. Pick ONE sharpest observation from the 3-week practice run.\n\nBest candidates:\n- Natural language element filtering replacing Find & Select (fastest visible win, non-technical audience can grasp it)\n- Geometry fidelity threshold in AI Visualizer (more visual, good if you have a screenshot)\n\nOne observation only. Frame as a practitioner noticing something real, not a product review.\n\nFull ArchiCAD AI write-up goes to Substack (see Post 10 note). This post is NOT the AI post. The AI is a supporting detail.\n\nDo not name JT. This is the recruiter-bait post.",
+      "body": "OUTLINE — co-write after 3-week ArchiCAD AI practice run complete (run Jul-Aug, write Aug):\n\nHook: Two weeks ago I described ArchiCAD chaos. Here is the template I built to fix it — and one thing I noticed while testing Archicad 29 new tools alongside it.\n\nBody beats:\n- What the template covers: layer system, attribute manager, classifications, view templates, output sets, naming conventions\n- What it does not cover (honest): project-specific 3D, site libraries, render setups\n- Why a template is a system not a file: the rules scale, the file does not\n- What I would do differently\n- ONE ArchiCAD AI observation: pick sharpest from practice run\n- What is not yet in the template that I want next\n\nCTA: If you are hiring a BIM coordinator or building a BIM team, happy to talk about how this scales. DM open.",
+      "tags": "#BIM #ArchiCAD #BIMcoordinator #ArchitectLife #AEC #Architecture",
+      "image": "Clean screenshot of template structure — layer list or attribute panel. No client info.",
+      "threads_echo": "",
+      "publish_date": "",
+      "response_notes": "",
+      "last_edited": ""
+    },
+    {
+      "id": "post-6",
+      "week": "Week 13",
+      "date": "Mon 31 Aug 2026",
+      "status": "draft",
+      "pair": "Permit process · PAIN",
+      "title": "Taiwan permit chaos — why every firm loses days to process tracking",
+      "type": "PAIN POST · Pair 3 of 4 with Post 7 · Local Taiwan signal flare",
+      "tip": "Taiwan keyword anchors do real work here. Every Taiwan architect has war stories. Make them feel deeply seen. Do not translate the permit terms — leave as-is.",
+      "body": "OUTLINE — co-write closer to date:\n\nHook: In Taiwan, the permit process runs on group chat screenshots, someone's memory, and a spreadsheet last updated three weeks ago.\n\nBody beats:\n- Why permit tracking is hard: multiple stakeholders, government touchpoints, revisions, no source of truth\n- Specific scenario (no firm names): days lost because nobody knew which round we were on\n- Not a software problem. A systems problem.\n- Hidden cost: not just time, but client trust when timelines slip\n- Why generic PM tools do not fix this\n\nCTA: Taipei architects: how does your firm track the permit process today? Spreadsheets? Group chat? Someone's head? Genuinely curious.",
+      "tags": "#Architecture #Taipei #AEC #BIM #Taiwan",
+      "image": "Optional: anonymised flow diagram of permit tracking reality",
+      "threads_echo": "",
+      "publish_date": "",
+      "response_notes": "",
+      "last_edited": ""
+    },
+    {
+      "id": "post-7",
+      "week": "Week 15",
+      "date": "Mon 14 Sep 2026",
+      "status": "draft",
+      "pair": "Permit process · SOLUTION",
+      "title": "The system I built to track permits properly",
+      "type": "SOLUTION POST · Pair 3 of 4 with Post 6 · Highest defensibility content",
+      "tip": "Strongest scalable-product candidate. Watch DMs closely — anyone asking do you sell this is your validation signal.",
+      "body": "OUTLINE — co-write after Post 6 lands.",
+      "tags": "#Architecture #Taipei #BIM #Taiwan #AEC",
+      "image": "Anonymised dashboard screenshots showing permit stage tracking",
+      "threads_echo": "",
+      "publish_date": "",
+      "response_notes": "",
+      "last_edited": ""
+    },
+    {
+      "id": "post-8",
+      "week": "Week 18",
+      "date": "Mon 5 Oct 2026",
+      "status": "draft",
+      "pair": "Building regulation · PAIN",
+      "title": "No single source of truth for Taiwan building regulations",
+      "type": "PAIN POST · Pair 4 of 4 with Post 9 · Highest-recurrence local pain",
+      "tip": "Highest-recurrence pain — every project. Watch for I would pay for that signals.",
+      "body": "OUTLINE — co-write closer to date.",
+      "tags": "#Architecture #Taipei #Taiwan #AEC #BIM",
+      "image": "Optional: contradictory regulation search results screenshot",
+      "threads_echo": "",
+      "publish_date": "",
+      "response_notes": "",
+      "last_edited": ""
+    },
+    {
+      "id": "post-9",
+      "week": "Week 20",
+      "date": "Mon 19 Oct 2026",
+      "status": "draft",
+      "pair": "Building regulation · SOLUTION",
+      "title": "Building regulation navigator — my structured approach",
+      "type": "SOLUTION POST · Pair 4 of 4 with Post 8 · Flagship product candidate",
+      "tip": "After this post watch: DM volume from Taiwan architects, any subscription or how much questions.",
+      "body": "OUTLINE — co-write after Post 8 lands.",
+      "tags": "#Architecture #Taipei #Taiwan #AEC #BIM",
+      "image": "Anonymised navigator screenshots",
+      "threads_echo": "",
+      "publish_date": "",
+      "response_notes": "",
+      "last_edited": ""
+    },
+    {
+      "id": "post-10",
+      "week": "Week 23",
+      "date": "Mon 9 Nov 2026",
+      "status": "draft",
+      "pair": "Cross-border · DECISION LOGS",
+      "title": "NZ vs Taiwan — the site decisions that did not translate",
+      "type": "CROSS-BORDER POST · Sets up global identity · Substack teaser",
+      "tip": "ARCHICAD AI STRATEGY — Option C lands here:\n\nSubstack essay (Sep launch slot): I tested Archicad 29 AI Assistant every week for 3 weeks. Here is what actually works.\n\nThis LinkedIn post (Nov 9) can tease it: I wrote a longer piece on Substack about testing Archicad 29 AI tools — link in comments.\n\nThis gives the ArchiCAD AI content its own container (Substack depth + long form) without competing with the LinkedIn pair structure. The practice run data stays private until Sep Substack launch. Post 10 references it as an aside — not the lead.\n\nFor the LinkedIn post itself: NZ vs Taiwan decision log. Cross-border identity. What translates, what does not.",
+      "body": "OUTLINE — co-write closer to date, after Substack essay published:\n\nHook: Same brief. Same program. NZ site vs Taiwan site. The decisions that looked identical on paper felt completely different.\n\nBody beats:\n- Specific design decision that works in NZ but needs rethinking in TW\n- Regulatory translation: what NZ codes assume that Taiwan codes do not\n- Design vocabulary: what residential feel means in Auckland vs Taipei\n- What the cross-border position gives you: you see both systems because you are not fully inside either\n- Why this is undervalued in APAC AEC right now\n\nCTA: If you are working across APAC markets and hitting translation gaps — I would like to compare notes. DM open, or find the longer version on Substack.",
+      "tags": "#Architecture #NewZealand #Taiwan #CrossBorder #BIM #AEC",
+      "image": "Optional: side-by-side site plan comparison (anonymised)",
+      "threads_echo": "",
+      "publish_date": "",
+      "response_notes": "",
+      "last_edited": ""
+    },
+    {
+      "id": "post-11",
+      "week": "Week 26",
+      "date": "Mon 30 Nov 2026",
+      "status": "draft",
+      "pair": "Reflection · 6 MONTHS",
+      "title": "6 months of building in public — what I got wrong, what I would repeat",
+      "type": "REFLECTION POST · Closes Phase 3 · Sets up 2027",
+      "tip": "Be honest. What did not land. What surprised you. Honest reflection posts get the highest Tier 3 (conversation) response.",
+      "body": "OUTLINE — write after Q4 checkpoint data in:\n\nHook: Six months ago I started publishing here. Here is what I got wrong.\n\nBody beats:\n- What the numbers actually looked like\n- Which post landed most unexpectedly\n- What I thought would resonate that did not\n- What I would change about cadence\n- Where I am taking this in 2027\n\nCTA: If you have been reading along — thank you. What would you want to see more of next year?",
+      "tags": "#Architecture #BIM #AIinAEC #AEC",
+      "image": "Optional: chart of impressions over 6 months",
+      "threads_echo": "",
+      "publish_date": "",
+      "response_notes": "",
+      "last_edited": ""
     }
-    return `<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
-      ${pb}<b style="color:var(--slate)">${esc(p.week)}</b> · ${esc(p.title.length > 50 ? p.title.substring(0,50)+'…' : p.title)}
-    </div>`;
-  }).join('') || '<div class="np-meta">No more upcoming.</div>';
-
-  const acts = dataset.actions || [];
-  const undone = acts.filter(a => !a.done).length;
-  document.getElementById('d-actions-count').textContent = `· ${undone} open`;
-  document.getElementById('d-actions').innerHTML = acts.map(a => `
-    <div class="action-item ${a.done ? 'done' : ''}" onclick="toggleAction('${a.id}')">
-      <input type="checkbox" ${a.done ? 'checked' : ''} onclick="event.stopPropagation();toggleAction('${a.id}')">
-      <span>${esc(a.text)}</span>
-    </div>
-  `).join('');
-
-  document.getElementById('d-diff').innerHTML = (dataset.roadmap.differentiation_stack || []).map(d => `<span class="diff-chip">${esc(d)}</span>`).join('');
-
-  document.getElementById('d-products').innerHTML = (dataset.products || []).map(p => `
-    <div class="product-row">
-      <span class="pname">${esc(p.name)}</span>
-      <span class="prole">${esc((p.role||'').split('·')[0])}</span>
-    </div>
-  `).join('');
-
-  document.getElementById('tc-prod').textContent = (dataset.products || []).length;
-  document.getElementById('tc-li').textContent = total;
+  ]
 }
 
-function toggleAction(id) {
-  const a = (dataset.actions || []).find(x => x.id === id);
-  if (a) { a.done = !a.done; save(); renderDashboard(); }
-}
-
-// ──── ROADMAP ─────────────────────────────────────────────────────
-function renderRoadmap() {
-  const phases = dataset.roadmap.phases || [];
-  document.getElementById('roadmap-phases').innerHTML = phases.map(ph => `
-    <div class="phase-block ${ph.status === 'active' ? 'active' : 'upcoming'}">
-      <div class="phase-head">
-        <span class="phase-label">${esc(ph.label)}</span>
-        <span class="phase-name">${esc(ph.name)}</span>
-        <span class="phase-period">${esc(ph.period)}</span>
-        <span class="phase-status ${ph.status === 'active' ? 'status-active' : 'status-upcoming'}">${ph.status}</span>
-      </div>
-      <div class="phase-cols">
-        <div class="phase-col"><h4>Milestones</h4><ul>${(ph.milestones || []).map(m => `<li>${esc(m)}</li>`).join('')}</ul></div>
-        <div class="phase-col"><h4>LinkedIn posts in phase</h4><ul>${(ph.linkedin_posts || []).map(m => `<li>${esc(m)}</li>`).join('')}</ul></div>
-      </div>
-    </div>
-  `).join('');
-  const sc = dataset.roadmap.scalable_product_bet || {};
-  document.getElementById('r-scal-primary').textContent = sc.primary || '';
-  document.getElementById('r-scal-magnet').textContent = sc.magnet || '';
-  document.getElementById('r-scal-deferred').textContent = sc.deferred || '';
-  document.getElementById('r-hardline').innerHTML = '<b>HARD LINE:</b> ' + esc(dataset.roadmap.hard_line || '');
-}
-
-// ──── PRODUCTS + SPRINT ───────────────────────────────────────────
-function renderProducts() {
-  document.getElementById('products-list').innerHTML = (dataset.products || []).map(p => `
-    <div class="product-card live">
-      <div class="product-head">
-        <div><div class="product-name">${esc(p.name)}</div><div class="product-status">Status: <b>${esc(p.status)}</b></div></div>
-        <span class="product-role-tag">${esc(p.role)}</span>
-      </div>
-      <div class="product-next"><b>Next:</b> ${esc(p.next)}</div>
-      <div class="product-note">${esc(p.note)}</div>
-    </div>
-  `).join('');
-  const s = dataset.sprint || {};
-  document.getElementById('sprint-title').textContent = s.title || '';
-  document.getElementById('sprint-list').innerHTML = (s.phases || []).map(ph => `
-    <div class="sprint-phase">
-      <h4>${esc(ph.name)}</h4>
-      ${(ph.tasks || []).map(t => {
-        const done = (t.includes('(DONE') || t.includes('DONE)'));
-        return `<div class="task-item ${done ? 'done' : ''}"><input type="checkbox" ${done ? 'checked' : ''}><span>${esc(t)}</span></div>`;
-      }).join('')}
-    </div>
-  `).join('');
-}
-
-// ──── LINKEDIN ────────────────────────────────────────────────────
-function renderLinkedIn() { renderSidebar(); renderPosts(); }
-
-function renderSidebar() {
-  const sb = document.getElementById('li-sidebar');
-  const phases = [
-    { label: 'Phase 1 · Jun–Aug', ids: ['post-1','post-2','post-3','post-4','post-5'] },
-    { label: 'Phase 2 · Aug–Oct', ids: ['post-6','post-7','post-8','post-9'] },
-    { label: 'Phase 3 · Nov', ids: ['post-10','post-11'] }
-  ];
-  let html = '';
-  phases.forEach((phase, i) => {
-    html += `<div class="sb-label">${phase.label}</div>`;
-    phase.ids.forEach(id => {
-      const p = posts.find(x => x.id === id);
-      if (!p) return;
-      const dotClass = p.status === 'done' ? 'dot-done' : (p.status === 'ready' ? 'dot-ready' : 'dot-draft');
-      const dateBit = p.date.replace('Mon ', '').replace(' 2026', '').replace(' 2027', '');
-      const navLabel = p.title.length > 24 ? p.title.substring(0,24) + '…' : p.title;
-      html += `<div class="nav-item" onclick="navClick(this,'${p.id}')"><span class="nav-dot ${dotClass}"></span><span class="nav-text">${esc(navLabel)}</span><span class="nav-week">${dateBit}</span></div>`;
-    });
-    if (i < phases.length - 1) html += '<div class="sb-divider"></div>';
-  });
-  sb.innerHTML = html;
-}
-
-function renderPosts() {
-  const container = document.getElementById('posts-container');
-  container.innerHTML = '';
-  const phases = [
-    { label: 'Phase 1 — Foundation, Façade & ArchiCAD pairs', ids: ['post-1','post-2','post-3','post-4','post-5'] },
-    { label: 'Phase 2 — Taiwan local authority (建照 + 建築技術規則)', ids: ['post-6','post-7','post-8','post-9'] },
-    { label: 'Phase 3 — Cross-border identity & reflection', ids: ['post-10','post-11'] }
-  ];
-  phases.forEach(phase => {
-    const div = document.createElement('div');
-    div.innerHTML = `<div class="section-header"><div class="section-line"></div><div class="section-title">${phase.label}</div><div class="section-line"></div></div>`;
-    container.appendChild(div);
-    phase.ids.forEach(id => {
-      const p = posts.find(x => x.id === id);
-      if (p) container.appendChild(makeCard(p));
-    });
-  });
-  const known = phases.flatMap(p => p.ids);
-  const custom = posts.filter(p => !known.includes(p.id));
-  if (custom.length) {
-    const div = document.createElement('div');
-    div.innerHTML = `<div class="section-header"><div class="section-line"></div><div class="section-title">Your additions</div><div class="section-line"></div></div>`;
-    container.appendChild(div);
-    custom.forEach(p => container.appendChild(makeCard(p)));
-  }
-}
-
-function makeCard(p) {
-  const card = document.createElement('div');
-  card.className = `post-card status-${p.status}`;
-  card.id = p.id;
-  const badgeClass = p.status === 'done' ? 'badge-done' : (p.status === 'ready' ? 'badge-ready' : 'badge-draft');
-  const badgeLabel = p.status === 'done' ? `${p.week} · Published` : (p.status === 'ready' ? `${p.week} · Ready` : `${p.week} · Draft`);
-  let pairBadge = '';
-  if (p.pair) {
-    const isPain = p.pair.toLowerCase().includes('pain');
-    pairBadge = `<span class="pair-badge ${isPain ? 'pair-pain' : 'pair-sol'}">${esc(p.pair)}</span>`;
-  }
-  const lastEdited = p.last_edited ? `<span class="last-edited">edited ${p.last_edited}</span>` : '';
-  card.innerHTML = `
-    <div class="card-header" onclick="toggleCard('${p.id}')">
-      <div style="flex:1;min-width:0">
-        <div class="card-meta">
-          <span class="week-badge ${badgeClass}">${badgeLabel}</span>
-          ${pairBadge}
-          <span class="card-date-display">${esc(p.date)}</span>
-          ${lastEdited}
-        </div>
-        <div class="card-title-display">${esc(p.title)}</div>
-        <div class="card-type-display">${esc(p.type)}</div>
-      </div>
-      <div class="card-header-right">
-        <button class="btn-think" onclick="event.stopPropagation();runThink('${p.id}',this)" title="AI critique">🧠 Think</button>
-        <button class="btn-del" onclick="event.stopPropagation();deletePost('${p.id}')">✕</button>
-        <div class="card-toggle" id="tog-${p.id}">▾</div>
-      </div>
-    </div>
-    <div class="card-body" id="body-${p.id}">
-      <div id="think-${p.id}"></div>
-      <div class="field-group"><div class="field-label">Title</div><input class="editable-line" value="${esc(p.title)}" oninput="updateField('${p.id}','title',this.value)"></div>
-      <div class="fields-row">
-        <div class="field-group"><div class="field-label">Scheduled date</div><input class="editable-line" value="${esc(p.date)}" oninput="updateField('${p.id}','date',this.value)"></div>
-        <div class="field-group">
-          <div class="field-label">Status</div>
-          <select class="status-select" onchange="updateStatus('${p.id}',this.value)">
-            <option value="draft" ${p.status==='draft'?'selected':''}>Draft</option>
-            <option value="ready" ${p.status==='ready'?'selected':''}>Ready</option>
-            <option value="done" ${p.status==='done'?'selected':''}>Published</option>
-          </select>
-        </div>
-        <div class="field-group"><div class="field-label">Pair tag</div><input class="editable-line" value="${esc(p.pair||'')}" placeholder="e.g. Façade · PAIN" oninput="updateField('${p.id}','pair',this.value);render()"></div>
-      </div>
-      <div class="fields-row-2">
-        <div class="field-group"><div class="field-label">Actual publish date <span>YYYY-MM-DD</span></div><input class="editable-line" value="${esc(p.publish_date||'')}" placeholder="2026-06-14" oninput="updateField('${p.id}','publish_date',this.value)"></div>
-        <div class="field-group"><div class="field-label">Post type / notes</div><input class="editable-line" value="${esc(p.type)}" oninput="updateField('${p.id}','type',this.value)"></div>
-      </div>
-      <div class="field-group"><div class="field-label">💡 Tip / reminder</div><textarea class="tip-area" oninput="updateField('${p.id}','tip',this.value)">${esc(p.tip)}</textarea></div>
-      <div class="field-group">
-        <div class="field-label">Post body <span id="cc-${p.id}">${(p.body||'').length} chars</span></div>
-        <textarea class="editable-area" oninput="updateBody('${p.id}',this.value)">${esc(p.body)}</textarea>
-      </div>
-      <div class="field-group">
-        <div class="field-label">Hashtags <span>space-separated</span></div>
-        <input class="tags-edit" value="${esc(p.tags)}" oninput="updateField('${p.id}','tags',this.value);renderTags('${p.id}',this.value)">
-        <div class="tags-preview" id="tags-${p.id}">${renderTagsHTML(p.tags)}</div>
-      </div>
-      <div class="field-group"><div class="field-label">🧵 Threads echo (繁中)</div><textarea class="editable-area threads" oninput="updateField('${p.id}','threads_echo',this.value)">${esc(p.threads_echo||'')}</textarea></div>
-      <div class="field-group"><div class="field-label">Image / graphic note</div><input class="editable-line" value="${esc(p.image||'')}" oninput="updateField('${p.id}','image',this.value)"></div>
-      <div class="field-group"><div class="field-label">📋 Response notes <span>fill in after publishing — DMs, key comments, reactions</span></div><textarea class="editable-area notes" oninput="updateField('${p.id}','response_notes',this.value)">${esc(p.response_notes||'')}</textarea></div>
-      <div class="card-actions">
-        <button class="btn-copy" onclick="copyPost('${p.id}',this)">Copy post + tags</button>
-        <button class="btn-save" onclick="savePost('${p.id}',this)">Save changes</button>
-        <span class="char-count" id="cc2-${p.id}">${(p.body||'').length} / 3000 chars</span>
-      </div>
-    </div>
-  `;
-  return card;
-}
-
-// ──── THINK PANEL ─────────────────────────────────────────────────
-async function runThink(id, btn) {
-  const p = posts.find(x => x.id === id);
-  if (!p) return;
-  const panel = document.getElementById('think-' + id);
-  if (panel.innerHTML) { panel.innerHTML = ''; return; }
-  if (!API_KEY) {
-    panel.innerHTML = '<div class="think-panel"><div class="think-load" style="color:#c44">⚠️ API key not set. Add your Anthropic key to the API_KEY constant locally for Think to work. Do not commit the key to GitHub.</div></div>';
-    return;
-  }
-  panel.innerHTML = '<div class="think-panel"><div class="think-load">🧠 Thinking…</div></div>';
-  btn.disabled = true;
-  const sys = `You are a sharp LinkedIn editor for Rosivia Liao — NZ-trained licensed architecture designer in Taiwan, building a personal brand RL Studio. Audience: senior Taiwan AEC principals (no BIM background), global APAC AEC, BIM coordinators. Tone: direct, dry, Kiwi-flavoured, no corporate motivational voice. Goal: attract partners/collaborators — NOT sell. Respond ONLY with valid JSON: {"hook":"...","blind_spot":"...","reader_test":"..."}`;
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 800, system: sys, messages: [{ role: 'user', content: `Title: ${p.title}\nType: ${p.type}\n\nBody:\n${p.body}` }] })
-    });
-    const data = await res.json();
-    const raw = data.content?.find(c => c.type === 'text')?.text || '';
-    const clean = raw.replace(/```json|```/gi, '').trim();
-    const parsed = JSON.parse(clean);
-    panel.innerHTML = `<div class="think-panel">
-      <div class="tb"><div class="tbl">⚡ Sharper Hook</div><div class="tbc">${esc(parsed.hook)}</div></div>
-      <div class="tb"><div class="tbl">⚠️ Blind Spot</div><div class="tbc">${esc(parsed.blind_spot)}</div></div>
-      <div class="tb"><div class="tbl">👁 Reader Test</div><div class="tbc">${esc(parsed.reader_test)}</div></div>
-    </div>`;
-  } catch (err) {
-    panel.innerHTML = `<div class="think-panel"><div class="think-load" style="color:#c44">Error: ${esc(err.message)}</div></div>`;
-  }
-  btn.disabled = false;
-}
-
-// ──── IMPORT BLOCK PARSER ─────────────────────────────────────────
-function openImportModal() {
-  document.getElementById('import-modal').classList.add('open');
-  document.getElementById('import-status').className = 'import-status';
-  document.getElementById('import-status').textContent = '';
-  document.getElementById('import-text').value = '';
-}
-function closeImportModal() { document.getElementById('import-modal').classList.remove('open'); }
-
-function parseImport() {
-  const raw = document.getElementById('import-text').value.trim();
-  const statusEl = document.getElementById('import-status');
-  if (!raw) { showImportStatus(false, 'Nothing to import — paste the block first.'); return; }
-
-  try {
-    const headerMatch = raw.match(/===\s*POST\s+(\S+)\s*===/i);
-    if (!headerMatch) throw new Error('Missing "=== POST N ===" header.');
-
-    const idMatch = raw.match(/^ID:\s*(\S+)/m);
-    if (!idMatch) throw new Error('Missing "ID: post-N" line.');
-    const postId = idMatch[1].trim();
-
-    const statusMatch = raw.match(/^STATUS:\s*(\S+)/m);
-    const importStatus = statusMatch ? statusMatch[1].trim().toLowerCase() : '';
-
-    const pubDateMatch = raw.match(/^PUBLISH_DATE:\s*(.*)$/m);
-    const importPubDate = pubDateMatch ? pubDateMatch[1].trim() : '';
-
-    const sections = {};
-    const sectionRegex = /---\s*([A-Z_ ]+?)\s*---\s*\n([\s\S]*?)(?=\n---\s*[A-Z_ ]+?\s*---|\n===\s*END|$)/g;
-    let m;
-    while ((m = sectionRegex.exec(raw)) !== null) {
-      const key = m[1].trim().toUpperCase().replace(/ /g, '_');
-      sections[key] = m[2].trim();
-    }
-
-    if (!sections.BODY && !sections.TITLE) throw new Error('No --- BODY --- or --- TITLE --- section found.');
-
-    let post = posts.find(p => p.id === postId);
-    const isNew = !post;
-    if (isNew) {
-      post = {
-        id: postId, week: 'New', date: 'TBD', status: 'draft', pair: '',
-        title: 'Imported post', type: 'Imported', tip: '',
-        body: '', tags: '', image: '',
-        threads_echo: '', publish_date: '', response_notes: '', last_edited: ''
       };
       posts.push(post);
     }
