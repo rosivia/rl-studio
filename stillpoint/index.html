@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3B5A7D">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<title>RL Studio Stillpoint</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Merriweather:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: phone-first app shell — sticky brand header, one scrolling view, fixed bottom tab bar; full-screen dark player overlay */
+:root{
+  --bg:#F4F6F9; --surface:#FFFFFF; --ink:#1B2633; --muted:#5C6A7B; --line:#DCE3EB;
+  --slate:#3B5A7D; --slate-soft:#E7EEF6; --btn:#3B5A7D; --btn-ink:#FFFFFF;
+  --gold:#D4A051; --gold-ink:#8A6320; --gold-soft:#FBF3E6;
+  --ok:#2F7A47; --ok-soft:#E4F2E8; --warn:#A0620C; --warn-soft:#FCEFD9;
+  --f-display:'Merriweather',Georgia,'Noto Sans TC',serif;
+  --f-body:'Poppins','Noto Sans TC',system-ui,sans-serif;
+  --f-data:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E151E; --surface:#162130; --ink:#E6ECF2; --muted:#93A2B4; --line:#283648;
+  --slate:#8DB0D6; --slate-soft:#1C2A3B; --btn:#3B5A7D; --btn-ink:#FFFFFF;
+  --gold:#D4A051; --gold-ink:#E3B872; --gold-soft:#2A2418;
+  --ok:#6CC08A; --ok-soft:#173226; --warn:#E5A84E; --warn-soft:#33270F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E151E; --surface:#162130; --ink:#E6ECF2; --muted:#93A2B4; --line:#283648;
+  --slate:#8DB0D6; --slate-soft:#1C2A3B; --btn:#3B5A7D; --btn-ink:#FFFFFF;
+  --gold:#D4A051; --gold-ink:#E3B872; --gold-soft:#2A2418;
+  --ok:#6CC08A; --ok-soft:#173226; --warn:#E5A84E; --warn-soft:#33270F; color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+h1,h2,h3{font-family:var(--f-display);color:var(--slate);text-wrap:balance;margin:0;font-weight:700}
+h2{font-size:1.25rem}
+h3{font-size:1rem}
+p{margin:0}
+button{font:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.mono{font-family:var(--f-data);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.eyebrow{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--muted)}
+
+.wrap{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* header */
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:2px solid var(--btn)}
+.hdr .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px}
+.brand{font-size:.62rem;letter-spacing:.2em;font-weight:700;color:var(--slate);text-transform:uppercase}
+.appname{font-family:var(--f-display);font-size:1.15rem;color:var(--slate);line-height:1.1}
+.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.lang button{border:0;background:transparent;color:var(--muted);padding:6px 12px;font-size:.8rem;font-weight:500}
+.lang button[aria-pressed="true"]{background:var(--gold);color:#1B2633}
+
+main{padding-block:18px 110px}
+.view{display:flex;flex-direction:column;gap:16px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card.hero{background:linear-gradient(160deg,#22364D 0%,#3B5A7D 70%,#55708F 100%);border:0;color:#F3F6FA}
+.card.hero h2{color:#FFFFFF;font-size:1.4rem}
+.card.hero .eyebrow{color:#E9C98F}
+.card.hero p{color:#D8E2EE}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+
+.btn{border:0;border-radius:999px;padding:11px 20px;background:var(--btn);color:var(--btn-ink);font-weight:500;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:var(--gold);color:#1B2633}
+.btn.gold{background:var(--gold);color:#1B2633}
+.btn.ghost{background:transparent;color:var(--slate);border:1px solid var(--line)}
+.btn.small{padding:7px 14px;font-size:.85rem}
+
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:500;padding:3px 10px;border-radius:999px;background:var(--slate-soft);color:var(--slate)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.gold{background:var(--gold-soft);color:var(--gold-ink)}
+
+/* session list */
+.sessions{display:grid;gap:12px}
+.sess{display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:center;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;color:var(--ink)}
+.sess:hover{border-color:var(--gold)}
+.sess .disc{width:56px;height:56px;border-radius:50%}
+.sess .meta{min-width:0;display:flex;flex-direction:column;gap:2px}
+.sess .meta b{font-family:var(--f-display);color:var(--slate);font-size:1rem}
+.sess .meta span{font-size:.82rem;color:var(--muted)}
+.sess .len{font-family:var(--f-data);font-size:.85rem;color:var(--gold-ink)}
+.phases{display:flex;gap:3px;margin-top:6px}
+.phases i{display:block;height:4px;border-radius:2px;background:var(--line)}
+
+.field{display:flex;flex-direction:column;gap:6px;font-size:.85rem;color:var(--muted)}
+.field select,.field input[type=range]{width:100%}
+select{font:inherit;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 13px;font-size:.85rem}
+.seg button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#1B2633}
+
+/* breathe */
+.orbstage{position:relative;height:300px;display:grid;place-items:center;border-radius:var(--r);background:radial-gradient(circle at 50% 45%,#2B4563 0%,#14202E 70%);overflow:hidden}
+.orb{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#F2D7A6 0%,#D4A051 45%,#8C6A3A 100%);box-shadow:0 0 60px 10px rgba(212,160,81,.35);transform:scale(.7);transition-property:transform;transition-timing-function:ease-in-out}
+.orblabel{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:#F3F6FA;font-weight:500;letter-spacing:.04em}
+.orbcount{position:absolute;top:18px;right:20px;color:#C9D6E5;font-family:var(--f-data);font-size:.85rem}
+
+/* body tab */
+.acts{display:flex;flex-direction:column}
+.act{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 0;border-top:1px solid var(--line)}
+.act:first-child{border-top:0}
+.act b{font-weight:500}
+.act .r{text-align:right;font-family:var(--f-data);font-size:.82rem;color:var(--muted)}
+.targets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tgt{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.tgt .v{font-family:var(--f-data);font-size:1.05rem;color:var(--slate)}
+.tgt .s{font-size:.75rem;color:var(--muted)}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.day{border-radius:10px;padding:8px 4px;text-align:center;background:var(--slate-soft);display:flex;flex-direction:column;gap:2px;min-width:0}
+.day.today{background:var(--gold);color:#1B2633}
+.day.today small{color:#1B2633}
+.day b{font-size:.72rem;letter-spacing:.06em}
+.day small{font-size:.66rem;line-height:1.25;color:var(--muted)}
+.supgroup{display:flex;flex-direction:column;gap:2px}
+.supgroup h3{font-family:var(--f-body);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-ink);margin:8px 0 2px}
+.sup{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);background:none;border-left:0;border-right:0;border-bottom:0;text-align:left;color:var(--ink);width:100%}
+.sup .box{width:24px;height:24px;border-radius:7px;border:2px solid var(--line);display:grid;place-items:center;font-size:.8rem;color:#fff}
+.sup[aria-checked="true"] .box{background:var(--ok);border-color:var(--ok)}
+.sup .nm{display:flex;flex-direction:column;min-width:0}
+.sup .nm small{color:var(--muted);font-size:.75rem}
+.dots{display:flex;gap:3px}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--ok)}
+.bar{height:8px;border-radius:4px;background:var(--slate-soft);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold);border-radius:4px;transition:width .4s}
+.note{font-size:.8rem;color:var(--muted);border-left:3px solid var(--gold);padding-left:10px}
+.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:.9rem}
+.status{font-size:.82rem}
+
+/* tab bar */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+.tabs button{border:0;background:none;color:var(--muted);padding:9px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.72rem;font-weight:500;border-top:3px solid transparent}
+.tabs button svg{width:22px;height:22px}
+.tabs button[aria-selected="true"]{color:var(--slate);border-top-color:var(--gold)}
+
+/* player overlay — deliberately always dark */
+.player{position:fixed;inset:0;z-index:50;background:#0A1018;color:#EEF2F7;display:flex;flex-direction:column}
+.player canvas{position:absolute;inset:0;width:100%;height:100%}
+.pl-top,.pl-bottom{position:relative;z-index:2;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.pl-top{padding-top:calc(env(safe-area-inset-top,0px) + 16px);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pl-top .x{border:1px solid rgba(255,255,255,.25);background:rgba(10,16,24,.35);color:#EEF2F7;border-radius:999px;padding:7px 14px;font-size:.85rem}
+.pl-mid{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:10px;padding:0 24px}
+.pl-mid .ph-n{font-family:var(--f-data);font-size:.78rem;letter-spacing:.2em;color:#E9C98F;text-transform:uppercase}
+.pl-mid .ph-t{font-family:var(--f-display);font-size:2rem;line-height:1.2;color:#FFFFFF;text-wrap:balance}
+.pl-mid .cue{max-width:30ch;color:#D3DDE9;font-size:1rem;min-height:3.2em;font-style:italic;font-family:var(--f-display)}
+.pl-bottom{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 20px);display:flex;flex-direction:column;gap:14px;background:linear-gradient(to top,rgba(10,16,24,.85),rgba(10,16,24,0))}
+.pl-prog{display:flex;gap:4px}
+.pl-prog i{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.18);overflow:hidden;position:relative}
+.pl-prog i b{position:absolute;inset:0 auto 0 0;background:#D4A051;width:0}
+.pl-time{display:flex;justify-content:space-between;font-family:var(--f-data);font-size:.85rem;color:#C2CEDC}
+.pl-ctrl{display:flex;justify-content:center;align-items:center;gap:18px}
+.pl-ctrl .play{width:72px;height:72px;border-radius:50%;border:0;background:#D4A051;color:#1B2633;display:grid;place-items:center}
+.pl-ctrl .play svg{width:30px;height:30px}
+.pl-ctrl .sm{width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(10,16,24,.35);color:#EEF2F7;display:grid;place-items:center}
+.pl-ctrl .sm svg{width:20px;height:20px}
+.pl-mix{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;font-size:.78rem;color:#C2CEDC}
+.pl-mix input{width:100%;accent-color:#D4A051}
+.done{display:flex;flex-direction:column;align-items:center;gap:12px}
+.done .big{font-family:var(--f-data);font-size:2.4rem;color:#E9C98F}
+
+@media (prefers-reduced-motion: reduce){ .orb{transition-duration:0s !important} .bar i{transition:none} }
+@media (min-width:560px){ .targets{grid-template-columns:repeat(4,minmax(0,1fr))} }
+</style>
+
+<header class="hdr">
+  <div class="wrap">
+    <div>
+      <div class="brand">RL Studio</div>
+      <div class="appname" id="appname">Stillpoint</div>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button id="lang-en" aria-pressed="true">EN</button>
+      <button id="lang-zh" aria-pressed="false">中文</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="view" id="v-today"></section>
+  <section class="view" id="v-meditate" hidden></section>
+  <section class="view" id="v-breathe" hidden></section>
+  <section class="view" id="v-body" hidden></section>
+</main>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap" role="tablist">
+    <button role="tab" data-tab="today" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span data-i="tabToday">Today</span></button>
+    <button role="tab" data-tab="meditate" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="5" r="2.2"/><path d="M12 8v5M7 21c0-3 2-5 5-5s5 2 5 5M4 14c2.5-.5 5-1 8-1s5.5.5 8 1"/></svg><span data-i="tabMed">Meditate</span></button>
+    <button role="tab" data-tab="breathe" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 8h10a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h7"/></svg><span data-i="tabBreathe">Breathe</span></button>
+    <button role="tab" data-tab="body" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg><span data-i="tabBody">Body</span></button>
+  </div>
+</nav>
+
+<div class="player" id="player" hidden>
+  <canvas id="cv"></canvas>
+  <div class="pl-top">
+    <span class="eyebrow" style="color:#C2CEDC" id="pl-name"></span>
+    <button class="x" id="pl-close"></button>
+  </div>
+  <div class="pl-mid" id="pl-mid">
+    <div class="ph-n" id="pl-phn"></div>
+    <div class="ph-t" id="pl-pht"></div>
+    <div class="cue" id="pl-cue" aria-live="polite"></div>
+  </div>
+  <div class="pl-bottom">
+    <div class="pl-prog" id="pl-prog"></div>
+    <div class="pl-time"><span id="pl-el">0:00</span><span id="pl-rem">0:00</span></div>
+    <div class="pl-ctrl">
+      <button class="sm" id="pl-back" aria-label="Previous phase"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6v12L9.5 12z"/></svg></button>
+      <button class="play" id="pl-play" aria-label="Play"><svg viewBox="0 0 24 24" fill="currentColor" id="pl-icon"><path d="M8 5v14l11-7z"/></svg></button>
+      <button class="sm" id="pl-next" aria-label="Next phase"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6v12l10.5-6z"/></svg></button>
+    </div>
+    <div class="pl-mix">
+      <label for="vol-voice" data-i="voice">Voice</label><input type="range" id="vol-voice" min="0" max="1" step="0.05" value="0.9">
+      <label for="vol-amb" data-i="ambient">Ambient</label><input type="range" id="vol-amb" min="0" max="1" step="0.05" value="0.5">
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+/* ---------- storage (per-device convenience; safe if blocked) ---------- */
+const store={get(k,d){try{const v=localStorage.getItem('sp_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('sp_'+k,JSON.stringify(v))}catch(e){}}};
+const $=s=>document.querySelector(s);
+const todayKey=d=>(d||new Date()).toLocaleDateString('en-CA');
+let lang=store.get('lang','en');
+let cur='today';
+
+/* ---------- copy ---------- */
+const T={
+ en:{tabToday:'Today',tabMed:'Meditate',tabBreathe:'Breathe',tabBody:'Body',voice:'Voice',ambient:'Ambient',
+  greetM:'Good morning, Rosivia',greetA:'Good afternoon, Rosivia',greetE:'Good evening, Rosivia',
+  suggested:'Suggested now',begin:'Begin',minutes:'min',supToday:'Supplements today',taken:'taken',next:'Next up',
+  routine:'Today’s routine',lastSit:'Practice log',noSit:'No sessions logged on this phone yet. Your first one starts the streak.',
+  streak:'day streak',sessions:'sessions',total:'min total',
+  guided:'Guided sessions',silent:'Silent timer',silentDesc:'Bells only. For open sitting or your own practice.',
+  length:'Length',interval:'Interval bell',none:'None',every:'Every',voiceSet:'Guide voice',preview:'Preview voice',
+  voiceTip:'For a deeper male voice: Android Settings → System → Languages → Text-to-speech output → Speech Services by Google → ⚙ → Install voice data → English (US) → pick a male voice. Then choose it here.',
+  ambSound:'Ambient sound',drone:'Deep drone',rain:'Soft rain',off:'Off',
+  watch:'Watch cues',watchDesc:'Each phase change sends a phone notification. Garmin mirrors it to your Forerunner 255 as a vibration and a title.',
+  enable:'Enable watch cues',enabled:'Watch cues on',unsupported:'This preview can’t send notifications. Watch cues work once the app runs from its own address (see setup).',
+  denied:'Notifications are blocked for this site. Allow them in Chrome site settings.',
+  breathTitle:'Breathwork',rounds:'Duration',start:'Start',stop:'Stop',ready:'Tap start',
+  inhale:'Breathe in',hold:'Hold',exhale:'Breathe out',topup:'Sip in more',
+  toWatch:'On your Forerunner 255',
+  watchSteps:['Press START → scroll to Breathwork.','Pick “Relax and Focus” (you already used it 3× Sep 30–Oct 2) or “Coherence” if listed.','The watch paces you with vibration and logs HR, so the session lands in Garmin.'],
+  watchNote:'Your phone can’t push a custom breathing pattern to the watch. Garmin only allows that through its own app or a Connect IQ watch app. Use the watch for paced breathing it can log, and this app for guided sessions.',
+  garmin:'Garmin',lastSync:'Latest data',daysAgo:'days ago',syncWarn:'No new Garmin data since Oct 2. HRV, sleep and stress came back empty. Open Garmin Connect and sync, or check the connection.',
+  recent:'Recent activities',targets:'Your targets',weekT:'Weekly rhythm',supT:'Supplements',
+  supNote:'Stack and timing from your May 2026 sync template. Tell me what changed (D3 dose, zinc, anything weekly) and I’ll update it.',
+  last7:'last 7 days',close:'End',complete:'Session complete',logged:'Logged to your practice history.',again:'Done',
+  phase:'Phase',of:'of',sourceG:'Source: Garmin, Forerunner 255, times converted to Taipei (UTC+8).',
+  sugMorning:'Your 05:00 block. The full six-phase practice.',sugMidday:'A midday reset, matching your lunchtime breathwork habit.',
+  sugEvening:'Clear the workday before the evening.',sugNight:'Slow 4-7-8 breathing before sleep.',sugTennis:'Box breathing before tennis tonight.',
+  timings:{morning:'Breakfast',premeal:'Before meals',lunch:'With lunch',training:'Training days',bedtime:'Bedtime'}
+ },
+ zh:{tabToday:'今天',tabMed:'冥想',tabBreathe:'呼吸',tabBody:'身體',voice:'引導語音',ambient:'背景音',
+  greetM:'早安，Rosivia',greetA:'午安，Rosivia',greetE:'晚安，Rosivia',
+  suggested:'現在推薦',begin:'開始',minutes:'分鐘',supToday:'今日保健品',taken:'已服用',next:'下一個',
+  routine:'今日行程',lastSit:'練習紀錄',noSit:'這支手機還沒有練習紀錄。完成第一次就開始累積天數。',
+  streak:'天連續',sessions:'次練習',total:'分鐘總計',
+  guided:'引導冥想',silent:'靜坐計時',silentDesc:'只有鐘聲，適合自由靜坐或自己的練習。',
+  length:'時間長度',interval:'間隔鐘聲',none:'無',every:'每',voiceSet:'引導聲音',preview:'試聽',
+  voiceTip:'中文語音：Android 設定 → 系統 → 語言 → 文字轉語音輸出 → Google 語音服務 → ⚙ → 安裝語音資料 → 中文（台灣）。之後在這裡選擇。',
+  ambSound:'背景音',drone:'低頻共鳴',rain:'細雨',off:'關閉',
+  watch:'手錶提示',watchDesc:'每次進入新階段，手機會發出通知，Garmin 會同步到 Forerunner 255 震動提示。',
+  enable:'開啟手錶提示',enabled:'手錶提示已開啟',unsupported:'預覽模式無法發送通知。在自己的網址執行後即可使用（請見設定說明）。',
+  denied:'此網站的通知已被封鎖，請到 Chrome 網站設定中允許。',
+  breathTitle:'呼吸練習',rounds:'時間',start:'開始',stop:'停止',ready:'點擊開始',
+  inhale:'吸氣',hold:'停住',exhale:'吐氣',topup:'再吸一點',
+  toWatch:'在你的 Forerunner 255 上',
+  watchSteps:['按 START → 找到「呼吸練習 Breathwork」。','選「Relax and Focus」（9/30–10/2 你已用過 3 次），或清單中的「Coherence」。','手錶會用震動帶你呼吸並記錄心率，紀錄會同步到 Garmin。'],
+  watchNote:'手機無法把自訂呼吸節奏傳到手錶，Garmin 只允許透過官方 App 或 Connect IQ 手錶程式。手錶負責可記錄的呼吸練習，這個 App 負責引導冥想。',
+  garmin:'Garmin',lastSync:'最新資料',daysAgo:'天前',syncWarn:'10/2 之後沒有新的 Garmin 資料，HRV、睡眠、壓力都是空的。請打開 Garmin Connect 同步，或檢查連線。',
+  recent:'近期活動',targets:'你的目標',weekT:'每週節奏',supT:'保健品',
+  supNote:'品項與時間來自你 2026 年 5 月的同步範本。若有變更（D3 劑量、鋅、每週品項），告訴我就更新。',
+  last7:'近 7 天',close:'結束',complete:'練習完成',logged:'已記錄到練習紀錄。',again:'完成',
+  phase:'階段',of:'/',sourceG:'資料來源：Garmin Forerunner 255，時間已換算為台北時間（UTC+8）。',
+  sugMorning:'你的 05:00 時段，完整六階段練習。',sugMidday:'午間重整，配合你中午做呼吸練習的習慣。',
+  sugEvening:'在晚上之前，把工作的能量清掉。',sugNight:'睡前做緩慢的 4-7-8 呼吸。',sugTennis:'今晚打網球前，做方塊呼吸。',
+  timings:{morning:'早餐',premeal:'餐前',lunch:'午餐',training:'訓練日',bedtime:'睡前'}
+ }
+};
+const t=k=>T[lang][k]??T.en[k];
+
+/* ---------- sessions (original scripts; structure inspired by six-phase and grounding practices) ---------- */
+const C=(t,en,zh)=>({t,en,zh});
+const SESSIONS=[
+ {id:'six',color:['#3B5A7D','#D4A051'],name:{en:'Six Phase Practice',zh:'六階段冥想'},
+  desc:{en:'Connection, gratitude, forgiveness, future, today, blessing.',zh:'連結、感恩、寬恕、未來、今天、祝福。'},
+  phases:[
+   {d:60,intro:1,c:[112,140,190],t:{en:'Settle',zh:'安住'},cues:[C(0,'Welcome. Find a comfortable seat, spine tall, shoulders soft.','歡迎。找一個舒服的坐姿，脊椎挺直，肩膀放鬆。'),C(12,'Close your eyes. Take a slow breath in through the nose... and let it go.','閉上眼睛。用鼻子慢慢吸一口氣……再慢慢吐出來。'),C(35,'Let the day fall away. There is nowhere else to be.','讓今天的事情先放下。此刻，你不需要去任何地方。')]},
+   {d:180,c:[200,215,240],t:{en:'Connection',zh:'連結'},cues:[C(0,'Phase one. Connection.','第一階段：連結。'),C(6,'Imagine a soft white light in the centre of your chest.','想像胸口中央有一團柔和的白光。'),C(30,'With each breath, let it grow. It fills your body... then the room you are sitting in.','每一次呼吸，讓光變得更大。它充滿你的身體……再充滿你所在的房間。'),C(80,'Let it spread to the people you love, to your city, to everyone, everywhere.','讓光延伸到你愛的人、你的城市，到每一個地方的每一個人。'),C(130,'Feel yourself connected to all of it. Rest here.','感受自己與這一切相連。在這裡停留。')]},
+   {d:180,c:[212,160,81],t:{en:'Gratitude',zh:'感恩'},cues:[C(0,'Phase two. Gratitude.','第二階段：感恩。'),C(6,'Bring to mind three things in your personal life you are grateful for. Small or large.','想三件你在生活中感謝的事，大小都可以。'),C(70,'Now three things about your work. A skill, a person, a moment that went well.','現在想三件關於工作的事：一個技能、一個人、一個順利的時刻。'),C(125,'And finally, one thing about yourself you appreciate. Feel it in your body.','最後，想一件你欣賞自己的地方。用身體去感受它。')]},
+   {d:180,c:[150,120,190],t:{en:'Forgiveness',zh:'寬恕'},cues:[C(0,'Phase three. Forgiveness.','第三階段：寬恕。'),C(6,'Think of someone or something that has been weighing on you. Start small.','想一個一直壓在你心上的人或事。從小事開始。'),C(45,'Picture them in front of you. Notice what you feel, without judging it.','想像對方就在你面前。觀察自己的感受，不需要評判。'),C(90,'Ask yourself, what is the lesson here? Silently say: I forgive you. I release this.','問自己：這裡的功課是什麼？在心裡說：我原諒你，我放下了。'),C(140,'Let the weight leave your body with your next breath out.','下一次吐氣時，讓這份重量離開你的身體。')]},
+   {d:240,c:[90,160,200],t:{en:'Your future',zh:'未來夢想'},cues:[C(0,'Phase four. Your future. Three years from now.','第四階段：未來。三年之後。'),C(8,'Imagine your life three years ahead, going beautifully. Where are you living?','想像三年後的生活，一切都很美好。你住在哪裡？'),C(60,'What work are you doing? Who are you working with? How does a typical week feel?','你在做什麼樣的工作？和誰一起合作？一週的生活是什麼感覺？'),C(120,'See your body strong and healthy. Your relationships warm. Your finances calm.','看見自己身體強壯健康，關係溫暖，財務安穩。'),C(180,'Feel the joy of that life as if it is already here.','感受那份喜悅，就好像它已經發生。')]},
+   {d:240,c:[230,180,110],t:{en:'Your perfect day',zh:'完美的一天'},cues:[C(0,'Phase five. Your perfect day. Today.','第五階段：完美的一天。就是今天。'),C(8,'Picture this morning going well. You feel clear, energised, unhurried.','想像今天早上很順利。你頭腦清楚、充滿能量、從容不迫。'),C(70,'See your work going smoothly. A difficult moment, met with calm.','看見工作順利進行。遇到困難時，你也能冷靜面對。'),C(140,'See this evening. You are proud of how you showed up.','看見今晚的自己，為今天的表現感到驕傲。'),C(200,'Hold that picture. This is the day you are choosing.','記住這個畫面。這就是你選擇的一天。')]},
+   {d:120,c:[245,215,160],t:{en:'Blessing',zh:'祝福'},cues:[C(0,'Phase six. Blessing.','第六階段：祝福。'),C(8,'Imagine a warm light pouring down from above, through the top of your head.','想像一道溫暖的光從上方灑下，穿過你的頭頂。'),C(40,'It fills you with support and protection for everything you set out to do today.','它為你今天要做的每一件事，帶來支持與保護。'),C(85,'Take a deep breath in. Gently move your fingers. When you are ready, open your eyes.','深深吸一口氣。輕輕動一動手指。準備好了，就睜開眼睛。')]}
+  ]},
+ {id:'ground',color:['#2E5B52','#D4A051'],name:{en:'Ground, Clear, Refill',zh:'扎根・清理・補充'},
+  desc:{en:'Energy practice: grounding cord, release, golden sun.',zh:'能量練習：扎根線、釋放、金色太陽。'},
+  phases:[
+   {d:120,c:[80,120,140],t:{en:'Arrive',zh:'抵達'},cues:[C(0,'Welcome. Sit with your feet flat on the floor and your hands resting on your thighs.','歡迎。雙腳平放在地上，雙手輕放在大腿。'),C(15,'Close your eyes. Let your breath slow down by itself.','閉上眼睛，讓呼吸自然慢下來。'),C(60,'Notice where your body touches the chair, the floor. You are here.','感覺身體與椅子、地面接觸的地方。你就在這裡。')]},
+   {d:180,c:[120,95,60],t:{en:'Ground',zh:'扎根'},cues:[C(0,'Now we ground.','現在我們來扎根。'),C(6,'Imagine a cord running from the base of your spine, down through the floor, deep into the centre of the earth.','想像從脊椎底部延伸出一條線，穿過地板，一直深入地心。'),C(60,'Make it strong. A tree root, a beam of light, whatever feels right to you.','讓它變得穩固。可以是樹根、一道光，任何你覺得對的樣子。'),C(110,'Let it hold you steady. Anything you do not need can flow down this cord.','讓它穩穩托住你。任何你不需要的，都可以順著這條線流下去。')]},
+   {d:240,c:[70,150,170],t:{en:'Clear',zh:'清理'},cues:[C(0,'Now we clear.','現在我們來清理。'),C(6,'Notice any tension, any worry, any energy that is not yours. From work, from other people.','留意身上的緊繃、擔心，或不屬於你的能量，來自工作，來自別人。'),C(60,'Let it loosen and drain down your grounding cord. You do not have to carry it.','讓它鬆開，順著扎根線流走。你不需要背著它。'),C(130,'If a thought arrives, just let it slide down the cord too.','如果念頭出現，也讓它順著線滑下去。'),C(190,'Feel the space that opens up inside you.','感受內在空出來的空間。')]},
+   {d:240,c:[225,170,85],t:{en:'Refill',zh:'補充'},cues:[C(0,'Now we refill.','現在我們來補充能量。'),C(6,'Imagine a golden sun a little above your head. This is your own energy.','想像頭頂上方有一顆金色的太陽，這是你自己的能量。'),C(50,'Call back any part of your attention you have left with other places and people today. Let it return to the sun.','把今天留在其他地方、其他人身上的注意力召喚回來，讓它回到太陽裡。'),C(120,'Now let the sun pour down into you. Through your head, your chest, your belly, all the way to your feet.','現在讓太陽的光流進你的身體。從頭頂、胸口、腹部，一直到雙腳。'),C(190,'Fill every space you cleared with your own golden light.','用你自己的金色光芒，填滿每一個剛清出來的空間。')]},
+   {d:120,c:[245,210,150],t:{en:'Return',zh:'回來'},cues:[C(0,'Slowly come back.','慢慢回來。'),C(8,'Keep your grounding cord with you as you move through the day.','帶著你的扎根線，度過今天。'),C(50,'Take a deep breath. Stretch a little. Open your eyes when you are ready.','深呼吸，伸展一下。準備好了，就睜開眼睛。')]}
+  ]},
+ {id:'morning',color:['#55708F','#E9C98F'],name:{en:'Morning Reset',zh:'晨間重整'},
+  desc:{en:'Breath, one word for the day, one thank-you.',zh:'呼吸、今天的一個詞、一份感謝。'},
+  phases:[
+   {d:90,c:[110,150,200],t:{en:'Breathe',zh:'呼吸'},cues:[C(0,'Good morning. Sit tall and close your eyes.','早安。坐直，閉上眼睛。'),C(10,'Breathe in for four... and out for six. Again.','吸氣數到四……吐氣數到六。再一次。'),C(50,'Let each out-breath soften your shoulders.','每一次吐氣，讓肩膀更放鬆。')]},
+   {d:120,c:[212,160,81],t:{en:'Intention',zh:'意圖'},cues:[C(0,'Choose one word for today. Focus. Patience. Courage. Whatever you need.','為今天選一個詞。專注、耐心、勇氣，或任何你需要的。'),C(40,'See yourself living that word at work this morning.','看見自己今天早上在工作中活出這個詞。'),C(85,'Say it to yourself once more.','在心裡再對自己說一次。')]},
+   {d:90,c:[245,215,160],t:{en:'Thanks',zh:'感謝'},cues:[C(0,'Finally, name one thing you are grateful for right now.','最後，說出一件此刻你感謝的事。'),C(45,'Take one last full breath. Open your eyes. Go well.','最後一次深呼吸。睜開眼睛，好好出發。')]}
+  ]}
+];
+const totalMin=s=>Math.round(s.phases.reduce((a,p)=>a+p.d,0)/60);
+
+/* ---------- breath patterns ---------- */
+const BREATHS=[
+ {id:'coh',name:{en:'Coherent 5.5',zh:'共振呼吸 5.5'},use:{en:'Balance HRV',zh:'平衡 HRV'},steps:[['inhale',5.5,1],['exhale',5.5,0]]},
+ {id:'box',name:{en:'Box 4·4·4·4',zh:'方塊呼吸 4·4·4·4'},use:{en:'Focus before work or a match',zh:'工作或比賽前專注'},steps:[['inhale',4,1],['hold',4,1],['exhale',4,0],['hold',4,0]]},
+ {id:'478',name:{en:'4-7-8',zh:'4-7-8 呼吸'},use:{en:'Wind down before sleep',zh:'睡前放鬆'},steps:[['inhale',4,1],['hold',7,1],['exhale',8,0]]},
+ {id:'sigh',name:{en:'Physiological sigh',zh:'生理嘆息'},use:{en:'Fast stress reset',zh:'快速紓壓'},steps:[['inhale',2,.85],['topup',1,1],['exhale',6,0]]}
+];
+
+/* ---------- Garmin snapshot (pulled 2026-11-03; UTC converted to Taipei +8) ---------- */
+const GARMIN={latest:'2026-10-02',acts:[
+ {d:'2026-10-02',tm:'13:03',type:{en:'Breathwork · Relax and Focus',zh:'呼吸練習 · Relax and Focus'},dur:1316,hr:'70 / 82'},
+ {d:'2026-10-02',tm:'06:10',type:{en:'Strength',zh:'肌力訓練'},dur:1749,hr:'95 / 133',kcal:111},
+ {d:'2026-10-01',tm:'12:50',type:{en:'Breathwork · Relax and Focus',zh:'呼吸練習 · Relax and Focus'},dur:2261,hr:'70 / 90'},
+ {d:'2026-10-01',tm:'06:21',type:{en:'Breathwork · Relax and Focus',zh:'呼吸練習 · Relax and Focus'},dur:1595,hr:'60 / 74'},
+ {d:'2026-09-30',tm:'20:05',type:{en:'Run · Xinzhuang · 4.22 km',zh:'跑步 · 新莊 · 4.22 公里'},dur:2088,hr:'136 / 155',kcal:279}
+]};
+const TARGETS=[
+ {k:{en:'HRV 7-day',zh:'HRV 7 日平均'},v:'44+ ms',s:{en:'Baseline 37–53 · red flag <35',zh:'基準 37–53 · 警示 <35'}},
+ {k:{en:'Resting HR',zh:'靜止心率'},v:'≤52 bpm',s:{en:'Alert >57 for 3+ days',zh:'連續 3 天 >57 警示'}},
+ {k:{en:'VO2 max',zh:'最大攝氧量'},v:'50+',s:{en:'Goal by Apr 2027',zh:'2027 年 4 月目標'}},
+ {k:{en:'Zone 4 intervals',zh:'Zone 4 間歇'},v:'4 / month',s:{en:'140–158 bpm',zh:'140–158 bpm'}}
+];
+const WEEK=[ // index 0 = Monday
+ {en:'Intervals Z4',zh:'Z4 間歇'},{en:'Gym 07:00',zh:'健身 07:00'},{en:'Gym · Run club PM',zh:'健身 · 晚上跑團'},
+ {en:'Easy / rest',zh:'輕鬆 / 休息'},{en:'Gym · Tennis PM',zh:'健身 · 晚上網球'},{en:'Family · Tennis PM',zh:'家庭 · 晚上網球'},{en:'Learning · Recovery',zh:'學習 · 恢復'}
+];
+const SUPS=[
+ {id:'d3',g:'morning',n:'Vitamin D3',dose:{en:'3000 IU (confirm dose)',zh:'3000 IU（請確認劑量）'}},
+ {id:'o3',g:'morning',n:'Omega-3',dose:{en:'Fish oil',zh:'魚油'}},
+ {id:'vc',g:'morning',n:'Vitamin C',dose:{en:'1000 mg',zh:'1000 mg'}},
+ {id:'bio',g:'morning',n:'Biotin',dose:{en:'1000 mcg',zh:'1000 mcg'}},
+ {id:'mct',g:'morning',n:'MCT oil',dose:{en:'With coffee or breakfast',zh:'加入咖啡或早餐'}},
+ {id:'acv',g:'premeal',n:'ACV',dose:{en:'Apple cider vinegar',zh:'蘋果醋'}},
+ {id:'zn',g:'lunch',n:'Zinc',dose:{en:'15–25 mg, with food',zh:'15–25 mg，隨餐'}},
+ {id:'cr',g:'training',n:'Creatine',dose:{en:'5 g + 500 ml extra water',zh:'5 g + 額外 500 ml 水'}},
+ {id:'wp',g:'training',n:'Whey protein',dose:{en:'Post-workout',zh:'運動後'}},
+ {id:'mg',g:'bedtime',n:'Magnesium',dose:{en:'500 mg',zh:'500 mg'}},
+ {id:'uc',g:'bedtime',n:'UC-II',dose:{en:'40 mg, fasted 2 h',zh:'40 mg，空腹 2 小時'}}
+];
+const GROUPS=['morning','premeal','lunch','training','bedtime'];
+const GROUP_HOUR={morning:9,premeal:12,lunch:14,training:19,bedtime:23};
+
+/* ---------- helpers ---------- */
+const fmt=s=>{s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+const rgb=c=>`rgb(${c[0]},${c[1]},${c[2]})`;
+const el=(h)=>{const d=document.createElement('div');d.innerHTML=h.trim();return d.firstChild};
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const L=o=>o[lang]??o.en;
+const dayIdx=()=>(new Date().getDay()+6)%7;
+
+/* ---------- audio ---------- */
+let ac=null,master=null,ambBus=null,ambNodes=[];
+let settings=Object.assign({amb:'drone',interval:5,silentMin:15,voiceVol:.9,ambVol:.5},store.get('settings',{}));
+const saveSettings=()=>store.set('settings',settings);
+function ensureAudio(){try{if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=.9;master.connect(ac.destination)}if(ac.state==='suspended')ac.resume()}catch(e){}}
+function noise(kind){const len=ac.sampleRate*4,b=ac.createBuffer(1,len,ac.sampleRate),d=b.getChannelData(0);let l=0,b0=0,b1=0,b2=0;
+ for(let i=0;i<len;i++){const w=Math.random()*2-1;if(kind==='brown'){l=(l+.02*w)/1.02;d[i]=l*3.5}else{b0=.99765*b0+w*.099;b1=.963*b1+w*.2965;b2=.57*b2+w*1.0526;d[i]=(b0+b1+b2+w*.1848)*.11}}
+ const s=ac.createBufferSource();s.buffer=b;s.loop=true;return s}
+function startAmbient(){stopAmbient(true);if(!ac||settings.amb==='off')return;
+ ambBus=ac.createGain();ambBus.gain.value=0;ambBus.connect(master);
+ if(settings.amb==='drone'){const n=noise('brown'),lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=380;const ng=ac.createGain();ng.gain.value=.55;n.connect(lp).connect(ng).connect(ambBus);
+  const lfo=ac.createOscillator(),lg=ac.createGain();lfo.frequency.value=.06;lg.gain.value=140;lfo.connect(lg).connect(lp.frequency);
+  const o1=ac.createOscillator(),g1=ac.createGain();o1.frequency.value=110;g1.gain.value=.045;o1.connect(g1).connect(ambBus);
+  const o2=ac.createOscillator(),g2=ac.createGain();o2.frequency.value=164.8;g2.gain.value=.025;o2.connect(g2).connect(ambBus);
+  [n,lfo,o1,o2].forEach(x=>x.start());ambNodes=[n,lfo,o1,o2]}
+ else{const n=noise('pink'),hp=ac.createBiquadFilter(),lp=ac.createBiquadFilter();hp.type='highpass';hp.frequency.value=400;lp.type='lowpass';lp.frequency.value=5200;const g=ac.createGain();g.gain.value=.5;n.connect(hp).connect(lp).connect(g).connect(ambBus);n.start();ambNodes=[n]}
+ ambBus.gain.linearRampToValueAtTime(settings.ambVol*.6,ac.currentTime+3)}
+function setAmbVol(){if(ambBus&&ac)ambBus.gain.setTargetAtTime(settings.ambVol*.6,ac.currentTime,.3)}
+function fadeAmbient(on){if(!ambBus||!ac)return;ambBus.gain.cancelScheduledValues(ac.currentTime);ambBus.gain.setTargetAtTime(on?settings.ambVol*.6:0,ac.currentTime,.6)}
+function stopAmbient(now){const nodes=ambNodes,bus=ambBus;ambNodes=[];ambBus=null;if(!bus)return;try{bus.gain.setTargetAtTime(0,ac.currentTime,now?.05:.5);setTimeout(()=>{nodes.forEach(n=>{try{n.stop()}catch(e){}});bus.disconnect()},now?200:2500)}catch(e){}}
+function bell(count=1,base=392){if(!ac)return;for(let k=0;k<count;k++){const t0=ac.currentTime+.05+k*2.4;[[1,.22],[2.76,.08],[5.4,.035]].forEach(([m,a],i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=base*m;g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(a,t0+.012);g.gain.exponentialRampToValueAtTime(.0001,t0+7-i*1.8);o.connect(g).connect(master);o.start(t0);o.stop(t0+7.2)})}}
+function tone(up){if(!ac)return;const t0=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.frequency.setValueAtTime(up?330:392,t0);o.frequency.linearRampToValueAtTime(up?392:330,t0+.6);g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(.06,t0+.08);g.gain.exponentialRampToValueAtTime(.0001,t0+1.2);o.connect(g).connect(master);o.start(t0);o.stop(t0+1.3)}
+
+/* ---------- speech ---------- */
+const hasTTS='speechSynthesis' in window;
+let voices=[];
+function loadVoices(){if(!hasTTS)return;voices=speechSynthesis.getVoices();if(cur==='meditate')renderMeditate()}
+if(hasTTS){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+const langVoices=()=>voices.filter(v=>lang==='zh'?/^(zh|cmn)/i.test(v.lang):/^en/i.test(v.lang));
+function pickVoice(){const saved=store.get('voice_'+lang,null),list=langVoices();
+ return list.find(v=>v.voiceURI===saved)||(lang==='zh'?(list.find(v=>/TW|Hant/i.test(v.lang))||list[0]):(list.find(v=>/male/i.test(v.name)&&!/female/i.test(v.name))||list.find(v=>/en[-_]US/i.test(v.lang))||list[0]))||null}
+function speak(text){if(!hasTTS||settings.voiceVol<=0)return;try{const u=new SpeechSynthesisUtterance(text);u.lang=lang==='zh'?'zh-TW':'en-US';const v=pickVoice();if(v)u.voice=v;u.rate=lang==='zh'?.86:.8;u.pitch=.86;u.volume=settings.voiceVol;speechSynthesis.speak(u)}catch(e){}}
+const hush=()=>{if(hasTTS)try{speechSynthesis.cancel()}catch(e){}};
+
+/* ---------- wake lock ---------- */
+let wake=null;
+async function holdWake(){try{if('wakeLock' in navigator&&!wake){wake=await navigator.wakeLock.request('screen');wake.addEventListener('release',()=>{wake=null})}}catch(e){wake=null}}
+function dropWake(){try{wake&&wake.release()}catch(e){}wake=null}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&P&&P.running)holdWake()});
+
+/* ---------- watch cues (notifications mirrored by Garmin Connect) ---------- */
+let watchOn=store.get('watch',false),swReg=null,watchMsg='';
+if('serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js').then(r=>{swReg=r}).catch(()=>{})}catch(e){}}
+async function enableWatch(){
+ if(!('Notification' in window)){watchMsg=t('unsupported');renderMeditate();return}
+ try{const p=await Notification.requestPermission();if(p==='granted'){watchOn=true;store.set('watch',true);watchMsg='';notify('Stillpoint',lang==='zh'?'手錶提示已開啟':'Watch cues are on')}else{watchMsg=p==='denied'?t('denied'):t('unsupported')}}catch(e){watchMsg=t('unsupported')}
+ renderMeditate()}
+function notify(title,body){
+ try{navigator.vibrate&&navigator.vibrate([160,90,160])}catch(e){}
+ if(!watchOn)return;
+ try{if(swReg&&swReg.showNotification){swReg.showNotification(title,{body,tag:'stillpoint',renotify:true,vibrate:[160,90,160]})}else if('Notification' in window&&Notification.permission==='granted'){new Notification(title,{body,tag:'stillpoint'})}}catch(e){}}
+
+/* ---------- practice log ---------- */
+const getLog=()=>store.get('log',[]);
+function addLog(id,min){const l=getLog();l.push({d:todayKey(),id,min});store.set('log',l.slice(-400))}
+function streak(){const days=new Set(getLog().map(x=>x.d));let n=0;const d=new Date();if(!days.has(todayKey(d)))d.setDate(d.getDate()-1);while(days.has(todayKey(d))){n++;d.setDate(d.getDate()-1)}return n}
+
+/* ---------- supplements ---------- */
+const getTicks=()=>store.get('ticks',{});
+function toggleSup(id){const tk=getTicks(),k=todayKey();const a=new Set(tk[k]||[]);a.has(id)?a.delete(id):a.add(id);tk[k]=[...a];store.set('ticks',tk);render()}
+function last7(id){const tk=getTicks(),out=[];const d=new Date();for(let i=6;i>=0;i--){const x=new Date(d);x.setDate(d.getDate()-i);out.push((tk[todayKey(x)]||[]).includes(id))}return out}
+
+/* ---------- suggestion ---------- */
+function suggestion(){const h=new Date().getHours(),di=dayIdx();
+ if((di===4||di===5)&&h>=16&&h<20)return{kind:'breath',id:'box',why:t('sugTennis'),min:3};
+ if(h>=3&&h<7)return{kind:'med',id:'six',why:t('sugMorning')};
+ if(h>=7&&h<11)return{kind:'med',id:'morning',why:lang==='zh'?'用 5 分鐘開始今天的工作。':'Start the workday in five minutes.'};
+ if(h>=11&&h<15)return{kind:'med',id:'ground',why:t('sugMidday')};
+ if(h>=15&&h<21)return{kind:'med',id:'ground',why:t('sugEvening')};
+ return{kind:'breath',id:'478',why:t('sugNight'),min:5}}
+
+/* ---------- views ---------- */
+function setTab(tab){cur=tab;document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));
+ ['today','meditate','breathe','body'].forEach(v=>$('#v-'+v).hidden=v!==tab);if(tab!=='breathe')stopBreath();render();window.scrollTo(0,0)}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+
+function render(){
+ document.documentElement.lang=lang==='zh'?'zh-Hant':'en';
+ $('#lang-en').setAttribute('aria-pressed',lang==='en');$('#lang-zh').setAttribute('aria-pressed',lang==='zh');
+ document.querySelectorAll('[data-i]').forEach(n=>n.textContent=t(n.dataset.i));
+ ({today:renderToday,meditate:renderMeditate,breathe:renderBreathe,body:renderBody})[cur]()}
+
+function renderToday(){
+ const v=$('#v-today'),h=new Date().getHours(),g=h<12?t('greetM'):h<18?t('greetA'):t('greetE');
+ const dateStr=new Date().toLocaleDateString(lang==='zh'?'zh-TW':'en-NZ',{weekday:'long',day:'numeric',month:'long'});
+ const s=suggestion();let title,len;
+ if(s.kind==='med'){const se=SESSIONS.find(x=>x.id===s.id);title=L(se.name);len=totalMin(se)}else{const b=BREATHS.find(x=>x.id===s.id);title=L(b.name);len=s.min}
+ const tk=(getTicks()[todayKey()]||[]),done=tk.length,tot=SUPS.length;
+ const nextG=GROUPS.find(gr=>SUPS.some(x=>x.g===gr&&!tk.includes(x.id)));
+ const nextItems=nextG?SUPS.filter(x=>x.g===nextG&&!tk.includes(x.id)).map(x=>x.n).join(', '):'';
+ const log=getLog(),mins=log.reduce((a,x)=>a+x.min,0);
+ const daysAgo=Math.floor((new Date(todayKey())-new Date(GARMIN.latest))/864e5);
+ v.innerHTML=`
+  <div class="row between"><div><div class="eyebrow">${esc(dateStr)}</div><h2>${esc(g)}</h2></div></div>
+  <div class="card hero">
+    <div class="eyebrow">${t('suggested')}</div>
+    <h2>${esc(title)}</h2>
+    <p>${esc(s.why)}</p>
+    <div class="row between"><span class="mono" style="color:#E9C98F">${len} ${t('minutes')}</span><button class="btn gold" id="sug-go">${t('begin')}</button></div>
+  </div>
+  <div class="card">
+    <div class="row between"><h3>${t('supToday')}</h3><span class="mono muted">${done}/${tot} ${t('taken')}</span></div>
+    <div class="bar"><i style="width:${Math.round(done/tot*100)}%"></i></div>
+    ${nextG?`<p class="muted" style="font-size:.88rem">${t('next')}: <b style="color:var(--ink);font-weight:500">${esc(T[lang].timings[nextG])}</b> · ${esc(nextItems)}</p>`:''}
+    <div><button class="btn ghost small" id="go-body">${t('supT')} →</button></div>
+  </div>
+  <div class="card">
+    <h3>${t('routine')}</h3>
+    <div class="row"><span class="chip gold">05:00 ${lang==='zh'?'冥想':'Meditation'}</span><span class="chip">${esc(L(WEEK[dayIdx()]))}</span></div>
+    <div class="row"><span class="chip warn">${t('garmin')}: ${daysAgo} ${t('daysAgo')}</span></div>
+  </div>
+  <div class="card">
+    <h3>${t('lastSit')}</h3>
+    ${log.length?`<div class="row" style="gap:22px"><div><div class="mono" style="font-size:1.5rem;color:var(--gold-ink)">${streak()}</div><div class="muted" style="font-size:.8rem">${t('streak')}</div></div><div><div class="mono" style="font-size:1.5rem;color:var(--slate)">${log.length}</div><div class="muted" style="font-size:.8rem">${t('sessions')}</div></div><div><div class="mono" style="font-size:1.5rem;color:var(--slate)">${mins}</div><div class="muted" style="font-size:.8rem">${t('total')}</div></div></div>`:`<p class="muted">${t('noSit')}</p>`}
+  </div>`;
+ $('#sug-go').onclick=()=>{if(s.kind==='med')openSession(s.id);else{breathSel=s.id;breathMin=s.min;setTab('breathe')}};
+ $('#go-body').onclick=()=>setTab('body')}
+
+function renderMeditate(){
+ const v=$('#v-meditate');if(cur!=='meditate')return;
+ const list=langVoices(),curV=pickVoice();
+ const card=s=>{const tot=s.phases.reduce((a,p)=>a+p.d,0);return `<button class="sess" data-s="${s.id}">
+   <span class="disc" style="background:radial-gradient(circle at 35% 30%,${s.color[1]} 0%,${s.color[0]} 70%)"></span>
+   <span class="meta"><b>${esc(L(s.name))}</b><span>${esc(L(s.desc))}</span>
+   <span class="phases">${s.phases.map(p=>`<i style="flex:${p.d};background:${rgb(p.c)}"></i>`).join('')}</span></span>
+   <span class="len">${totalMin(s)}′</span></button>`};
+ v.innerHTML=`
+  <h2>${t('guided')}</h2>
+  <div class="sessions">${SESSIONS.map(card).join('')}</div>
+  <div class="card">
+    <div class="row between"><h3>${t('silent')}</h3><button class="btn small" id="silent-go">${t('begin')}</button></div>
+    <p class="muted" style="font-size:.88rem">${t('silentDesc')}</p>
+    <div class="field">${t('length')}<div class="seg" id="seg-len">${[5,10,15,20,30,45].map(m=>`<button aria-pressed="${settings.silentMin===m}" data-v="${m}">${m}′</button>`).join('')}</div></div>
+    <div class="field">${t('interval')}<div class="seg" id="seg-int">${[0,5,10].map(m=>`<button aria-pressed="${settings.interval===m}" data-v="${m}">${m?t('every')+' '+m+'′':t('none')}</button>`).join('')}</div></div>
+  </div>
+  <div class="card">
+    <h3>${t('voiceSet')}</h3>
+    ${hasTTS?`<div class="field"><label for="voice-sel">${lang==='zh'?'中文聲音':'English voice'}</label><select id="voice-sel">${list.length?list.map(x=>`<option value="${esc(x.voiceURI)}" ${curV&&x.voiceURI===curV.voiceURI?'selected':''}>${esc(x.name)} · ${esc(x.lang)}</option>`).join(''):`<option>${lang==='zh'?'系統預設':'System default'}</option>`}</select></div>
+    <div><button class="btn ghost small" id="voice-test">▶ ${t('preview')}</button></div>`:`<p class="muted">Speech is not available in this browser.</p>`}
+    <p class="note">${t('voiceTip')}</p>
+    <div class="field">${t('ambSound')}<div class="seg" id="seg-amb">${['drone','rain','off'].map(a=>`<button aria-pressed="${settings.amb===a}" data-v="${a}">${t(a)}</button>`).join('')}</div></div>
+  </div>
+  <div class="card">
+    <div class="row between"><h3>${t('watch')}</h3>${watchOn?`<span class="chip ok">${t('enabled')}</span>`:`<button class="btn small" id="watch-go">${t('enable')}</button>`}</div>
+    <p class="muted" style="font-size:.88rem">${t('watchDesc')}</p>
+    ${watchMsg?`<p class="status" style="color:var(--warn)">${esc(watchMsg)}</p>`:''}
+  </div>`;
+ v.querySelectorAll('.sess').forEach(b=>b.onclick=()=>openSession(b.dataset.s));
+ $('#silent-go').onclick=()=>openSession('silent');
+ v.querySelectorAll('#seg-len button').forEach(b=>b.onclick=()=>{settings.silentMin=+b.dataset.v;saveSettings();renderMeditate()});
+ v.querySelectorAll('#seg-int button').forEach(b=>b.onclick=()=>{settings.interval=+b.dataset.v;saveSettings();renderMeditate()});
+ v.querySelectorAll('#seg-amb button').forEach(b=>b.onclick=()=>{settings.amb=b.dataset.v;saveSettings();renderMeditate()});
+ const vs=$('#voice-sel');if(vs)vs.onchange=()=>store.set('voice_'+lang,vs.value);
+ const vt=$('#voice-test');if(vt)vt.onclick=()=>{hush();speak(lang==='zh'?'閉上眼睛。慢慢吸一口氣……再慢慢吐出來。':'Close your eyes. Take a slow breath in... and let it go.')};
+ const wg=$('#watch-go');if(wg)wg.onclick=enableWatch}
+
+/* ---------- breathe ---------- */
+let breathSel='coh',breathMin=5,B=null;
+function renderBreathe(){
+ const v=$('#v-breathe'),b=BREATHS.find(x=>x.id===breathSel);
+ v.innerHTML=`
+  <h2>${t('breathTitle')}</h2>
+  <div class="seg" id="seg-br">${BREATHS.map(x=>`<button aria-pressed="${x.id===breathSel}" data-v="${x.id}">${esc(L(x.name))}</button>`).join('')}</div>
+  <p class="muted" style="font-size:.88rem">${esc(L(b.use))} · <span class="mono">${b.steps.map(s=>s[1]).join(' · ')}</span></p>
+  <div class="orbstage"><div class="orb" id="orb"></div><div class="orblabel" id="orbl">${t('ready')}</div><div class="orbcount" id="orbc"></div></div>
+  <div class="row between">
+    <div class="seg" id="seg-bm">${[1,3,5,10].map(m=>`<button aria-pressed="${breathMin===m}" data-v="${m}">${m}′</button>`).join('')}</div>
+    <button class="btn gold" id="br-go">${B?t('stop'):t('start')}</button>
+  </div>
+  <div class="card">
+    <h3>${t('toWatch')}</h3>
+    <ol class="steps">${T[lang].watchSteps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>
+    <p class="note">${t('watchNote')}</p>
+  </div>`;
+ v.querySelectorAll('#seg-br button').forEach(x=>x.onclick=()=>{stopBreath();breathSel=x.dataset.v;renderBreathe()});
+ v.querySelectorAll('#seg-bm button').forEach(x=>x.onclick=()=>{breathMin=+x.dataset.v;renderBreathe()});
+ $('#br-go').onclick=()=>B?stopBreath(true):startBreath()}
+function startBreath(){ensureAudio();holdWake();const b=BREATHS.find(x=>x.id===breathSel);B={b,i:-1,end:Date.now()+breathMin*60000,timer:null};$('#br-go').textContent=t('stop');stepBreath()}
+function stepBreath(){if(!B)return;const orb=$('#orb'),lab=$('#orbl'),cnt=$('#orbc');
+ if(Date.now()>=B.end){bell(1);addLog('breath-'+B.b.id,breathMin);stopBreath(true);if(lab)lab.textContent=t('complete');return}
+ B.i=(B.i+1)%B.b.steps.length;const [k,sec,sc]=B.b.steps[B.i];
+ if(orb){orb.style.transitionDuration=sec+'s';orb.style.transform=`scale(${.55+sc*.95})`}
+ if(lab)lab.textContent=t(k);if(cnt)cnt.textContent=fmt((B.end-Date.now())/1000);
+ if(k==='inhale'||k==='exhale')tone(k==='inhale');
+ try{navigator.vibrate&&navigator.vibrate(k==='inhale'?60:k==='exhale'?[30,60,30]:0)}catch(e){}
+ B.timer=setTimeout(stepBreath,sec*1000)}
+function stopBreath(rerender){if(!B)return;clearTimeout(B.timer);B=null;dropWake();if(rerender&&cur==='breathe'){const keep=$('#orbl')&&$('#orbl').textContent;renderBreathe();if(keep===t('complete'))$('#orbl').textContent=keep}}
+
+/* ---------- body ---------- */
+function renderBody(){
+ const v=$('#v-body'),tk=getTicks()[todayKey()]||[],di=dayIdx();
+ const daysAgo=Math.floor((new Date(todayKey())-new Date(GARMIN.latest))/864e5);
+ const dn=lang==='zh'?['一','二','三','四','五','六','日']:['MON','TUE','WED','THU','FRI','SAT','SUN'];
+ v.innerHTML=`
+  <h2>${lang==='zh'?'身體與恢復':'Body and recovery'}</h2>
+  <div class="card">
+    <div class="row between"><h3>${t('garmin')}</h3><span class="chip warn">${t('lastSync')}: ${GARMIN.latest} · ${daysAgo} ${t('daysAgo')}</span></div>
+    <p class="note">${t('syncWarn')}</p>
+    <div class="eyebrow">${t('recent')}</div>
+    <div class="acts">${GARMIN.acts.map(a=>`<div class="act"><b>${esc(L(a.type))}</b><span class="r">${fmt(a.dur)}</span><span class="muted mono" style="font-size:.78rem">${a.d.slice(5)} · ${a.tm}</span><span class="r">HR ${a.hr}${a.kcal?' · '+a.kcal+' kcal':''}</span></div>`).join('')}</div>
+    <p class="muted" style="font-size:.72rem">${t('sourceG')}</p>
+  </div>
+  <div class="card"><h3>${t('targets')}</h3>
+    <div class="targets">${TARGETS.map(x=>`<div class="tgt"><span class="eyebrow">${esc(L(x.k))}</span><span class="v">${x.v}</span><span class="s">${esc(L(x.s))}</span></div>`).join('')}</div>
+  </div>
+  <div class="card"><h3>${t('weekT')}</h3>
+    <div class="week">${WEEK.map((w,i)=>`<div class="day ${i===di?'today':''}"><b>${dn[i]}</b><small>${esc(L(w))}</small></div>`).join('')}</div>
+  </div>
+  <div class="card">
+    <div class="row between"><h3>${t('supT')}</h3><span class="mono muted">${tk.length}/${SUPS.length} · ${t('last7')} ●</span></div>
+    ${GROUPS.map(g=>`<div class="supgroup"><h3>${esc(T[lang].timings[g])}</h3>${SUPS.filter(x=>x.g===g).map(x=>{const on=tk.includes(x.id);return `<button class="sup" role="checkbox" aria-checked="${on}" data-id="${x.id}"><span class="box">${on?'✓':''}</span><span class="nm"><span>${esc(x.n)}</span><small>${esc(L(x.dose))}</small></span><span class="dots">${last7(x.id).map(d=>`<i class="${d?'on':''}"></i>`).join('')}</span></button>`}).join('')}</div>`).join('')}
+    <p class="note">${t('supNote')}</p>
+  </div>`;
+ v.querySelectorAll('.sup').forEach(b=>b.onclick=()=>toggleSup(b.dataset.id))}
+
+/* ---------- player ---------- */
+let P=null,tickT=null,raf=null;
+function buildSilent(){const n=settings.interval?Math.max(1,Math.round(settings.silentMin/settings.interval)):1,d=settings.silentMin*60/n;
+ return{id:'silent',name:{en:'Silent timer',zh:'靜坐計時'},phases:Array.from({length:n},(_,i)=>({d,c:i%2?[90,130,170]:[70,105,150],t:{en:n>1?`Sit · ${i+1}`:'Sit',zh:n>1?`靜坐 · ${i+1}`:'靜坐'},cues:[]}))}}
+function openSession(id){
+ const s=id==='silent'?buildSilent():SESSIONS.find(x=>x.id===id);
+ P={s,idx:0,pe:0,te:0,running:false,started:false,fired:new Set(),total:s.phases.reduce((a,p)=>a+p.d,0),col:s.phases[0].c.slice(),done:false};
+ $('#player').hidden=false;document.body.style.overflow='hidden';
+ $('#pl-name').textContent=L(s.name);$('#pl-close').textContent=t('close');
+ $('#pl-prog').innerHTML=s.phases.map(p=>`<i style="flex:${p.d}"><b></b></i>`).join('');
+ $('#vol-voice').value=settings.voiceVol;$('#vol-amb').value=settings.ambVol;
+ restoreMid();updatePlayer();sizeCanvas();loop()}
+function restoreMid(){$('#pl-mid').innerHTML='<div class="ph-n" id="pl-phn"></div><div class="ph-t" id="pl-pht"></div><div class="cue" id="pl-cue" aria-live="polite"></div>'}
+function enterPhase(first){const p=P.s.phases[P.idx];P.pe=0;P.fired=new Set();if(!first)bell(1);
+ notify(L(p.t),`${t('phase')} ${P.idx+1} ${t('of')} ${P.s.phases.length} · ${fmt(p.d)}`);$('#pl-cue').textContent=''}
+function playPause(){if(!P)return;if(P.done){closePlayer();return}
+ ensureAudio();
+ if(!P.running){P.running=true;P.last=performance.now();holdWake();
+  if(!P.started){P.started=true;startAmbient();if(hasTTS)try{speechSynthesis.speak(new SpeechSynthesisUtterance(''))}catch(e){};bell(1,330);enterPhase(true)}else{fadeAmbient(true)}
+  tickT=setInterval(tick,250)}
+ else{P.running=false;clearInterval(tickT);hush();fadeAmbient(false);dropWake()}
+ updatePlayer()}
+function tick(){if(!P||!P.running)return;const now=performance.now(),dt=Math.min(5,(now-P.last)/1000);P.last=now;P.pe+=dt;P.te+=dt;
+ const p=P.s.phases[P.idx];p.cues.forEach((c,i)=>{if(!P.fired.has(i)&&P.pe>=c.t){P.fired.add(i);speak(c[lang]);$('#pl-cue').textContent=c[lang]}});
+ if(P.pe>=p.d){if(P.idx<P.s.phases.length-1){P.idx++;enterPhase(false)}else{finish();return}}
+ updatePlayer()}
+function jump(dir){if(!P||P.done)return;const ni=P.idx+dir;if(ni<0||ni>=P.s.phases.length){if(dir<0){P.te-=P.pe;P.pe=0;P.fired=new Set()}updatePlayer();return}
+ hush();P.te=P.s.phases.slice(0,ni).reduce((a,x)=>a+x.d,0);P.idx=ni;if(P.started)enterPhase(false);else P.pe=0;updatePlayer()}
+function finish(){clearInterval(tickT);P.running=false;P.done=true;bell(3,330);fadeAmbient(false);setTimeout(()=>stopAmbient(),6000);dropWake();
+ const min=Math.max(1,Math.round(P.te/60));addLog(P.s.id,min);notify(t('complete'),`${min} ${t('minutes')}`);
+ $('#pl-mid').innerHTML=`<div class="done"><div class="ph-n">${esc(L(P.s.name))}</div><div class="ph-t">${t('complete')}</div><div class="big">${min}′</div><div class="cue">${t('logged')}</div></div>`;
+ $('#pl-prog').querySelectorAll('b').forEach(b=>b.style.width='100%');$('#pl-rem').textContent='0:00';
+ $('#pl-icon').innerHTML='<path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/>';$('#pl-play').setAttribute('aria-label',t('again'))}
+function updatePlayer(){if(!P||P.done)return;const p=P.s.phases[P.idx];
+ const hasIntro=P.s.phases[0].intro?1:0;$('#pl-phn').textContent=P.s.id==='silent'?`${fmt(p.d-P.pe)}`:p.intro?(lang==='zh'?'開場':'Opening'):`${t('phase')} ${P.idx+1-hasIntro} ${t('of')} ${P.s.phases.length-hasIntro}`;
+ $('#pl-pht').textContent=L(p.t);
+ if(!P.started)$('#pl-cue').textContent=lang==='zh'?'戴上耳機，點擊播放。':'Put on headphones and press play.';
+ $('#pl-prog').querySelectorAll('b').forEach((b,i)=>b.style.width=(i<P.idx?100:i===P.idx?Math.min(100,P.pe/p.d*100):0)+'%');
+ $('#pl-el').textContent=fmt(P.te);$('#pl-rem').textContent='-'+fmt(P.total-P.te);
+ $('#pl-icon').innerHTML=P.running?'<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>':'<path d="M8 5v14l11-7z"/>';$('#pl-play').setAttribute('aria-label',P.running?'Pause':'Play')}
+function closePlayer(){clearInterval(tickT);hush();stopAmbient();dropWake();cancelAnimationFrame(raf);
+ if(P&&!P.done&&P.te>=120)addLog(P.s.id,Math.round(P.te/60));P=null;$('#player').hidden=true;document.body.style.overflow='';render()}
+$('#pl-play').onclick=playPause;$('#pl-close').onclick=closePlayer;$('#pl-next').onclick=()=>jump(1);$('#pl-back').onclick=()=>jump(-1);
+$('#vol-voice').oninput=e=>{settings.voiceVol=+e.target.value;saveSettings()};
+$('#vol-amb').oninput=e=>{settings.ambVol=+e.target.value;saveSettings();setAmbVol()};
+
+/* ---------- visual: drifting light field + breathing core (6 breaths/min) ---------- */
+const cv=$('#cv'),cx=cv.getContext('2d');const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let lastDraw=0;
+function sizeCanvas(){const r=Math.min(2,devicePixelRatio||1);cv.width=innerWidth*r;cv.height=innerHeight*r;cx.setTransform(r,0,0,r,0,0)}
+addEventListener('resize',()=>{if(P)sizeCanvas()});
+function loop(ts=0){if(!P)return;raf=requestAnimationFrame(loop);if(reduce&&ts-lastDraw<1000)return;lastDraw=ts;
+ const w=innerWidth,h=innerHeight,target=P.s.phases[Math.min(P.idx,P.s.phases.length-1)].c;
+ for(let i=0;i<3;i++)P.col[i]+=(target[i]-P.col[i])*.01;const c=P.col.map(Math.round);
+ cx.globalCompositeOperation='source-over';cx.fillStyle='#0A1018';cx.fillRect(0,0,w,h);cx.globalCompositeOperation='lighter';
+ const m=Math.min(w,h);
+ for(let k=0;k<4;k++){const x=w/2+Math.cos(ts*7e-5*(k+1)+k*1.7)*w*.22,y=h*.42+Math.sin(ts*5e-5*(k+2)+k*2.1)*h*.14,r=m*(.42+.1*Math.sin(ts*3e-4+k));
+  const g=cx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(${c},${k%2?.16:.22})`);g.addColorStop(1,'rgba(0,0,0,0)');cx.fillStyle=g;cx.fillRect(0,0,w,h)}
+ const br=.5-.5*Math.cos(ts/10000*2*Math.PI),rr=m*(.09+.05*br),gx=w/2,gy=h*.42;
+ const g2=cx.createRadialGradient(gx,gy,0,gx,gy,rr*2.6);g2.addColorStop(0,'rgba(245,225,185,.55)');g2.addColorStop(.35,`rgba(${c},.28)`);g2.addColorStop(1,'rgba(0,0,0,0)');
+ cx.fillStyle=g2;cx.beginPath();cx.arc(gx,gy,rr*2.6,0,Math.PI*2);cx.fill()}
+
+/* ---------- language ---------- */
+function setLang(l){lang=l;store.set('lang',l);hush();if(P&&!P.done){$('#pl-name').textContent=L(P.s.name);$('#pl-close').textContent=t('close');updatePlayer()}render()}
+$('#lang-en').onclick=()=>setLang('en');$('#lang-zh').onclick=()=>setLang('zh');
+
+render();
+})();
+</script>
+
+</body>
+</html>
