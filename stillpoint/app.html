@@ -254,8 +254,9 @@ const T={
   supNote:'Stack and timing from your May 2026 sync template. Tell me what changed (D3 dose, zinc, anything weekly) and I’ll update it.',
   last7:'last 7 days',close:'End',complete:'Session complete',logged:'Logged to your practice history.',again:'Done',
   phase:'Phase',of:'of',sourceG:'Source: Garmin, Forerunner 255, times converted to Taipei (UTC+8).',
-  sugMorning:'Your 05:00 block. The full six-phase practice.',sugMidday:'A midday reset, matching your lunchtime breathwork habit.',
+  sugMorning:'Your 05:00 block. The full six-phase practice.',sugMidday:'Eight minutes to calm your nerves before the afternoon.',sugReview:'Close the day: gratitude, release, rest.',
   sugEvening:'Clear the workday before the evening.',sugNight:'Slow 4-7-8 breathing before sleep.',sugTennis:'Box breathing before tennis tonight.',
+  offT:'Offline check',offApp:'App saved on this phone',offEn:'English voice works offline',offZh:'Chinese voice works offline',offAll:'Ready for no signal. Sessions, sounds, timer, logs and watch cues all run without internet.',offNot:'Not ready yet. Fix the items marked ✗ while you still have signal.',offArtifact:'This link needs internet. Install the standalone version on your home screen to use Stillpoint offline.',offTip:'Before a hike: open the app once with signal, run 10 seconds of a session in each language, keep the phone in airplane mode with Bluetooth on for watch cues.',online:'online only',offline:'offline',
   timings:{morning:'Breakfast',premeal:'Before meals',lunch:'With lunch',training:'Training days',bedtime:'Bedtime'}
  },
  zh:{tabToday:'今天',tabMed:'冥想',tabBreathe:'呼吸',tabBody:'身體',voice:'引導語音',ambient:'背景音',
@@ -280,8 +281,9 @@ const T={
   supNote:'品項與時間來自你 2026 年 5 月的同步範本。若有變更（D3 劑量、鋅、每週品項），告訴我就更新。',
   last7:'近 7 天',close:'結束',complete:'練習完成',logged:'已記錄到練習紀錄。',again:'完成',
   phase:'階段',of:'/',sourceG:'資料來源：Garmin Forerunner 255，時間已換算為台北時間（UTC+8）。',
-  sugMorning:'你的 05:00 時段，完整六階段練習。',sugMidday:'午間重整，配合你中午做呼吸練習的習慣。',
+  sugMorning:'你的 05:00 時段，完整六階段練習。',sugMidday:'用 8 分鐘安定神經，再進入下午。',sugReview:'結束今天：感恩、釋放、休息。',
   sugEvening:'在晚上之前，把工作的能量清掉。',sugNight:'睡前做緩慢的 4-7-8 呼吸。',sugTennis:'今晚打網球前，做方塊呼吸。',
+  offT:'離線檢查',offApp:'App 已存在手機上',offEn:'英文語音可離線',offZh:'中文語音可離線',offAll:'無訊號也能用。冥想、聲音、計時、紀錄、手錶提示都不需要網路。',offNot:'尚未完成。請在有訊號時處理標示 ✗ 的項目。',offArtifact:'這個連結需要網路。請把獨立版本加到主畫面，就能離線使用。',offTip:'登山前：在有訊號時打開 App，兩種語言各播放 10 秒。山上開飛航模式並保持藍牙開啟，手錶提示仍可使用。',online:'需網路',offline:'離線',
   timings:{morning:'早餐',premeal:'餐前',lunch:'午餐',training:'訓練日',bedtime:'睡前'}
  }
 };
@@ -316,6 +318,23 @@ const SESSIONS=[
    {d:90,c:[110,150,200],t:{en:'Breathe',zh:'呼吸'},cues:[C(0,'Good morning. Sit tall and close your eyes.','早安。坐直，閉上眼睛。'),C(10,'Breathe in for four... and out for six. Again.','吸氣數到四……吐氣數到六。再一次。'),C(50,'Let each out-breath soften your shoulders.','每一次吐氣，讓肩膀更放鬆。')]},
    {d:120,c:[212,160,81],t:{en:'Intention',zh:'意圖'},cues:[C(0,'Choose one word for today. Focus. Patience. Courage. Whatever you need.','為今天選一個詞。專注、耐心、勇氣，或任何你需要的。'),C(40,'See yourself living that word at work this morning.','看見自己今天早上在工作中活出這個詞。'),C(85,'Say it to yourself once more.','在心裡再對自己說一次。')]},
    {d:90,c:[245,215,160],t:{en:'Thanks',zh:'感謝'},cues:[C(0,'Finally, name one thing you are grateful for right now.','最後，說出一件此刻你感謝的事。'),C(45,'Take one last full breath. Open your eyes. Go well.','最後一次深呼吸。睜開眼睛，好好出發。')]}
+  ]},
+ {id:'midday',color:['#2F5E6E','#9FC3C9'],name:{en:'Midday Calm',zh:'午間安定'},
+  desc:{en:'Settle your nerves: sighs, long exhales, body softening.',zh:'安定神經：嘆息呼吸、長吐氣、全身放鬆。'},
+  phases:[
+   {d:90,c:[70,130,150],t:{en:'Pause',zh:'暫停'},cues:[C(0,'Stop for a moment. Put your phone down where you can hear it, and close your eyes.','先停下來。把手機放在聽得到的地方，閉上眼睛。'),C(15,'Breathe in through the nose. Then a second short sip of air on top. Now a long, slow breath out through the mouth.','用鼻子吸氣，再補吸一小口，然後用嘴巴長長地、慢慢地吐氣。'),C(45,'Again. Two sips in... one long breath out.','再一次。吸兩口……長長吐一口。'),C(70,'Once more, and then let the breath return to normal.','最後一次，然後讓呼吸回到自然。')]},
+   {d:150,c:[90,150,175],t:{en:'Long exhale',zh:'長吐氣'},cues:[C(0,'Now breathe in for four, and out for eight.','現在吸氣四拍，吐氣八拍。'),C(20,'In for four... out for eight. The long breath out tells your body it is safe.','吸四……吐八。長長的吐氣會告訴身體：你是安全的。'),C(80,'Keep this rhythm. If your mind goes to the meeting, the email, the deadline, just come back to the out-breath.','保持這個節奏。如果念頭跑到會議、郵件、期限，就回到吐氣。'),C(130,'In... and slowly out.','吸……慢慢吐。')]},
+   {d:150,c:[120,160,190],t:{en:'Soften',zh:'放鬆'},cues:[C(0,'Let the breath go free. Now soften your body, from the top down.','讓呼吸自由。現在從頭到腳放鬆身體。'),C(15,'Your forehead. Your jaw. Let the teeth part slightly.','額頭。下巴。讓上下牙齒微微分開。'),C(50,'Your shoulders drop. Your hands rest heavy.','肩膀沉下來。雙手沉沉地放著。'),C(90,'Your belly softens. Your legs, your feet, heavy on the floor.','腹部放軟。雙腿、雙腳，穩穩踩在地上。'),C(125,'Notice that you are calmer than you were a few minutes ago.','留意一下，你比幾分鐘前平靜了。')]},
+   {d:90,c:[212,170,110],t:{en:'Return',zh:'回來'},cues:[C(0,'Choose how you want to walk into this afternoon. Steady. Clear. Kind.','選擇你想用什麼狀態走進下午：穩定、清晰、溫和。'),C(40,'Take one full breath. Open your eyes. You are ready.','深深吸一口氣。睜開眼睛。你準備好了。')]}
+  ]},
+ {id:'evening',color:['#2A3352','#C9A46A'],name:{en:'Evening Review',zh:'夜間回顧'},
+  desc:{en:'Gratitude for today, release, tomorrow, rest.',zh:'感謝今天、釋放、明天、休息。'},
+  phases:[
+   {d:90,c:[60,80,130],t:{en:'Arrive',zh:'抵達'},cues:[C(0,'Welcome to the end of your day. Sit or lie down, and close your eyes.','歡迎來到今天的尾聲。坐著或躺下，閉上眼睛。'),C(15,'Breathe out fully, as if you are setting down a heavy bag.','完整地吐一口氣，好像放下一個沉重的背包。'),C(50,'The work is done for today. Let your body know that.','今天的工作結束了。讓身體知道這件事。')]},
+   {d:180,c:[212,160,81],t:{en:'Gratitude',zh:'感恩'},cues:[C(0,'Gratitude. Replay your day from the morning.','感恩。從早上開始回顧今天。'),C(10,'Find three moments you are grateful for. A conversation, a meal, a small win.','找出三個值得感謝的時刻：一段對話、一頓飯、一個小小的成功。'),C(80,'Stay with each one for a few breaths. Let yourself feel it again.','每一個都停留幾次呼吸，讓自己再感受一次。'),C(140,'Now thank yourself for one thing you did well today.','現在，為今天做得好的一件事，謝謝自己。')]},
+   {d:150,c:[140,115,175],t:{en:'Release',zh:'釋放'},cues:[C(0,'Release. Was there a moment today that did not go well?','釋放。今天有沒有不順利的時刻？'),C(15,'See it clearly, once. What would you do differently?','清楚地看它一次。下次你會怎麼做？'),C(60,'Now let it go. Say quietly: I did my best with what I knew.','現在放下它。輕聲說：我已經用我所知道的盡力了。'),C(110,'Breathe it out. It does not need to come to bed with you.','把它吐出去。它不需要跟你一起上床。')]},
+   {d:90,c:[90,140,190],t:{en:'Tomorrow',zh:'明天'},cues:[C(0,'Tomorrow. Picture one thing you want to go well.','明天。想像一件你希望順利的事。'),C(30,'See it happening easily. Then let the picture fade.','看見它輕鬆地發生，然後讓畫面淡去。')]},
+   {d:90,c:[50,65,105],t:{en:'Rest',zh:'休息'},cues:[C(0,'Rest now. Let your breath slow down on its own.','現在休息。讓呼吸自己慢下來。'),C(40,'There is nothing left to do today. Stay as long as you like.','今天已經沒有要做的事了。想待多久就待多久。')]}
   ]}
 ];
 const totalMin=s=>Math.round(s.phases.reduce((a,p)=>a+p.d,0)/60);
@@ -396,11 +415,12 @@ function tone(up){if(!ac)return;const t0=ac.currentTime,o=ac.createOscillator(),
 /* ---------- speech ---------- */
 const hasTTS='speechSynthesis' in window;
 let voices=[];
-function loadVoices(){if(!hasTTS)return;voices=speechSynthesis.getVoices();if(cur==='meditate')renderMeditate()}
+function loadVoices(){if(!hasTTS)return;voices=speechSynthesis.getVoices();if(cur==='meditate')renderMeditate();if(cur==='today'&&typeof offlineCheck==='function')offlineCheck()}
 if(hasTTS){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
 const langVoices=()=>voices.filter(v=>lang==='zh'?/^(zh|cmn)/i.test(v.lang):/^en/i.test(v.lang));
 function pickVoice(){const saved=store.get('voice_'+lang,null),list=langVoices();
- return list.find(v=>v.voiceURI===saved)||(lang==='zh'?(list.find(v=>/TW|Hant/i.test(v.lang))||list[0]):(list.find(v=>/male/i.test(v.name)&&!/female/i.test(v.name))||list.find(v=>/en[-_]US/i.test(v.lang))||list[0]))||null}
+ const loc=list.filter(v=>v.localService);const pool=loc.length?loc:list;
+ return list.find(v=>v.voiceURI===saved)||(lang==='zh'?(pool.find(v=>/TW|Hant/i.test(v.lang))||pool[0]):(pool.find(v=>/male/i.test(v.name)&&!/female/i.test(v.name))||pool.find(v=>/en[-_]US/i.test(v.lang))||pool[0]))||null}
 function speak(text){if(!hasTTS||settings.voiceVol<=0)return;try{const u=new SpeechSynthesisUtterance(text);u.lang=lang==='zh'?'zh-TW':'en-US';const v=pickVoice();if(v)u.voice=v;u.rate=lang==='zh'?.86:.8;u.pitch=.86;u.volume=settings.voiceVol;speechSynthesis.speak(u)}catch(e){}}
 const hush=()=>{if(hasTTS)try{speechSynthesis.cancel()}catch(e){}};
 
@@ -437,9 +457,24 @@ function suggestion(){const h=new Date().getHours(),di=dayIdx();
  if((di===4||di===5)&&h>=16&&h<20)return{kind:'breath',id:'box',why:t('sugTennis'),min:3};
  if(h>=3&&h<7)return{kind:'med',id:'six',why:t('sugMorning')};
  if(h>=7&&h<11)return{kind:'med',id:'morning',why:lang==='zh'?'用 5 分鐘開始今天的工作。':'Start the workday in five minutes.'};
- if(h>=11&&h<15)return{kind:'med',id:'ground',why:t('sugMidday')};
- if(h>=15&&h<21)return{kind:'med',id:'ground',why:t('sugEvening')};
+ if(h>=11&&h<15)return{kind:'med',id:'midday',why:t('sugMidday')};
+ if(h>=15&&h<18)return{kind:'med',id:'ground',why:t('sugEvening')};
+ if(h>=18&&h<22)return{kind:'med',id:'evening',why:t('sugReview')};
  return{kind:'breath',id:'478',why:t('sugNight'),min:5}}
+
+/* ---------- offline readiness ---------- */
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+async function offlineCheck(){const chip=$('#offchip'),body=$('#offbody');if(!chip)return;
+ let app=false;try{if('caches' in window)app=!!(await caches.match(new URL('index.html',location.href).href,{ignoreSearch:true}))}catch(e){}
+ const vs=hasTTS?speechSynthesis.getVoices():[];
+ const en=vs.some(v=>/^en/i.test(v.lang)&&v.localService),zh=vs.some(v=>/^(zh|cmn)/i.test(v.lang)&&v.localService);
+ if(!$('#offchip'))return;
+ const ok=app&&en&&zh,mark=b=>b?'<b style="color:var(--ok)">✓</b>':'<b style="color:var(--warn)">✗</b>';
+ chip.className='chip '+(ok?'ok':'warn');chip.textContent=ok?'✓':(app?'!':'✗');
+ body.innerHTML=(app?'':`<p style="color:var(--warn);margin-bottom:6px">${esc(t('offArtifact'))}</p>`)+
+  `<div style="display:flex;flex-direction:column;gap:4px">${[[app,'offApp'],[en,'offEn'],[zh,'offZh']].map(([b,k])=>`<div>${mark(b)}&nbsp; ${esc(t(k))}</div>`).join('')}</div>`+
+  `<p style="margin-top:8px">${esc(ok?t('offAll'):t('offNot'))}</p><p class="note" style="margin-top:8px">${esc(t('offTip'))}</p>`}
+if('serviceWorker' in navigator){try{navigator.serviceWorker.addEventListener('controllerchange',()=>{if(cur==='today')offlineCheck()})}catch(e){}}
 
 /* ---------- views ---------- */
 function setTab(tab){cur=tab;document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));
@@ -481,12 +516,13 @@ function renderToday(){
     <div class="row"><span class="chip gold">05:00 ${lang==='zh'?'冥想':'Meditation'}</span><span class="chip">${esc(L(WEEK[dayIdx()]))}</span></div>
     <div class="row"><span class="chip warn">${t('garmin')}: ${daysAgo} ${t('daysAgo')}</span></div>
   </div>
+  <div class="card" id="offcard"><div class="row between"><h3>${t('offT')}</h3><span class="chip" id="offchip">…</span></div><div id="offbody" class="muted" style="font-size:.88rem"></div></div>
   <div class="card">
     <h3>${t('lastSit')}</h3>
     ${log.length?`<div class="row" style="gap:22px"><div><div class="mono" style="font-size:1.5rem;color:var(--gold-ink)">${streak()}</div><div class="muted" style="font-size:.8rem">${t('streak')}</div></div><div><div class="mono" style="font-size:1.5rem;color:var(--slate)">${log.length}</div><div class="muted" style="font-size:.8rem">${t('sessions')}</div></div><div><div class="mono" style="font-size:1.5rem;color:var(--slate)">${mins}</div><div class="muted" style="font-size:.8rem">${t('total')}</div></div></div>`:`<p class="muted">${t('noSit')}</p>`}
   </div>`;
  $('#sug-go').onclick=()=>{if(s.kind==='med')openSession(s.id);else{breathSel=s.id;breathMin=s.min;setTab('breathe')}};
- $('#go-body').onclick=()=>setTab('body')}
+ $('#go-body').onclick=()=>setTab('body');offlineCheck()}
 
 function renderMeditate(){
  const v=$('#v-meditate');if(cur!=='meditate')return;
@@ -507,7 +543,7 @@ function renderMeditate(){
   </div>
   <div class="card">
     <h3>${t('voiceSet')}</h3>
-    ${hasTTS?`<div class="field"><label for="voice-sel">${lang==='zh'?'中文聲音':'English voice'}</label><select id="voice-sel">${list.length?list.map(x=>`<option value="${esc(x.voiceURI)}" ${curV&&x.voiceURI===curV.voiceURI?'selected':''}>${esc(x.name)} · ${esc(x.lang)}</option>`).join(''):`<option>${lang==='zh'?'系統預設':'System default'}</option>`}</select></div>
+    ${hasTTS?`<div class="field"><label for="voice-sel">${lang==='zh'?'中文聲音':'English voice'}</label><select id="voice-sel">${list.length?list.map(x=>`<option value="${esc(x.voiceURI)}" ${curV&&x.voiceURI===curV.voiceURI?'selected':''}>${esc(x.name)} · ${esc(x.lang)} · ${x.localService?t('offline'):t('online')}</option>`).join(''):`<option>${lang==='zh'?'系統預設':'System default'}</option>`}</select></div>
     <div><button class="btn ghost small" id="voice-test">▶ ${t('preview')}</button></div>`:`<p class="muted">Speech is not available in this browser.</p>`}
     <p class="note">${t('voiceTip')}</p>
     <div class="field">${t('ambSound')}<div class="seg" id="seg-amb">${['drone','rain','off'].map(a=>`<button aria-pressed="${settings.amb===a}" data-v="${a}">${t(a)}</button>`).join('')}</div></div>
