@@ -1,6 +1,6 @@
 // Stillpoint service worker: full offline use after one online visit, plus notifications (mirrored to Garmin).
-const CACHE='stillpoint-v2';
-const FONTS='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Merriweather:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap';
+const CACHE='stillpoint-v3';
+const FONTS='https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap';
 const SHELL=['./','./index.html','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(async c=>{
   await c.addAll(SHELL);

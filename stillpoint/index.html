@@ -3,189 +3,223 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#3B5A7D">
+<meta name="theme-color" content="#006A67">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
 </head>
 <body>
-<title>RL Studio Stillpoint</title>
+<title>Stillpoint</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Merriweather:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* Layout: phone-first app shell — sticky brand header, one scrolling view, fixed bottom tab bar; full-screen dark player overlay */
+/* Layout: Material Design 3 phone app — small top app bar, one scrolling destination, bottom navigation bar; immersive dark player. All sizes in rem so the text-size setting scales the whole UI. */
 :root{
-  --bg:#F4F6F9; --surface:#FFFFFF; --ink:#1B2633; --muted:#5C6A7B; --line:#DCE3EB;
-  --slate:#3B5A7D; --slate-soft:#E7EEF6; --btn:#3B5A7D; --btn-ink:#FFFFFF;
-  --gold:#D4A051; --gold-ink:#8A6320; --gold-soft:#FBF3E6;
-  --ok:#2F7A47; --ok-soft:#E4F2E8; --warn:#A0620C; --warn-soft:#FCEFD9;
-  --f-display:'Merriweather',Georgia,'Noto Sans TC',serif;
-  --f-body:'Poppins','Noto Sans TC',system-ui,sans-serif;
-  --f-data:'IBM Plex Mono',ui-monospace,Menlo,monospace;
-  --r:14px;
+  --primary:#006A67; --on-primary:#FFFFFF; --primary-container:#9DF2EC; --on-primary-container:#00201F;
+  --secondary:#4A6361; --secondary-container:#CCE8E5; --on-secondary-container:#051F1E;
+  --tertiary:#4A607C; --tertiary-container:#D2E4FF; --on-tertiary-container:#031C35;
+  --error:#BA1A1A; --error-container:#FFDAD6; --on-error-container:#410002;
+  --surface:#F4FBF9; --surface-c-low:#EEF5F3; --surface-c:#E8EFED; --surface-c-high:#E3EAE8; --surface-c-highest:#DDE4E2;
+  --on-surface:#161D1C; --on-surface-variant:#3F4948; --outline:#6F7978; --outline-variant:#BEC9C7;
+  --ok:#1E6B3A; --ok-container:#B7F1C5;
+  --font:'Roboto','Noto Sans TC',system-ui,sans-serif;
+  --scale:1;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0E151E; --surface:#162130; --ink:#E6ECF2; --muted:#93A2B4; --line:#283648;
-  --slate:#8DB0D6; --slate-soft:#1C2A3B; --btn:#3B5A7D; --btn-ink:#FFFFFF;
-  --gold:#D4A051; --gold-ink:#E3B872; --gold-soft:#2A2418;
-  --ok:#6CC08A; --ok-soft:#173226; --warn:#E5A84E; --warn-soft:#33270F; color-scheme:dark}}
+  --primary:#80D5D0; --on-primary:#003735; --primary-container:#00504D; --on-primary-container:#9DF2EC;
+  --secondary:#B0CCC9; --secondary-container:#324B49; --on-secondary-container:#CCE8E5;
+  --tertiary:#B2C8E8; --tertiary-container:#334863; --on-tertiary-container:#D2E4FF;
+  --error:#FFB4AB; --error-container:#93000A; --on-error-container:#FFDAD6;
+  --surface:#0E1514; --surface-c-low:#161D1C; --surface-c:#1A2120; --surface-c-high:#252B2A; --surface-c-highest:#2F3635;
+  --on-surface:#DDE4E2; --on-surface-variant:#BEC9C7; --outline:#889392; --outline-variant:#3F4948;
+  --ok:#8FD8A4; --ok-container:#0D5229; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0E151E; --surface:#162130; --ink:#E6ECF2; --muted:#93A2B4; --line:#283648;
-  --slate:#8DB0D6; --slate-soft:#1C2A3B; --btn:#3B5A7D; --btn-ink:#FFFFFF;
-  --gold:#D4A051; --gold-ink:#E3B872; --gold-soft:#2A2418;
-  --ok:#6CC08A; --ok-soft:#173226; --warn:#E5A84E; --warn-soft:#33270F; color-scheme:dark}
+  --primary:#80D5D0; --on-primary:#003735; --primary-container:#00504D; --on-primary-container:#9DF2EC;
+  --secondary:#B0CCC9; --secondary-container:#324B49; --on-secondary-container:#CCE8E5;
+  --tertiary:#B2C8E8; --tertiary-container:#334863; --on-tertiary-container:#D2E4FF;
+  --error:#FFB4AB; --error-container:#93000A; --on-error-container:#FFDAD6;
+  --surface:#0E1514; --surface-c-low:#161D1C; --surface-c:#1A2120; --surface-c-high:#252B2A; --surface-c-highest:#2F3635;
+  --on-surface:#DDE4E2; --on-surface-variant:#BEC9C7; --outline:#889392; --outline-variant:#3F4948;
+  --ok:#8FD8A4; --ok-container:#0D5229; color-scheme:dark}
 
+html{font-size:calc(100% * var(--scale))}
 *{box-sizing:border-box}
 html,body{height:100%}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body{background:var(--surface);color:var(--on-surface);font-family:var(--font);font-size:1rem;line-height:1.5;-webkit-font-smoothing:antialiased;margin:0}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
-h1,h2,h3{font-family:var(--f-display);color:var(--slate);text-wrap:balance;margin:0;font-weight:700}
-h2{font-size:1.25rem}
-h3{font-size:1rem}
+button{font:inherit;cursor:pointer;color:inherit}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
 p{margin:0}
-button{font:inherit;cursor:pointer}
-button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.mono{font-family:var(--f-data);font-variant-numeric:tabular-nums}
-.muted{color:var(--muted)}
-.eyebrow{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--muted)}
+.wrap{max-width:40rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+/* M3 type scale */
+.headline{font-size:1.5rem;line-height:2rem;font-weight:400;margin:0;text-wrap:balance}
+.title-l{font-size:1.375rem;line-height:1.75rem;font-weight:400;margin:0}
+.title-m{font-size:1rem;line-height:1.5rem;font-weight:500;margin:0;letter-spacing:.01em}
+.body-m{font-size:.875rem;line-height:1.25rem}
+.label-l{font-size:.875rem;font-weight:500;letter-spacing:.01em}
+.label-m{font-size:.75rem;font-weight:500;letter-spacing:.03em}
+.var{color:var(--on-surface-variant)}
+.num{font-variant-numeric:tabular-nums}
 
-.wrap{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+/* top app bar */
+.appbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);transition:background .2s}
+.appbar.scrolled{background:var(--surface-c)}
+.appbar .wrap{display:flex;align-items:center;gap:.25rem;min-height:4rem}
+.appbar h1{flex:1;font-size:1.375rem;font-weight:400;margin:0}
+.icon-btn{width:3rem;height:3rem;border-radius:50%;border:0;background:transparent;display:grid;place-items:center;color:var(--on-surface-variant)}
+.icon-btn:hover{background:color-mix(in srgb,var(--on-surface) 8%,transparent)}
+.icon-btn svg{width:1.5rem;height:1.5rem}
+.watch-chip{display:inline-flex;align-items:center;gap:.375rem;height:2rem;padding:0 .75rem;border-radius:.5rem;border:1px solid var(--outline-variant);background:transparent;font-size:.875rem;font-weight:500;color:var(--on-surface-variant)}
+.watch-chip svg{width:1.125rem;height:1.125rem}
+.watch-chip.on{background:var(--secondary-container);border-color:transparent;color:var(--on-secondary-container)}
+.watch-chip .dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--outline)}
+.watch-chip.on .dot{background:var(--ok)}
 
-/* header */
-.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:2px solid var(--btn)}
-.hdr .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px}
-.brand{font-size:.62rem;letter-spacing:.2em;font-weight:700;color:var(--slate);text-transform:uppercase}
-.appname{font-family:var(--f-display);font-size:1.15rem;color:var(--slate);line-height:1.1}
-.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
-.lang button{border:0;background:transparent;color:var(--muted);padding:6px 12px;font-size:.8rem;font-weight:500}
-.lang button[aria-pressed="true"]{background:var(--gold);color:#1B2633}
+main{padding-block:.5rem calc(6.5rem + env(safe-area-inset-bottom,0px))}
+.view{display:flex;flex-direction:column;gap:1rem}
+.section-h{font-size:.875rem;font-weight:500;color:var(--primary);margin:.5rem 0 0;letter-spacing:.01em}
 
-main{padding-block:18px 110px}
-.view{display:flex;flex-direction:column;gap:16px}
-
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
-.card.hero{background:linear-gradient(160deg,#22364D 0%,#3B5A7D 70%,#55708F 100%);border:0;color:#F3F6FA}
-.card.hero h2{color:#FFFFFF;font-size:1.4rem}
-.card.hero .eyebrow{color:#E9C98F}
-.card.hero p{color:#D8E2EE}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+/* cards */
+.card{border-radius:.75rem;padding:1rem;display:flex;flex-direction:column;gap:.75rem;min-width:0}
+.card.filled{background:var(--surface-c-highest)}
+.card.outlined{background:var(--surface);border:1px solid var(--outline-variant)}
+.card.elevated{background:var(--surface-c-low);box-shadow:0 1px 2px rgba(0,0,0,.18),0 1px 3px 1px rgba(0,0,0,.08)}
+.card.feature{background:var(--primary-container);color:var(--on-primary-container)}
+.card.feature .var{color:var(--on-primary-container);opacity:.8}
+.row{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap}
 .between{justify-content:space-between}
 
-.btn{border:0;border-radius:999px;padding:11px 20px;background:var(--btn);color:var(--btn-ink);font-weight:500;display:inline-flex;align-items:center;gap:8px}
-.btn:hover{background:var(--gold);color:#1B2633}
-.btn.gold{background:var(--gold);color:#1B2633}
-.btn.ghost{background:transparent;color:var(--slate);border:1px solid var(--line)}
-.btn.small{padding:7px 14px;font-size:.85rem}
+/* buttons */
+.btn{height:2.5rem;padding:0 1.5rem;border-radius:1.25rem;border:0;font-size:.875rem;font-weight:500;letter-spacing:.01em;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;white-space:nowrap}
+.btn svg{width:1.125rem;height:1.125rem}
+.btn.filled{background:var(--primary);color:var(--on-primary)}
+.btn.tonal{background:var(--secondary-container);color:var(--on-secondary-container)}
+.btn.outlined{background:transparent;border:1px solid var(--outline);color:var(--primary)}
+.btn.text{background:transparent;color:var(--primary);padding:0 .75rem}
+.btn.big{height:3.5rem;padding:0 2rem;border-radius:1rem;font-size:1rem}
+.btn:hover{filter:brightness(1.06)}
+.btn[disabled]{opacity:.38;pointer-events:none}
 
-.chip{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:500;padding:3px 10px;border-radius:999px;background:var(--slate-soft);color:var(--slate)}
-.chip.warn{background:var(--warn-soft);color:var(--warn)}
-.chip.ok{background:var(--ok-soft);color:var(--ok)}
-.chip.gold{background:var(--gold-soft);color:var(--gold-ink)}
+/* chips & segmented */
+.chip{display:inline-flex;align-items:center;gap:.375rem;height:2rem;padding:0 .75rem;border-radius:.5rem;border:1px solid var(--outline-variant);font-size:.875rem;font-weight:500;color:var(--on-surface-variant);background:transparent}
+.chip.ok{background:var(--ok-container);color:var(--ok);border-color:transparent}
+.chip.err{background:var(--error-container);color:var(--on-error-container);border-color:transparent}
+.chip.sel{background:var(--secondary-container);color:var(--on-secondary-container);border-color:transparent}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.seg{display:flex;border:1px solid var(--outline);border-radius:1.25rem;overflow:hidden;width:100%}
+.seg button{flex:1;min-width:0;height:2.5rem;border:0;border-left:1px solid var(--outline);background:transparent;font-size:.875rem;font-weight:500;color:var(--on-surface);padding:0 .5rem}
+.seg button:first-child{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--secondary-container);color:var(--on-secondary-container)}
 
-/* session list */
-.sessions{display:grid;gap:12px}
-.sess{display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:center;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;color:var(--ink)}
-.sess:hover{border-color:var(--gold)}
-.sess .disc{width:56px;height:56px;border-radius:50%}
-.sess .meta{min-width:0;display:flex;flex-direction:column;gap:2px}
-.sess .meta b{font-family:var(--f-display);color:var(--slate);font-size:1rem}
-.sess .meta span{font-size:.82rem;color:var(--muted)}
-.sess .len{font-family:var(--f-data);font-size:.85rem;color:var(--gold-ink)}
-.phases{display:flex;gap:3px;margin-top:6px}
-.phases i{display:block;height:4px;border-radius:2px;background:var(--line)}
+/* lists */
+.list{display:flex;flex-direction:column}
+.li{display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;padding:.75rem 0;min-height:3.5rem;text-align:left;background:none;border:0;width:100%}
+.li+.li{border-top:1px solid var(--outline-variant)}
+.li .lead{width:3.5rem;height:3.5rem;border-radius:.75rem;display:grid;place-items:center}
+.li .lead svg{width:1.75rem;height:1.75rem}
+.li .txt{min-width:0;display:flex;flex-direction:column}
+.li .txt b{font-weight:400;font-size:1rem}
+.li .txt span{font-size:.875rem;color:var(--on-surface-variant)}
+.li .trail{font-size:.75rem;font-weight:500;color:var(--on-surface-variant)}
+.check{width:1.5rem;height:1.5rem;border-radius:.25rem;border:2px solid var(--on-surface-variant);display:grid;place-items:center}
+.check svg{width:1.125rem;height:1.125rem;color:var(--on-primary)}
+[aria-checked="true"] .check{background:var(--primary);border-color:var(--primary)}
+.dots{display:flex;gap:.1875rem}
+.dots i{width:.4375rem;height:.4375rem;border-radius:50%;background:var(--outline-variant)}
+.dots i.on{background:var(--primary)}
+.progress{height:.25rem;border-radius:.125rem;background:var(--surface-c-highest);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--primary)}
 
-.field{display:flex;flex-direction:column;gap:6px;font-size:.85rem;color:var(--muted)}
-.field select,.field input[type=range]{width:100%}
-select{font:inherit;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
-.seg{display:flex;flex-wrap:wrap;gap:6px}
-.seg button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 13px;font-size:.85rem}
-.seg button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#1B2633}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
+.stat{display:flex;flex-direction:column}
+.stat b{font-size:1.75rem;font-weight:400;line-height:2.25rem}
+.stat span{font-size:.75rem;color:var(--on-surface-variant)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}
+.tile{background:var(--surface-c);border-radius:.75rem;padding:.75rem;display:flex;flex-direction:column;gap:.125rem;min-width:0}
+.tile b{font-size:1.125rem;font-weight:500;color:var(--primary)}
+.tile span{font-size:.75rem;color:var(--on-surface-variant)}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.25rem}
+.day{border-radius:.75rem;padding:.5rem .125rem;text-align:center;background:var(--surface-c);display:flex;flex-direction:column;gap:.125rem;min-width:0}
+.day b{font-size:.75rem;font-weight:500}
+.day small{font-size:.625rem;line-height:1.2;color:var(--on-surface-variant);overflow-wrap:anywhere}
+.day.today{background:var(--primary);color:var(--on-primary)}
+.day.today small{color:var(--on-primary)}
+.note{font-size:.875rem;color:var(--on-surface-variant);background:var(--surface-c);border-radius:.75rem;padding:.75rem}
+.warn{background:var(--error-container);color:var(--on-error-container)}
+.steps{margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem;font-size:.9375rem}
+.field{display:flex;flex-direction:column;gap:.5rem}
+.field label,.field .lbl{font-size:.875rem;font-weight:500;color:var(--on-surface-variant)}
+select{font:inherit;font-size:1rem;height:3.5rem;padding:0 1rem;border-radius:.25rem;border:1px solid var(--outline);background:var(--surface);color:var(--on-surface);width:100%}
+input[type=range]{width:100%;accent-color:var(--primary);height:2rem}
+.switch{position:relative;width:3.25rem;height:2rem;border-radius:1rem;border:2px solid var(--outline);background:var(--surface-c-highest);flex:none;padding:0}
+.switch::after{content:"";position:absolute;top:50%;left:.375rem;width:1rem;height:1rem;border-radius:50%;background:var(--outline);transform:translateY(-50%);transition:all .2s}
+.switch[aria-checked="true"]{background:var(--primary);border-color:var(--primary)}
+.switch[aria-checked="true"]::after{left:1.5rem;width:1.5rem;height:1.5rem;background:var(--on-primary)}
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.5rem 0}
+.setrow .txt{min-width:0}
+.aa{display:flex;align-items:center;gap:.75rem}
+.aa span:first-child{font-size:.875rem}.aa span:last-child{font-size:1.375rem}
 
-/* breathe */
-.orbstage{position:relative;height:300px;display:grid;place-items:center;border-radius:var(--r);background:radial-gradient(circle at 50% 45%,#2B4563 0%,#14202E 70%);overflow:hidden}
-.orb{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#F2D7A6 0%,#D4A051 45%,#8C6A3A 100%);box-shadow:0 0 60px 10px rgba(212,160,81,.35);transform:scale(.7);transition-property:transform;transition-timing-function:ease-in-out}
-.orblabel{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:#F3F6FA;font-weight:500;letter-spacing:.04em}
-.orbcount{position:absolute;top:18px;right:20px;color:#C9D6E5;font-family:var(--f-data);font-size:.85rem}
+/* breathe stage */
+.stage{position:relative;height:20rem;border-radius:1.75rem;background:radial-gradient(circle at 50% 45%,#1F3B3A 0%,#0B1514 72%);display:grid;place-items:center;overflow:hidden;color:#E6F2F0}
+.orb{width:8rem;height:8rem;border-radius:50%;background:radial-gradient(circle at 40% 35%,#CFF7F2 0%,#5FC4BC 45%,#1E6E68 100%);box-shadow:0 0 4rem .5rem rgba(95,196,188,.35);transform:scale(.6);transition-property:transform;transition-timing-function:ease-in-out}
+.stage .lbl{position:absolute;bottom:1.25rem;left:0;right:0;text-align:center;font-size:1.25rem;font-weight:500}
+.stage .tl{position:absolute;top:1rem;left:1.25rem;font-size:.875rem;opacity:.8}
+.stage .tr{position:absolute;top:1rem;right:1.25rem;font-size:.875rem;opacity:.8}
+.stage .center{position:absolute;inset:0;display:grid;place-items:center;font-size:3rem;font-weight:300;pointer-events:none}
+.results{display:flex;gap:.5rem;flex-wrap:wrap}
 
-/* body tab */
-.acts{display:flex;flex-direction:column}
-.act{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 0;border-top:1px solid var(--line)}
-.act:first-child{border-top:0}
-.act b{font-weight:500}
-.act .r{text-align:right;font-family:var(--f-data);font-size:.82rem;color:var(--muted)}
-.targets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.tgt{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
-.tgt .v{font-family:var(--f-data);font-size:1.05rem;color:var(--slate)}
-.tgt .s{font-size:.75rem;color:var(--muted)}
-.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
-.day{border-radius:10px;padding:8px 4px;text-align:center;background:var(--slate-soft);display:flex;flex-direction:column;gap:2px;min-width:0}
-.day.today{background:var(--gold);color:#1B2633}
-.day.today small{color:#1B2633}
-.day b{font-size:.72rem;letter-spacing:.06em}
-.day small{font-size:.66rem;line-height:1.25;color:var(--muted)}
-.supgroup{display:flex;flex-direction:column;gap:2px}
-.supgroup h3{font-family:var(--f-body);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-ink);margin:8px 0 2px}
-.sup{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);background:none;border-left:0;border-right:0;border-bottom:0;text-align:left;color:var(--ink);width:100%}
-.sup .box{width:24px;height:24px;border-radius:7px;border:2px solid var(--line);display:grid;place-items:center;font-size:.8rem;color:#fff}
-.sup[aria-checked="true"] .box{background:var(--ok);border-color:var(--ok)}
-.sup .nm{display:flex;flex-direction:column;min-width:0}
-.sup .nm small{color:var(--muted);font-size:.75rem}
-.dots{display:flex;gap:3px}
-.dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
-.dots i.on{background:var(--ok)}
-.bar{height:8px;border-radius:4px;background:var(--slate-soft);overflow:hidden}
-.bar i{display:block;height:100%;background:var(--gold);border-radius:4px;transition:width .4s}
-.note{font-size:.8rem;color:var(--muted);border-left:3px solid var(--gold);padding-left:10px}
-.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:.9rem}
-.status{font-size:.82rem}
+/* navigation bar */
+.navbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface-c);padding-bottom:env(safe-area-inset-bottom,0px)}
+.navbar .wrap{display:grid;grid-template-columns:repeat(4,1fr);height:5rem;align-items:center}
+.navbar button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:.25rem;font-size:.75rem;font-weight:500;color:var(--on-surface-variant);padding:0}
+.navbar .ind{width:4rem;height:2rem;border-radius:1rem;display:grid;place-items:center;transition:background .2s}
+.navbar svg{width:1.5rem;height:1.5rem}
+.navbar button[aria-selected="true"]{color:var(--on-surface)}
+.navbar button[aria-selected="true"] .ind{background:var(--secondary-container);color:var(--on-secondary-container)}
 
-/* tab bar */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
-.tabs .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
-.tabs button{border:0;background:none;color:var(--muted);padding:9px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.72rem;font-weight:500;border-top:3px solid transparent}
-.tabs button svg{width:22px;height:22px}
-.tabs button[aria-selected="true"]{color:var(--slate);border-top-color:var(--gold)}
+/* snackbar */
+.snack{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(6rem + env(safe-area-inset-bottom,0px));z-index:60;background:#2B3231;color:#ECF2F0;border-radius:.25rem;padding:.875rem 1rem;font-size:.875rem;max-width:calc(100% - 32px);box-shadow:0 3px 6px rgba(0,0,0,.3)}
 
-/* player overlay — deliberately always dark */
-.player{position:fixed;inset:0;z-index:50;background:#0A1018;color:#EEF2F7;display:flex;flex-direction:column}
+/* player — always dark */
+.player{position:fixed;inset:0;z-index:50;background:#08100F;color:#E6F2F0;display:flex;flex-direction:column}
 .player canvas{position:absolute;inset:0;width:100%;height:100%}
 .pl-top,.pl-bottom{position:relative;z-index:2;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
-.pl-top{padding-top:calc(env(safe-area-inset-top,0px) + 16px);display:flex;justify-content:space-between;align-items:center;gap:10px}
-.pl-top .x{border:1px solid rgba(255,255,255,.25);background:rgba(10,16,24,.35);color:#EEF2F7;border-radius:999px;padding:7px 14px;font-size:.85rem}
-.pl-mid{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:10px;padding:0 24px}
-.pl-mid .ph-n{font-family:var(--f-data);font-size:.78rem;letter-spacing:.2em;color:#E9C98F;text-transform:uppercase}
-.pl-mid .ph-t{font-family:var(--f-display);font-size:2rem;line-height:1.2;color:#FFFFFF;text-wrap:balance}
-.pl-mid .cue{max-width:30ch;color:#D3DDE9;font-size:1rem;min-height:3.2em;font-style:italic;font-family:var(--f-display)}
-.pl-bottom{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 20px);display:flex;flex-direction:column;gap:14px;background:linear-gradient(to top,rgba(10,16,24,.85),rgba(10,16,24,0))}
-.pl-prog{display:flex;gap:4px}
-.pl-prog i{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.18);overflow:hidden;position:relative}
-.pl-prog i b{position:absolute;inset:0 auto 0 0;background:#D4A051;width:0}
-.pl-time{display:flex;justify-content:space-between;font-family:var(--f-data);font-size:.85rem;color:#C2CEDC}
-.pl-ctrl{display:flex;justify-content:center;align-items:center;gap:18px}
-.pl-ctrl .play{width:72px;height:72px;border-radius:50%;border:0;background:#D4A051;color:#1B2633;display:grid;place-items:center}
-.pl-ctrl .play svg{width:30px;height:30px}
-.pl-ctrl .sm{width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(10,16,24,.35);color:#EEF2F7;display:grid;place-items:center}
-.pl-ctrl .sm svg{width:20px;height:20px}
-.pl-mix{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;font-size:.78rem;color:#C2CEDC}
-.pl-mix input{width:100%;accent-color:#D4A051}
-.done{display:flex;flex-direction:column;align-items:center;gap:12px}
-.done .big{font-family:var(--f-data);font-size:2.4rem;color:#E9C98F}
+.pl-top{padding-top:calc(env(safe-area-inset-top,0px) + .5rem);display:flex;align-items:center;gap:.5rem;min-height:4rem}
+.pl-top .ttl{flex:1;font-size:1rem;font-weight:500}
+.pl-top .icon-btn{color:#E6F2F0}
+.pl-hr{display:inline-flex;align-items:center;gap:.375rem;font-size:.875rem;color:#BFE9E4}
+.pl-hr svg{width:1rem;height:1rem;color:#FF8A80}
+.pl-mid{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:.75rem;padding:0 1.5rem}
+.pl-mid .ph-n{font-size:.875rem;font-weight:500;letter-spacing:.08em;color:#80D5D0;text-transform:uppercase}
+.pl-mid .ph-t{font-size:2.25rem;line-height:2.75rem;color:#FFFFFF;text-wrap:balance}
+.pl-mid .cue{max-width:28ch;color:#C9DAD7;font-size:1.125rem;min-height:4.5em}
+.pl-bottom{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 1.25rem);display:flex;flex-direction:column;gap:1rem;background:linear-gradient(to top,rgba(8,16,15,.9),rgba(8,16,15,0))}
+.pl-prog{display:flex;gap:.25rem}
+.pl-prog i{flex:1;height:.25rem;border-radius:.125rem;background:rgba(255,255,255,.18);overflow:hidden;position:relative}
+.pl-prog i b{position:absolute;inset:0 auto 0 0;background:#80D5D0;width:0}
+.pl-time{display:flex;justify-content:space-between;font-size:.875rem;color:#B5C8C5;font-variant-numeric:tabular-nums}
+.pl-ctrl{display:flex;justify-content:center;align-items:center;gap:1.5rem}
+.pl-ctrl .fab{width:6rem;height:6rem;border-radius:1.75rem;border:0;background:#80D5D0;color:#003735;display:grid;place-items:center}
+.pl-ctrl .fab svg{width:2.25rem;height:2.25rem}
+.pl-ctrl .icon-btn{color:#E6F2F0;width:3.5rem;height:3.5rem}
+.pl-mix{display:grid;grid-template-columns:auto 1fr;gap:.25rem 1rem;align-items:center;font-size:.8125rem;color:#B5C8C5}
+.pl-mix input{accent-color:#80D5D0}
+.done{display:flex;flex-direction:column;align-items:center;gap:.75rem}
+.done .big{font-size:3rem;color:#80D5D0;font-weight:300}
 
-@media (prefers-reduced-motion: reduce){ .orb{transition-duration:0s !important} .bar i{transition:none} }
-@media (min-width:560px){ .targets{grid-template-columns:repeat(4,minmax(0,1fr))} }
+@media (prefers-reduced-motion: reduce){.orb{transition-duration:0s!important}.switch::after{transition:none}}
+@media (min-width:36rem){.grid2{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
 
-<header class="hdr">
+<header class="appbar" id="appbar">
   <div class="wrap">
-    <div>
-      <div class="brand">RL Studio</div>
-      <div class="appname" id="appname">Stillpoint</div>
-    </div>
-    <div class="lang" role="group" aria-label="Language">
-      <button id="lang-en" aria-pressed="true">EN</button>
-      <button id="lang-zh" aria-pressed="false">中文</button>
-    </div>
+    <button class="icon-btn" id="back" aria-label="Back" hidden><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></button>
+    <h1 id="bar-title">Stillpoint</h1>
+    <button class="watch-chip" id="watch-chip"><span class="dot"></span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 12c0-2.54-1.19-4.81-3.04-6.27L16 0H8l-.95 5.73C5.19 7.19 4 9.45 4 12s1.19 4.81 3.05 6.27L8 24h8l.96-5.73A7.98 7.98 0 0 0 20 12M6 12c0-3.31 2.69-6 6-6s6 2.69 6 6-2.69 6-6 6-6-2.69-6-6"/></svg><span id="watch-txt">Watch</span></button>
+    <button class="icon-btn" id="open-settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94a7.07 7.07 0 0 0 0-1.88l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96a7.03 7.03 0 0 0-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84a.48.48 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.48.48 0 0 0-.59.22L2.74 8.87a.47.47 0 0 0 .12.61l2.03 1.58a7.4 7.4 0 0 0 0 1.88l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61zM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2"/></svg></button>
   </div>
 </header>
 
@@ -194,35 +228,35 @@ select{font:inherit;padding:9px 10px;border-radius:10px;border:1px solid var(--l
   <section class="view" id="v-meditate" hidden></section>
   <section class="view" id="v-breathe" hidden></section>
   <section class="view" id="v-body" hidden></section>
+  <section class="view" id="v-settings" hidden></section>
 </main>
 
-<nav class="tabs" aria-label="Sections">
+<nav class="navbar" aria-label="Sections">
   <div class="wrap" role="tablist">
-    <button role="tab" data-tab="today" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span data-i="tabToday">Today</span></button>
-    <button role="tab" data-tab="meditate" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="5" r="2.2"/><path d="M12 8v5M7 21c0-3 2-5 5-5s5 2 5 5M4 14c2.5-.5 5-1 8-1s5.5.5 8 1"/></svg><span data-i="tabMed">Meditate</span></button>
-    <button role="tab" data-tab="breathe" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 8h10a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h7"/></svg><span data-i="tabBreathe">Breathe</span></button>
-    <button role="tab" data-tab="body" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg><span data-i="tabBody">Body</span></button>
+    <button role="tab" data-tab="today" aria-selected="true"><span class="ind"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10M2 13h2a1 1 0 0 0 0-2H2a1 1 0 0 0 0 2m18 0h2a1 1 0 0 0 0-2h-2a1 1 0 0 0 0 2M11 2v2a1 1 0 0 0 2 0V2a1 1 0 0 0-2 0m0 18v2a1 1 0 0 0 2 0v-2a1 1 0 0 0-2 0M5.99 4.58a1 1 0 0 0-1.41 1.41l1.06 1.06a1 1 0 0 0 1.41-1.41zm12.37 12.37a1 1 0 0 0-1.41 1.41l1.06 1.06a1 1 0 0 0 1.41-1.41zm1.06-10.96a1 1 0 0 0-1.41-1.41l-1.06 1.06a1 1 0 0 0 1.41 1.41zM7.05 18.36a1 1 0 0 0-1.41-1.41l-1.06 1.06a1 1 0 0 0 1.41 1.41z"/></svg></span><span data-i="tabToday">Today</span></button>
+    <button role="tab" data-tab="meditate" aria-selected="false"><span class="ind"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="2"/><path d="M21 16v-2c-2.24 0-4.16-.96-5.6-2.68l-1.34-1.6A1.98 1.98 0 0 0 12.53 9h-1.05c-.59 0-1.15.26-1.53.72l-1.34 1.6C7.16 13.04 5.24 14 3 14v2c2.77 0 5.19-1.17 7-3.25V15l-3.88 1.55c-.67.27-1.12.93-1.12 1.66C5 19.2 5.8 20 6.79 20H9v-.5a2.5 2.5 0 0 1 2.5-2.5h3c.28 0 .5.22.5.5s-.22.5-.5.5h-3c-.83 0-1.5.67-1.5 1.5v.5h7.21c.99 0 1.79-.8 1.79-1.79 0-.73-.45-1.39-1.12-1.66L14 15v-2.25c1.81 2.08 4.23 3.25 7 3.25"/></svg></span><span data-i="tabMed">Meditate</span></button>
+    <button role="tab" data-tab="breathe" aria-selected="false"><span class="ind"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.5 17c0 1.65-1.35 3-3 3s-3-1.35-3-3h2c0 .55.45 1 1 1s1-.45 1-1-.45-1-1-1H2v-2h9.5c1.65 0 3 1.35 3 3M19 6.5C19 4.57 17.43 3 15.5 3S12 4.57 12 6.5h2c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5S16.33 8 15.5 8H2v2h13.5c1.93 0 3.5-1.57 3.5-3.5m-.5 4.5H2v2h16.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5v2c1.93 0 3.5-1.57 3.5-3.5S20.43 11 18.5 11"/></svg></span><span data-i="tabBreathe">Breathe</span></button>
+    <button role="tab" data-tab="body" aria-selected="false"><span class="ind"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.11 12.45 14 10.24l-3.11 6.21a1 1 0 0 1-1.79 0L7.38 13H2v-2h6c.38 0 .72.21.89.55L10 13.76l3.11-6.21c.34-.68 1.45-.68 1.79 0L16.62 11H22v2h-6a1 1 0 0 1-.89-.55"/></svg></span><span data-i="tabBody">Body</span></button>
   </div>
 </nav>
+
+<div class="snack" id="snack" hidden role="status"></div>
 
 <div class="player" id="player" hidden>
   <canvas id="cv"></canvas>
   <div class="pl-top">
-    <span class="eyebrow" style="color:#C2CEDC" id="pl-name"></span>
-    <button class="x" id="pl-close"></button>
+    <button class="icon-btn" id="pl-close" aria-label="End session"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <span class="ttl" id="pl-name"></span>
+    <span class="pl-hr" id="pl-hr" hidden><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z"/></svg><span id="pl-hrv">--</span></span>
   </div>
-  <div class="pl-mid" id="pl-mid">
-    <div class="ph-n" id="pl-phn"></div>
-    <div class="ph-t" id="pl-pht"></div>
-    <div class="cue" id="pl-cue" aria-live="polite"></div>
-  </div>
+  <div class="pl-mid" id="pl-mid"></div>
   <div class="pl-bottom">
     <div class="pl-prog" id="pl-prog"></div>
     <div class="pl-time"><span id="pl-el">0:00</span><span id="pl-rem">0:00</span></div>
     <div class="pl-ctrl">
-      <button class="sm" id="pl-back" aria-label="Previous phase"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6v12L9.5 12z"/></svg></button>
-      <button class="play" id="pl-play" aria-label="Play"><svg viewBox="0 0 24 24" fill="currentColor" id="pl-icon"><path d="M8 5v14l11-7z"/></svg></button>
-      <button class="sm" id="pl-next" aria-label="Next phase"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6v12l10.5-6z"/></svg></button>
+      <button class="icon-btn" id="pl-back" aria-label="Previous part"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
+      <button class="fab" id="pl-play" aria-label="Play"><svg viewBox="0 0 24 24" fill="currentColor" id="pl-icon"><path d="M8 5v14l11-7z"/></svg></button>
+      <button class="icon-btn" id="pl-next" aria-label="Next part"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m6 18 8.5-6L6 6zM16 6v12h2V6z"/></svg></button>
     </div>
     <div class="pl-mix">
       <label for="vol-voice" data-i="voice">Voice</label><input type="range" id="vol-voice" min="0" max="1" step="0.05" value="0.9">
@@ -234,69 +268,67 @@ select{font:inherit;padding:9px 10px;border-radius:10px;border:1px solid var(--l
 <script>
 (function(){
 'use strict';
-/* ---------- storage (per-device convenience; safe if blocked) ---------- */
 const store={get(k,d){try{const v=localStorage.getItem('sp_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('sp_'+k,JSON.stringify(v))}catch(e){}}};
 const $=s=>document.querySelector(s);
 const todayKey=d=>(d||new Date()).toLocaleDateString('en-CA');
 let lang=store.get('lang','en');
 let cur='today';
+let settings=Object.assign({amb:'drone',interval:5,silentMin:15,voiceVol:.9,ambVol:.5,scale:1,watchCues:true,whBreaths:30,whRounds:3,whPace:'medium'},store.get('settings',{}));
+const saveSettings=()=>store.set('settings',settings);
+const applyScale=()=>document.documentElement.style.setProperty('--scale',settings.scale);
+applyScale();
 
-/* ---------- copy ---------- */
 const T={
- en:{tabToday:'Today',tabMed:'Meditate',tabBreathe:'Breathe',tabBody:'Body',voice:'Voice',ambient:'Ambient',
+ en:{tabToday:'Today',tabMed:'Meditate',tabBreathe:'Breathe',tabBody:'Body',settings:'Settings',voice:'Voice',ambient:'Ambient',
   greetM:'Good morning, Rosivia',greetA:'Good afternoon, Rosivia',greetE:'Good evening, Rosivia',
-  suggested:'Suggested now',begin:'Begin',minutes:'min',supToday:'Supplements today',taken:'taken',next:'Next up',
-  routine:'Today’s routine',lastSit:'Practice log',noSit:'No sessions logged on this phone yet. Your first one starts the streak.',
-  streak:'day streak',sessions:'sessions',total:'min total',
-  guided:'Guided sessions',silent:'Silent timer',silentDesc:'Bells only. For open sitting or your own practice.',
-  length:'Length',interval:'Interval bell',none:'None',every:'Every',voiceSet:'Guide voice',preview:'Preview voice',
-  voiceTip:'For a deeper male voice: Android Settings → System → Languages → Text-to-speech output → Speech Services by Google → ⚙ → Install voice data → English (US) → pick a male voice. Then choose it here.',
-  ambSound:'Ambient sound',drone:'Deep drone',rain:'Soft rain',off:'Off',
-  watch:'Watch cues',watchDesc:'Each phase change sends a phone notification. Garmin mirrors it to your Forerunner 255 as a vibration and a title.',
-  enable:'Enable watch cues',enabled:'Watch cues on',unsupported:'This preview can’t send notifications. Watch cues work once the app runs from its own address (see setup).',
-  denied:'Notifications are blocked for this site. Allow them in Chrome site settings.',
-  breathTitle:'Breathwork',rounds:'Duration',start:'Start',stop:'Stop',ready:'Tap start',
-  inhale:'Breathe in',hold:'Hold',exhale:'Breathe out',topup:'Sip in more',
-  toWatch:'On your Forerunner 255',
-  watchSteps:['Press START → scroll to Breathwork.','Pick “Relax and Focus” (you already used it 3× Sep 30–Oct 2) or “Coherence” if listed.','The watch paces you with vibration and logs HR, so the session lands in Garmin.'],
-  watchNote:'Your phone can’t push a custom breathing pattern to the watch. Garmin only allows that through its own app or a Connect IQ watch app. Use the watch for paced breathing it can log, and this app for guided sessions.',
-  garmin:'Garmin',lastSync:'Latest data',daysAgo:'days ago',syncWarn:'No new Garmin data since Oct 2. HRV, sleep and stress came back empty. Open Garmin Connect and sync, or check the connection.',
-  recent:'Recent activities',targets:'Your targets',weekT:'Weekly rhythm',supT:'Supplements',
-  supNote:'Stack and timing from your May 2026 sync template. Tell me what changed (D3 dose, zinc, anything weekly) and I’ll update it.',
-  last7:'last 7 days',close:'End',complete:'Session complete',logged:'Logged to your practice history.',again:'Done',
-  phase:'Phase',of:'of',sourceG:'Source: Garmin, Forerunner 255, times converted to Taipei (UTC+8).',
-  sugMorning:'Your 05:00 block. The full six-phase practice.',sugMidday:'Eight minutes to calm your nerves before the afternoon.',sugReview:'Close the day: gratitude, release, rest.',
-  sugEvening:'Clear the workday before the evening.',sugNight:'Slow 4-7-8 breathing before sleep.',sugTennis:'Box breathing before tennis tonight.',
-  offT:'Offline check',offApp:'App saved on this phone',offEn:'English voice works offline',offZh:'Chinese voice works offline',offAll:'Ready for no signal. Sessions, sounds, timer, logs and watch cues all run without internet.',offNot:'Not ready yet. Fix the items marked ✗ while you still have signal.',offArtifact:'This link needs internet. Install the standalone version on your home screen to use Stillpoint offline.',offTip:'Before a hike: open the app once with signal, run 10 seconds of a session in each language, keep the phone in airplane mode with Bluetooth on for watch cues.',online:'online only',offline:'offline',
-  timings:{morning:'Breakfast',premeal:'Before meals',lunch:'With lunch',training:'Training days',bedtime:'Bedtime'}
- },
- zh:{tabToday:'今天',tabMed:'冥想',tabBreathe:'呼吸',tabBody:'身體',voice:'引導語音',ambient:'背景音',
+  suggested:'Suggested now',begin:'Start',minutes:'min',supToday:'Supplements today',taken:'taken',next:'Next',open:'Open',
+  routine:'Today',log:'Practice',noSit:'No sessions on this phone yet. Your first one starts the streak.',streak:'day streak',sessions:'sessions',total:'minutes',
+  guided:'Guided sessions',sitting:'Guided sitting',sittingDesc:'Short spoken opening and close, gentle reminders between.',length:'Length',interval:'Reminder',none:'None',every:'Every',
+  watch:'Watch',watchOn:'Connected',watchOff:'Not connected',hr:'Heart rate',bpm:'bpm',
+  watchCard:'Your Forerunner 255',watchConnect:'Connect watch',watchReconnect:'Reconnect',
+  watchHow:['On the watch: Settings → Wrist Heart Rate → Broadcast Heart Rate. Turn it on.','Tap Connect watch below and pick the Forerunner in the list.','The app reconnects by itself when you open it. If it can’t, it asks you to tap once.'],
+  watchCuesT:'Phase cues on the watch',watchCuesD:'A notification at each phase change. Garmin Connect vibrates the watch. Allow Chrome in Garmin Connect → Notifications.',
+  btNo:'Bluetooth connection isn’t available here. Open Stillpoint from your home screen icon in Chrome.',
+  btFail:'Couldn’t reach the watch. Check Broadcast Heart Rate is on, then tap Reconnect.',
+  notifBlocked:'Notifications are blocked. Allow them in Chrome site settings so cues reach your watch.',
+  textSize:'Text size',language:'Language',voiceSet:'Guide voice',preview:'Preview',ambSound:'Ambient sound',drone:'Drone',rain:'Rain',off:'Off',
+  voiceTip:'Android Settings → System → Languages → Text-to-speech output → Speech Services by Google → Install voice data. Download English (US) and Chinese (Taiwan), then pick a deep, calm voice here. Choose one marked offline.',
+  online:'online only',offline:'offline',
+  breathTitle:'Breathwork',start:'Start',stop:'Stop',ready:'Tap Start',inhale:'Breathe in',hold:'Hold',exhale:'Breathe out',topup:'Sip in more',
+  wimName:'Power breathing',wimSub:'Wim Hof style · rounds of deep breaths and breath holds',breaths:'Breaths',rounds:'Rounds',pace:'Pace',slow:'Slow',medium:'Medium',fast:'Fast',
+  safetyT:'Before you start',safety:'Sit or lie down. Never do this in water, while driving, or standing. Tingling and light-headedness are normal; stop if you feel unwell. Skip it if you are pregnant or have epilepsy, a heart condition or high blood pressure.',understand:'I understand',
+  needBreath:'Breathe in',retention:'Hold',recovery:'Recovery hold',round:'Round',yourHolds:'Your holds',
+  garmin:'Garmin',lastSync:'Latest data',daysAgo:'days ago',syncWarn:'No new Garmin data since Oct 2. HRV, sleep and stress came back empty. Sync in Garmin Connect.',
+  recent:'Recent activities',targets:'Targets',weekT:'Week',supT:'Supplements',supNote:'From your May 2026 template. Tell me what changed and I’ll update it.',
+  complete:'Session complete',logged:'Saved to your practice log.',hrChange:'Heart rate',phase:'Part',of:'of',sourceG:'Garmin Forerunner 255 · Taipei time',
+  offT:'Offline check',offApp:'App saved on this phone',offEn:'English voice works offline',offZh:'Chinese voice works offline',offAll:'Ready for no signal.',offNot:'Fix the ✗ items while you have signal.',offArtifact:'This preview needs internet. Use the home screen app for offline.',
+  sugMorning:'Your 05:00 block. The full six-part practice.',sugWork:'Start the workday in five minutes.',sugMidday:'Eight minutes to calm your nerves.',sugEvening:'Clear the workday.',sugReview:'Close the day: gratitude, release, rest.',sugNight:'Slow 4-7-8 breathing before sleep.',sugTennis:'Box breathing before tennis.',sugIntuition:'A weekend intuition workout.',
+  timings:{morning:'Breakfast',premeal:'Before meals',lunch:'With lunch',training:'Training days',bedtime:'Bedtime'}},
+ zh:{tabToday:'今天',tabMed:'冥想',tabBreathe:'呼吸',tabBody:'身體',settings:'設定',voice:'引導語音',ambient:'背景音',
   greetM:'早安，Rosivia',greetA:'午安，Rosivia',greetE:'晚安，Rosivia',
-  suggested:'現在推薦',begin:'開始',minutes:'分鐘',supToday:'今日保健品',taken:'已服用',next:'下一個',
-  routine:'今日行程',lastSit:'練習紀錄',noSit:'這支手機還沒有練習紀錄。完成第一次就開始累積天數。',
-  streak:'天連續',sessions:'次練習',total:'分鐘總計',
-  guided:'引導冥想',silent:'靜坐計時',silentDesc:'只有鐘聲，適合自由靜坐或自己的練習。',
-  length:'時間長度',interval:'間隔鐘聲',none:'無',every:'每',voiceSet:'引導聲音',preview:'試聽',
-  voiceTip:'中文語音：Android 設定 → 系統 → 語言 → 文字轉語音輸出 → Google 語音服務 → ⚙ → 安裝語音資料 → 中文（台灣）。之後在這裡選擇。',
-  ambSound:'背景音',drone:'低頻共鳴',rain:'細雨',off:'關閉',
-  watch:'手錶提示',watchDesc:'每次進入新階段，手機會發出通知，Garmin 會同步到 Forerunner 255 震動提示。',
-  enable:'開啟手錶提示',enabled:'手錶提示已開啟',unsupported:'預覽模式無法發送通知。在自己的網址執行後即可使用（請見設定說明）。',
-  denied:'此網站的通知已被封鎖，請到 Chrome 網站設定中允許。',
-  breathTitle:'呼吸練習',rounds:'時間',start:'開始',stop:'停止',ready:'點擊開始',
-  inhale:'吸氣',hold:'停住',exhale:'吐氣',topup:'再吸一點',
-  toWatch:'在你的 Forerunner 255 上',
-  watchSteps:['按 START → 找到「呼吸練習 Breathwork」。','選「Relax and Focus」（9/30–10/2 你已用過 3 次），或清單中的「Coherence」。','手錶會用震動帶你呼吸並記錄心率，紀錄會同步到 Garmin。'],
-  watchNote:'手機無法把自訂呼吸節奏傳到手錶，Garmin 只允許透過官方 App 或 Connect IQ 手錶程式。手錶負責可記錄的呼吸練習，這個 App 負責引導冥想。',
-  garmin:'Garmin',lastSync:'最新資料',daysAgo:'天前',syncWarn:'10/2 之後沒有新的 Garmin 資料，HRV、睡眠、壓力都是空的。請打開 Garmin Connect 同步，或檢查連線。',
-  recent:'近期活動',targets:'你的目標',weekT:'每週節奏',supT:'保健品',
-  supNote:'品項與時間來自你 2026 年 5 月的同步範本。若有變更（D3 劑量、鋅、每週品項），告訴我就更新。',
-  last7:'近 7 天',close:'結束',complete:'練習完成',logged:'已記錄到練習紀錄。',again:'完成',
-  phase:'階段',of:'/',sourceG:'資料來源：Garmin Forerunner 255，時間已換算為台北時間（UTC+8）。',
-  sugMorning:'你的 05:00 時段，完整六階段練習。',sugMidday:'用 8 分鐘安定神經，再進入下午。',sugReview:'結束今天：感恩、釋放、休息。',
-  sugEvening:'在晚上之前，把工作的能量清掉。',sugNight:'睡前做緩慢的 4-7-8 呼吸。',sugTennis:'今晚打網球前，做方塊呼吸。',
-  offT:'離線檢查',offApp:'App 已存在手機上',offEn:'英文語音可離線',offZh:'中文語音可離線',offAll:'無訊號也能用。冥想、聲音、計時、紀錄、手錶提示都不需要網路。',offNot:'尚未完成。請在有訊號時處理標示 ✗ 的項目。',offArtifact:'這個連結需要網路。請把獨立版本加到主畫面，就能離線使用。',offTip:'登山前：在有訊號時打開 App，兩種語言各播放 10 秒。山上開飛航模式並保持藍牙開啟，手錶提示仍可使用。',online:'需網路',offline:'離線',
-  timings:{morning:'早餐',premeal:'餐前',lunch:'午餐',training:'訓練日',bedtime:'睡前'}
- }
+  suggested:'現在推薦',begin:'開始',minutes:'分鐘',supToday:'今日保健品',taken:'已服用',next:'下一個',open:'查看',
+  routine:'今天',log:'練習',noSit:'這支手機還沒有練習紀錄。完成第一次就開始累積天數。',streak:'天連續',sessions:'次練習',total:'分鐘',
+  guided:'引導冥想',sitting:'引導靜坐',sittingDesc:'簡短的語音開場與結尾，中間輕聲提醒。',length:'時間長度',interval:'提醒',none:'無',every:'每',
+  watch:'手錶',watchOn:'已連線',watchOff:'未連線',hr:'心率',bpm:'bpm',
+  watchCard:'你的 Forerunner 255',watchConnect:'連接手錶',watchReconnect:'重新連線',
+  watchHow:['在手錶上：設定 → 手腕心率 → 廣播心率，開啟。','點下方「連接手錶」，在清單中選 Forerunner。','之後打開 App 會自動重新連線；若無法自動連線，會請你點一下。'],
+  watchCuesT:'手錶階段提示',watchCuesD:'每次進入新階段會發出通知，Garmin Connect 讓手錶震動。請在 Garmin Connect → 通知 中允許 Chrome。',
+  btNo:'這裡無法使用藍牙連線。請從主畫面的 Stillpoint 圖示（Chrome）開啟。',
+  btFail:'連不到手錶。請確認「廣播心率」已開啟，再點重新連線。',
+  notifBlocked:'通知已被封鎖。請在 Chrome 網站設定中允許，提示才能傳到手錶。',
+  textSize:'文字大小',language:'語言',voiceSet:'引導聲音',preview:'試聽',ambSound:'背景音',drone:'低頻',rain:'細雨',off:'關閉',
+  voiceTip:'Android 設定 → 系統 → 語言 → 文字轉語音輸出 → Google 語音服務 → 安裝語音資料。下載英文（美國）與中文（台灣），再於此選擇低沉、平穩的聲音，並選標示「離線」的聲音。',
+  online:'需網路',offline:'離線',
+  breathTitle:'呼吸練習',start:'開始',stop:'停止',ready:'點擊開始',inhale:'吸氣',hold:'停住',exhale:'吐氣',topup:'再吸一點',
+  wimName:'強力呼吸',wimSub:'Wim Hof 風格 · 多輪深呼吸與閉氣',breaths:'呼吸次數',rounds:'輪數',pace:'速度',slow:'慢',medium:'中',fast:'快',
+  safetyT:'開始之前',safety:'請坐著或躺著。絕對不要在水中、開車或站立時練習。手腳發麻、輕微頭暈是正常的；若感到不適請立即停止。懷孕、癲癇、心臟疾病或高血壓者請勿練習。',understand:'我了解',
+  needBreath:'吸氣',retention:'閉氣',recovery:'恢復閉氣',round:'第',yourHolds:'你的閉氣時間',
+  garmin:'Garmin',lastSync:'最新資料',daysAgo:'天前',syncWarn:'10/2 之後沒有新的 Garmin 資料，HRV、睡眠、壓力都是空的。請在 Garmin Connect 同步。',
+  recent:'近期活動',targets:'目標',weekT:'每週',supT:'保健品',supNote:'來自你 2026 年 5 月的範本。若有變更請告訴我。',
+  complete:'練習完成',logged:'已存入練習紀錄。',hrChange:'心率',phase:'段落',of:'/',sourceG:'Garmin Forerunner 255 · 台北時間',
+  offT:'離線檢查',offApp:'App 已存在手機上',offEn:'英文語音可離線',offZh:'中文語音可離線',offAll:'無訊號也能用。',offNot:'請在有訊號時處理 ✗ 項目。',offArtifact:'此預覽需要網路。離線請使用主畫面 App。',
+  sugMorning:'你的 05:00 時段，完整六階段練習。',sugWork:'用 5 分鐘開始今天的工作。',sugMidday:'用 8 分鐘安定神經。',sugEvening:'清掉工作的能量。',sugReview:'結束今天：感恩、釋放、休息。',sugNight:'睡前做緩慢的 4-7-8 呼吸。',sugTennis:'打網球前做方塊呼吸。',sugIntuition:'週末的直覺練習。',
+  timings:{morning:'早餐',premeal:'餐前',lunch:'午餐',training:'訓練日',bedtime:'睡前'}}
 };
 const t=k=>T[lang][k]??T.en[k];
 
@@ -392,18 +424,38 @@ const SUPS=[
 const GROUPS=['morning','premeal','lunch','training','bedtime'];
 const GROUP_HOUR={morning:9,premeal:12,lunch:14,training:19,bedtime:23};
 
+
+
+/* ---------- added sessions ---------- */
+SESSIONS.push({id:'intuition',color:['#4A3F7A','#B9A6F0'],name:{en:'Intuition Workout',zh:'直覺練習'},
+ desc:{en:'Sigh it out, listen to the body, ask, trust the first answer.',zh:'出聲嘆氣、聆聽身體、提問、相信第一個答案。'},
+ phases:[
+  {d:120,c:[110,95,170],t:{en:'Breathe and sigh',zh:'呼吸與嘆氣'},cues:[C(0,'Welcome to your intuition workout. Sit comfortably and close your eyes.','歡迎來到直覺練習。舒服地坐著，閉上眼睛。'),C(12,'Breathe in deeply through your nose... and let it out with a sound. Ahhh.','用鼻子深深吸氣……再發出聲音吐出來：啊——'),C(35,'Again. In... and out loud. Let the sound loosen your chest.','再一次。吸氣……出聲吐氣。讓聲音鬆開你的胸口。'),C(70,'Once more. Notice how much quieter your head feels.','最後一次。留意頭腦安靜了多少。')]},
+  {d:150,c:[130,110,190],t:{en:'Into the body',zh:'回到身體'},cues:[C(0,'Bring your attention down, out of your head and into your heart.','把注意力從頭腦往下帶，帶到心的位置。'),C(20,'Place a hand on your chest if you like. Feel it rise and fall.','可以把一隻手放在胸口，感受它的起伏。'),C(60,'Scan your body slowly. Where does it feel light and open? Where does it feel tight or heavy?','慢慢掃描身體。哪裡感覺輕盈、打開？哪裡感覺緊、沉重？'),C(110,'No need to fix anything. Your body is already talking to you. Just listen.','不需要修正任何東西。身體已經在跟你說話，只要聆聽。')]},
+  {d:180,c:[150,130,220],t:{en:'Ask',zh:'提問'},cues:[C(0,'Now bring to mind one question you would like guidance on today. Keep it simple.','現在想一個今天想得到指引的問題，保持簡單。'),C(25,'Ask it silently, then let it go, like dropping a stone into still water.','在心裡問一次，然後放下，就像把石頭丟進平靜的水裡。'),C(60,'Notice the very first thing that comes. An image, a word, a feeling, a memory. Don\'t judge it. Don\'t explain it.','留意第一個出現的東西：一個畫面、一個詞、一種感覺、一段記憶。不評判，不解釋。'),C(115,'If nothing comes, that is fine. Ask again, gently, and wait.','如果什麼都沒出現也沒關係，再溫和地問一次，然後等待。'),C(150,'Whatever arrived, thank it.','不論出現什麼，謝謝它。')]},
+  {d:150,c:[200,170,230],t:{en:'Test the vibe',zh:'感受頻率'},cues:[C(0,'Let\'s test it. Imagine saying yes to the answer you received. How does your body respond?','我們來測試一下。想像對你得到的答案說「好」。身體有什麼反應？'),C(45,'Now imagine saying no. Notice the difference. Lighter or heavier? Open or closed?','現在想像說「不」。留意差別：更輕還是更重？打開還是關上？'),C(100,'Your body knows. The lighter path is usually your spirit speaking.','身體知道答案。比較輕盈的那條路，通常就是你內在的聲音。')]},
+  {d:120,c:[235,215,170],t:{en:'Act on it',zh:'付諸行動'},cues:[C(0,'Choose one small action today that follows this feeling.','選一個今天可以順著這份感覺去做的小行動。'),C(40,'During the day, notice the flickers. A sudden thought of someone, a gut feeling, a sign. Write them down tonight.','今天留意那些閃現：突然想到某個人、一種直覺、一個徵兆。今晚把它們寫下來。'),C(85,'Take a deep breath, sigh it out loud once more... and open your eyes.','深深吸一口氣，再出聲嘆一次……睜開眼睛。')]}
+ ]});
+const BREATH_INTRO={coh:{en:'Coherent breathing. Breathe in for five and a half, and out for five and a half. Follow my voice, then the tones.',zh:'共振呼吸。吸氣五秒半，吐氣五秒半。先跟著我的聲音，之後跟著音調。'},
+ box:{en:'Box breathing. In for four, hold for four, out for four, hold for four.',zh:'方塊呼吸。吸四拍、停四拍、吐四拍、停四拍。'},
+ '478':{en:'Four seven eight breathing. In through the nose for four, hold for seven, out through the mouth for eight.',zh:'4-7-8 呼吸。鼻子吸氣四拍，停住七拍，嘴巴吐氣八拍。'},
+ sigh:{en:'Physiological sigh. Two breaths in through the nose, then one long breath out.',zh:'生理嘆息。鼻子吸兩次，再長長地吐一口氣。'}};
+const BREATH_END={en:'Well done. Let your breath return to normal, and notice how you feel.',zh:'做得很好。讓呼吸回到自然，感受一下現在的自己。'};
+
 /* ---------- helpers ---------- */
 const fmt=s=>{s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
 const rgb=c=>`rgb(${c[0]},${c[1]},${c[2]})`;
-const el=(h)=>{const d=document.createElement('div');d.innerHTML=h.trim();return d.firstChild};
 const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
 const L=o=>o[lang]??o.en;
 const dayIdx=()=>(new Date().getDay()+6)%7;
+const ICON={check:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>',
+ play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+ pause:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>',
+ self:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="2"/><path d="M21 16v-2c-2.24 0-4.16-.96-5.6-2.68l-1.34-1.6A1.98 1.98 0 0 0 12.53 9h-1.05c-.59 0-1.15.26-1.53.72l-1.34 1.6C7.16 13.04 5.24 14 3 14v2c2.77 0 5.19-1.17 7-3.25V15l-3.88 1.55c-.67.27-1.12.93-1.12 1.66C5 19.2 5.8 20 6.79 20H9v-.5a2.5 2.5 0 0 1 2.5-2.5h3c.28 0 .5.22.5.5s-.22.5-.5.5h-3c-.83 0-1.5.67-1.5 1.5v.5h7.21c.99 0 1.79-.8 1.79-1.79 0-.73-.45-1.39-1.12-1.66L14 15v-2.25c1.81 2.08 4.23 3.25 7 3.25"/></svg>'};
+let snackT=null;function snack(msg){const s=$('#snack');s.textContent=msg;s.hidden=false;clearTimeout(snackT);snackT=setTimeout(()=>s.hidden=true,4000)}
 
 /* ---------- audio ---------- */
 let ac=null,master=null,ambBus=null,ambNodes=[];
-let settings=Object.assign({amb:'drone',interval:5,silentMin:15,voiceVol:.9,ambVol:.5},store.get('settings',{}));
-const saveSettings=()=>store.set('settings',settings);
 function ensureAudio(){try{if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=.9;master.connect(ac.destination)}if(ac.state==='suspended')ac.resume()}catch(e){}}
 function noise(kind){const len=ac.sampleRate*4,b=ac.createBuffer(1,len,ac.sampleRate),d=b.getChannelData(0);let l=0,b0=0,b1=0,b2=0;
  for(let i=0;i<len;i++){const w=Math.random()*2-1;if(kind==='brown'){l=(l+.02*w)/1.02;d[i]=l*3.5}else{b0=.99765*b0+w*.099;b1=.963*b1+w*.2965;b2=.57*b2+w*1.0526;d[i]=(b0+b1+b2+w*.1848)*.11}}
@@ -421,42 +473,57 @@ function setAmbVol(){if(ambBus&&ac)ambBus.gain.setTargetAtTime(settings.ambVol*.
 function fadeAmbient(on){if(!ambBus||!ac)return;ambBus.gain.cancelScheduledValues(ac.currentTime);ambBus.gain.setTargetAtTime(on?settings.ambVol*.6:0,ac.currentTime,.6)}
 function stopAmbient(now){const nodes=ambNodes,bus=ambBus;ambNodes=[];ambBus=null;if(!bus)return;try{bus.gain.setTargetAtTime(0,ac.currentTime,now?.05:.5);setTimeout(()=>{nodes.forEach(n=>{try{n.stop()}catch(e){}});bus.disconnect()},now?200:2500)}catch(e){}}
 function bell(count=1,base=392){if(!ac)return;for(let k=0;k<count;k++){const t0=ac.currentTime+.05+k*2.4;[[1,.22],[2.76,.08],[5.4,.035]].forEach(([m,a],i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=base*m;g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(a,t0+.012);g.gain.exponentialRampToValueAtTime(.0001,t0+7-i*1.8);o.connect(g).connect(master);o.start(t0);o.stop(t0+7.2)})}}
-function tone(up){if(!ac)return;const t0=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.frequency.setValueAtTime(up?330:392,t0);o.frequency.linearRampToValueAtTime(up?392:330,t0+.6);g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(.06,t0+.08);g.gain.exponentialRampToValueAtTime(.0001,t0+1.2);o.connect(g).connect(master);o.start(t0);o.stop(t0+1.3)}
+function tone(up,len=1.2){if(!ac)return;const t0=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.frequency.setValueAtTime(up?330:392,t0);o.frequency.linearRampToValueAtTime(up?392:330,t0+Math.min(.8,len*.5));g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(.06,t0+.06);g.gain.exponentialRampToValueAtTime(.0001,t0+len);o.connect(g).connect(master);o.start(t0);o.stop(t0+len+.1)}
 
-/* ---------- speech ---------- */
+/* ---------- speech: slow, with pauses at "..." ---------- */
 const hasTTS='speechSynthesis' in window;
-let voices=[];
-function loadVoices(){if(!hasTTS)return;voices=speechSynthesis.getVoices();if(cur==='meditate')renderMeditate();if(cur==='today'&&typeof offlineCheck==='function')offlineCheck()}
+let voices=[],speakGen=0;
+function loadVoices(){if(!hasTTS)return;voices=speechSynthesis.getVoices();if(cur==='settings')renderSettings();if(cur==='today')offlineCheck()}
 if(hasTTS){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
 const langVoices=()=>voices.filter(v=>lang==='zh'?/^(zh|cmn)/i.test(v.lang):/^en/i.test(v.lang));
-function pickVoice(){const saved=store.get('voice_'+lang,null),list=langVoices();
- const loc=list.filter(v=>v.localService);const pool=loc.length?loc:list;
+function pickVoice(){const saved=store.get('voice_'+lang,null),list=langVoices();const loc=list.filter(v=>v.localService);const pool=loc.length?loc:list;
  return list.find(v=>v.voiceURI===saved)||(lang==='zh'?(pool.find(v=>/TW|Hant/i.test(v.lang))||pool[0]):(pool.find(v=>/male/i.test(v.name)&&!/female/i.test(v.name))||pool.find(v=>/en[-_]US/i.test(v.lang))||pool[0]))||null}
-function speak(text){if(!hasTTS||settings.voiceVol<=0)return;try{const u=new SpeechSynthesisUtterance(text);u.lang=lang==='zh'?'zh-TW':'en-US';const v=pickVoice();if(v)u.voice=v;u.rate=lang==='zh'?.86:.8;u.pitch=.86;u.volume=settings.voiceVol;speechSynthesis.speak(u)}catch(e){}}
-const hush=()=>{if(hasTTS)try{speechSynthesis.cancel()}catch(e){}};
+function utter(text,onend){const u=new SpeechSynthesisUtterance(text);u.lang=lang==='zh'?'zh-TW':'en-US';const v=pickVoice();if(v)u.voice=v;u.rate=lang==='zh'?.82:.78;u.pitch=.82;u.volume=settings.voiceVol;if(onend){u.onend=onend;u.onerror=onend}return u}
+function speak(text){if(!hasTTS||settings.voiceVol<=0)return;try{const gen=speakGen;const parts=String(text).split(/\s*(?:\.\.\.|……)\s*/).filter(Boolean);
+ let i=0;const nx=()=>{if(gen!==speakGen||i>=parts.length)return;const p=parts[i++];speechSynthesis.speak(utter(p,()=>{if(i<parts.length)setTimeout(nx,1400)}))};nx()}catch(e){}}
+const hush=()=>{speakGen++;if(hasTTS)try{speechSynthesis.cancel()}catch(e){}};
 
 /* ---------- wake lock ---------- */
-let wake=null;
-async function holdWake(){try{if('wakeLock' in navigator&&!wake){wake=await navigator.wakeLock.request('screen');wake.addEventListener('release',()=>{wake=null})}}catch(e){wake=null}}
-function dropWake(){try{wake&&wake.release()}catch(e){}wake=null}
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&P&&P.running)holdWake()});
+let wake=null,wantWake=false;
+async function holdWake(){wantWake=true;try{if('wakeLock' in navigator&&!wake){wake=await navigator.wakeLock.request('screen');wake.addEventListener('release',()=>{wake=null})}}catch(e){wake=null}}
+function dropWake(){wantWake=false;try{wake&&wake.release()}catch(e){}wake=null}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){if(wantWake)holdWake();if(!hr.dev)autoConnect()}});
 
-/* ---------- watch cues (notifications mirrored by Garmin Connect) ---------- */
-let watchOn=store.get('watch',false),swReg=null,watchMsg='';
+/* ---------- watch: heart-rate broadcast over Bluetooth + notification cues ---------- */
+const hasBT=!!(navigator.bluetooth&&navigator.bluetooth.requestDevice);
+const hr={dev:null,bpm:null,state:'off',retry:0};
+function setHr(state,bpm){hr.state=state;if(bpm!==undefined)hr.bpm=bpm;paintWatch()}
+function paintWatch(){const on=hr.state==='on';const c=$('#watch-chip');c.classList.toggle('on',on);
+ $('#watch-txt').textContent=on?(hr.bpm?hr.bpm+' '+t('bpm'):t('watchOn')):t('watch');
+ const p=$('#pl-hr');if(p){p.hidden=!on;$('#pl-hrv').textContent=hr.bpm||'--'}
+ if(cur==='settings'){const s=$('#hr-state');if(s)s.textContent=on?`${t('watchOn')} · ${hr.bpm||'--'} ${t('bpm')}`:t('watchOff')}}
+function onHr(e){const v=e.target.value,f=v.getUint8(0);const bpm=(f&1)?v.getUint16(1,true):v.getUint8(1);if(bpm>0){setHr('on',bpm);if(P&&P.running){P.hrs.push(bpm)}if(W)W.hrs.push(bpm)}}
+async function attach(dev){hr.dev=dev;setHr('connecting');
+ if(!dev._sp){dev._sp=1;dev.addEventListener('gattserverdisconnected',()=>{setHr('off');if(hr.retry<5){hr.retry++;setTimeout(()=>attach(dev).catch(()=>{}),2000*hr.retry)}})}
+ const srv=await dev.gatt.connect();const svc=await srv.getPrimaryService('heart_rate');const ch=await svc.getCharacteristic('heart_rate_measurement');
+ await ch.startNotifications();ch.addEventListener('characteristicvaluechanged',onHr);hr.retry=0;setHr('on');store.set('hrDevice',dev.id)}
+async function connectWatch(){if(!hasBT){snack(t('btNo'));return}
+ try{const dev=await navigator.bluetooth.requestDevice({filters:[{services:['heart_rate']}],optionalServices:['battery_service']});await attach(dev)}catch(e){setHr('off');if(e&&e.name!=='NotFoundError')snack(t('btFail'))}}
+async function autoConnect(){if(!hasBT||!navigator.bluetooth.getDevices||hr.state==='on'||hr.state==='connecting')return;
+ try{const id=store.get('hrDevice',null);if(!id)return;const devs=await navigator.bluetooth.getDevices();const d=devs.find(x=>x.id===id);if(d)await attach(d)}catch(e){setHr('off')}}
+let swReg=null;
 if('serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js').then(r=>{swReg=r}).catch(()=>{})}catch(e){}}
-async function enableWatch(){
- if(!('Notification' in window)){watchMsg=t('unsupported');renderMeditate();return}
- try{const p=await Notification.requestPermission();if(p==='granted'){watchOn=true;store.set('watch',true);watchMsg='';notify('Stillpoint',lang==='zh'?'手錶提示已開啟':'Watch cues are on')}else{watchMsg=p==='denied'?t('denied'):t('unsupported')}}catch(e){watchMsg=t('unsupported')}
- renderMeditate()}
-function notify(title,body){
- try{navigator.vibrate&&navigator.vibrate([160,90,160])}catch(e){}
- if(!watchOn)return;
- try{if(swReg&&swReg.showNotification){swReg.showNotification(title,{body,tag:'stillpoint',renotify:true,vibrate:[160,90,160]})}else if('Notification' in window&&Notification.permission==='granted'){new Notification(title,{body,tag:'stillpoint'})}}catch(e){}}
+async function ensureCues(){if(!settings.watchCues||!('Notification' in window))return;try{if(Notification.permission==='default')await Notification.requestPermission();if(Notification.permission==='denied')snack(t('notifBlocked'))}catch(e){}}
+function cue(title,body){try{navigator.vibrate&&navigator.vibrate([160,90,160])}catch(e){}
+ if(!settings.watchCues||!('Notification' in window)||Notification.permission!=='granted')return;
+ try{if(swReg&&swReg.showNotification)swReg.showNotification(title,{body,tag:'stillpoint',renotify:true,vibrate:[160,90,160],icon:'icon.svg'});else new Notification(title,{body,tag:'stillpoint'})}catch(e){}}
+async function watchUp(){await ensureCues();if(hasBT&&hr.state!=='on'){await autoConnect()}}
 
 /* ---------- practice log ---------- */
 const getLog=()=>store.get('log',[]);
-function addLog(id,min){const l=getLog();l.push({d:todayKey(),id,min});store.set('log',l.slice(-400))}
+function addLog(id,min,extra){const l=getLog();l.push(Object.assign({d:todayKey(),id,min},extra||{}));store.set('log',l.slice(-400))}
 function streak(){const days=new Set(getLog().map(x=>x.d));let n=0;const d=new Date();if(!days.has(todayKey(d)))d.setDate(d.getDate()-1);while(days.has(todayKey(d))){n++;d.setDate(d.getDate()-1)}return n}
+const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):null;
 
 /* ---------- supplements ---------- */
 const getTicks=()=>store.get('ticks',{});
@@ -467,7 +534,7 @@ function last7(id){const tk=getTicks(),out=[];const d=new Date();for(let i=6;i>=
 function suggestion(){const h=new Date().getHours(),di=dayIdx();
  if((di===4||di===5)&&h>=16&&h<20)return{kind:'breath',id:'box',why:t('sugTennis'),min:3};
  if(h>=3&&h<7)return{kind:'med',id:'six',why:t('sugMorning')};
- if(h>=7&&h<11)return{kind:'med',id:'morning',why:lang==='zh'?'用 5 分鐘開始今天的工作。':'Start the workday in five minutes.'};
+ if(h>=7&&h<11)return di>=5?{kind:'med',id:'intuition',why:t('sugIntuition')}:{kind:'med',id:'morning',why:t('sugWork')};
  if(h>=11&&h<15)return{kind:'med',id:'midday',why:t('sugMidday')};
  if(h>=15&&h<18)return{kind:'med',id:'ground',why:t('sugEvening')};
  if(h>=18&&h<22)return{kind:'med',id:'evening',why:t('sugReview')};
@@ -475,229 +542,285 @@ function suggestion(){const h=new Date().getHours(),di=dayIdx();
 
 /* ---------- offline readiness ---------- */
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
-async function offlineCheck(){const chip=$('#offchip'),body=$('#offbody');if(!chip)return;
+async function offlineCheck(){const body=$('#offbody');if(!body)return;
  let app=false;try{if('caches' in window)app=!!(await caches.match(new URL('index.html',location.href).href,{ignoreSearch:true}))}catch(e){}
- const vs=hasTTS?speechSynthesis.getVoices():[];
- const en=vs.some(v=>/^en/i.test(v.lang)&&v.localService),zh=vs.some(v=>/^(zh|cmn)/i.test(v.lang)&&v.localService);
- if(!$('#offchip'))return;
- const ok=app&&en&&zh,mark=b=>b?'<b style="color:var(--ok)">✓</b>':'<b style="color:var(--warn)">✗</b>';
- chip.className='chip '+(ok?'ok':'warn');chip.textContent=ok?'✓':(app?'!':'✗');
- body.innerHTML=(app?'':`<p style="color:var(--warn);margin-bottom:6px">${esc(t('offArtifact'))}</p>`)+
-  `<div style="display:flex;flex-direction:column;gap:4px">${[[app,'offApp'],[en,'offEn'],[zh,'offZh']].map(([b,k])=>`<div>${mark(b)}&nbsp; ${esc(t(k))}</div>`).join('')}</div>`+
-  `<p style="margin-top:8px">${esc(ok?t('offAll'):t('offNot'))}</p><p class="note" style="margin-top:8px">${esc(t('offTip'))}</p>`}
-if('serviceWorker' in navigator){try{navigator.serviceWorker.addEventListener('controllerchange',()=>{if(cur==='today')offlineCheck()})}catch(e){}}
+ const vs=hasTTS?speechSynthesis.getVoices():[];const en=vs.some(v=>/^en/i.test(v.lang)&&v.localService),zh=vs.some(v=>/^(zh|cmn)/i.test(v.lang)&&v.localService);
+ const b2=$('#offbody'),chip=$('#offchip');if(!b2)return;const ok=app&&en&&zh;
+ chip.className='chip '+(ok?'ok':'err');chip.textContent=ok?'✓':'!';
+ b2.innerHTML=(app?'':`<p class="note warn">${esc(t('offArtifact'))}</p>`)+`<div class="list">${[[app,'offApp'],[en,'offEn'],[zh,'offZh']].map(([v,k])=>`<div class="row" style="gap:.5rem"><b style="color:${v?'var(--ok)':'var(--error)'}">${v?'✓':'✗'}</b><span class="body-m">${esc(t(k))}</span></div>`).join('')}</div><p class="body-m var">${esc(ok?t('offAll'):t('offNot'))}</p>`}
 
-/* ---------- views ---------- */
-function setTab(tab){cur=tab;document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));
- ['today','meditate','breathe','body'].forEach(v=>$('#v-'+v).hidden=v!==tab);if(tab!=='breathe')stopBreath();render();window.scrollTo(0,0)}
-document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+/* ---------- navigation ---------- */
+let prevTab='today';
+function setTab(tab){if(tab!=='settings'&&cur!=='settings')prevTab=cur;if(tab!=='settings')prevTab=tab;cur=tab;
+ document.querySelectorAll('.navbar button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));
+ ['today','meditate','breathe','body','settings'].forEach(v=>$('#v-'+v).hidden=v!==tab);
+ $('#back').hidden=tab!=='settings';$('#open-settings').hidden=tab==='settings';
+ if(tab!=='breathe'){stopBreath();stopWim(false)}render();window.scrollTo(0,0)}
+document.querySelectorAll('.navbar button').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+$('#open-settings').onclick=()=>setTab('settings');$('#back').onclick=()=>setTab(prevTab);
+$('#watch-chip').onclick=()=>{if(hr.state==='on')setTab('settings');else connectWatch()};
+addEventListener('scroll',()=>$('#appbar').classList.toggle('scrolled',scrollY>4),{passive:true});
 
-function render(){
- document.documentElement.lang=lang==='zh'?'zh-Hant':'en';
- $('#lang-en').setAttribute('aria-pressed',lang==='en');$('#lang-zh').setAttribute('aria-pressed',lang==='zh');
+function render(){document.documentElement.lang=lang==='zh'?'zh-Hant':'en';
  document.querySelectorAll('[data-i]').forEach(n=>n.textContent=t(n.dataset.i));
- ({today:renderToday,meditate:renderMeditate,breathe:renderBreathe,body:renderBody})[cur]()}
+ $('#bar-title').textContent=cur==='settings'?t('settings'):'Stillpoint';paintWatch();
+ ({today:renderToday,meditate:renderMeditate,breathe:renderBreathe,body:renderBody,settings:renderSettings})[cur]()}
 
-function renderToday(){
- const v=$('#v-today'),h=new Date().getHours(),g=h<12?t('greetM'):h<18?t('greetA'):t('greetE');
+/* ---------- today ---------- */
+function renderToday(){const v=$('#v-today'),h=new Date().getHours(),g=h<12?t('greetM'):h<18?t('greetA'):t('greetE');
  const dateStr=new Date().toLocaleDateString(lang==='zh'?'zh-TW':'en-NZ',{weekday:'long',day:'numeric',month:'long'});
  const s=suggestion();let title,len;
- if(s.kind==='med'){const se=SESSIONS.find(x=>x.id===s.id);title=L(se.name);len=totalMin(se)}else{const b=BREATHS.find(x=>x.id===s.id);title=L(b.name);len=s.min}
+ if(s.kind==='med'){const se=SESSIONS.find(x=>x.id===s.id);title=L(se.name);len=totalMin(se)}else{title=L(BREATHS.find(x=>x.id===s.id).name);len=s.min}
  const tk=(getTicks()[todayKey()]||[]),done=tk.length,tot=SUPS.length;
  const nextG=GROUPS.find(gr=>SUPS.some(x=>x.g===gr&&!tk.includes(x.id)));
  const nextItems=nextG?SUPS.filter(x=>x.g===nextG&&!tk.includes(x.id)).map(x=>x.n).join(', '):'';
  const log=getLog(),mins=log.reduce((a,x)=>a+x.min,0);
- const daysAgo=Math.floor((new Date(todayKey())-new Date(GARMIN.latest))/864e5);
  v.innerHTML=`
-  <div class="row between"><div><div class="eyebrow">${esc(dateStr)}</div><h2>${esc(g)}</h2></div></div>
-  <div class="card hero">
-    <div class="eyebrow">${t('suggested')}</div>
-    <h2>${esc(title)}</h2>
-    <p>${esc(s.why)}</p>
-    <div class="row between"><span class="mono" style="color:#E9C98F">${len} ${t('minutes')}</span><button class="btn gold" id="sug-go">${t('begin')}</button></div>
+  <div><p class="label-m var">${esc(dateStr)}</p><h2 class="headline">${esc(g)}</h2></div>
+  <div class="card feature">
+    <p class="label-l">${t('suggested')}</p>
+    <h3 class="title-l">${esc(title)}</h3>
+    <p class="body-m var">${esc(s.why)} · ${len} ${t('minutes')}</p>
+    <div><button class="btn filled big" id="sug-go">${ICON.play}${t('begin')}</button></div>
   </div>
-  <div class="card">
-    <div class="row between"><h3>${t('supToday')}</h3><span class="mono muted">${done}/${tot} ${t('taken')}</span></div>
-    <div class="bar"><i style="width:${Math.round(done/tot*100)}%"></i></div>
-    ${nextG?`<p class="muted" style="font-size:.88rem">${t('next')}: <b style="color:var(--ink);font-weight:500">${esc(T[lang].timings[nextG])}</b> · ${esc(nextItems)}</p>`:''}
-    <div><button class="btn ghost small" id="go-body">${t('supT')} →</button></div>
+  <div class="card filled">
+    <div class="row between"><h3 class="title-m">${t('supToday')}</h3><span class="body-m var num">${done}/${tot}</span></div>
+    <div class="progress"><i style="width:${Math.round(done/tot*100)}%"></i></div>
+    ${nextG?`<p class="body-m var">${t('next')}: ${esc(T[lang].timings[nextG])} · ${esc(nextItems)}</p>`:''}
+    <div><button class="btn text" id="go-body">${t('open')}</button></div>
   </div>
-  <div class="card">
-    <h3>${t('routine')}</h3>
-    <div class="row"><span class="chip gold">05:00 ${lang==='zh'?'冥想':'Meditation'}</span><span class="chip">${esc(L(WEEK[dayIdx()]))}</span></div>
-    <div class="row"><span class="chip warn">${t('garmin')}: ${daysAgo} ${t('daysAgo')}</span></div>
+  <div class="card outlined">
+    <h3 class="title-m">${t('log')}</h3>
+    ${log.length?`<div class="stats"><div class="stat"><b class="num">${streak()}</b><span>${t('streak')}</span></div><div class="stat"><b class="num">${log.length}</b><span>${t('sessions')}</span></div><div class="stat"><b class="num">${mins}</b><span>${t('total')}</span></div></div>`:`<p class="body-m var">${t('noSit')}</p>`}
   </div>
-  <div class="card" id="offcard"><div class="row between"><h3>${t('offT')}</h3><span class="chip" id="offchip">…</span></div><div id="offbody" class="muted" style="font-size:.88rem"></div></div>
-  <div class="card">
-    <h3>${t('lastSit')}</h3>
-    ${log.length?`<div class="row" style="gap:22px"><div><div class="mono" style="font-size:1.5rem;color:var(--gold-ink)">${streak()}</div><div class="muted" style="font-size:.8rem">${t('streak')}</div></div><div><div class="mono" style="font-size:1.5rem;color:var(--slate)">${log.length}</div><div class="muted" style="font-size:.8rem">${t('sessions')}</div></div><div><div class="mono" style="font-size:1.5rem;color:var(--slate)">${mins}</div><div class="muted" style="font-size:.8rem">${t('total')}</div></div></div>`:`<p class="muted">${t('noSit')}</p>`}
-  </div>`;
+  <div class="card outlined"><div class="row between"><h3 class="title-m">${t('offT')}</h3><span class="chip" id="offchip">…</span></div><div id="offbody" style="display:flex;flex-direction:column;gap:.5rem"></div></div>`;
  $('#sug-go').onclick=()=>{if(s.kind==='med')openSession(s.id);else{breathSel=s.id;breathMin=s.min;setTab('breathe')}};
  $('#go-body').onclick=()=>setTab('body');offlineCheck()}
 
-function renderMeditate(){
- const v=$('#v-meditate');if(cur!=='meditate')return;
- const list=langVoices(),curV=pickVoice();
- const card=s=>{const tot=s.phases.reduce((a,p)=>a+p.d,0);return `<button class="sess" data-s="${s.id}">
-   <span class="disc" style="background:radial-gradient(circle at 35% 30%,${s.color[1]} 0%,${s.color[0]} 70%)"></span>
-   <span class="meta"><b>${esc(L(s.name))}</b><span>${esc(L(s.desc))}</span>
-   <span class="phases">${s.phases.map(p=>`<i style="flex:${p.d};background:${rgb(p.c)}"></i>`).join('')}</span></span>
-   <span class="len">${totalMin(s)}′</span></button>`};
+/* ---------- meditate ---------- */
+function renderMeditate(){const v=$('#v-meditate');
+ const item=s=>`<button class="li" data-s="${s.id}"><span class="lead" style="background:linear-gradient(135deg,${s.color[0]},${s.color[1]});color:#fff">${ICON.self}</span>
+   <span class="txt"><b>${esc(L(s.name))}</b><span>${esc(L(s.desc))}</span></span><span class="trail num">${totalMin(s)} ${t('minutes')}</span></button>`;
  v.innerHTML=`
-  <h2>${t('guided')}</h2>
-  <div class="sessions">${SESSIONS.map(card).join('')}</div>
-  <div class="card">
-    <div class="row between"><h3>${t('silent')}</h3><button class="btn small" id="silent-go">${t('begin')}</button></div>
-    <p class="muted" style="font-size:.88rem">${t('silentDesc')}</p>
-    <div class="field">${t('length')}<div class="seg" id="seg-len">${[5,10,15,20,30,45].map(m=>`<button aria-pressed="${settings.silentMin===m}" data-v="${m}">${m}′</button>`).join('')}</div></div>
-    <div class="field">${t('interval')}<div class="seg" id="seg-int">${[0,5,10].map(m=>`<button aria-pressed="${settings.interval===m}" data-v="${m}">${m?t('every')+' '+m+'′':t('none')}</button>`).join('')}</div></div>
-  </div>
-  <div class="card">
-    <h3>${t('voiceSet')}</h3>
-    ${hasTTS?`<div class="field"><label for="voice-sel">${lang==='zh'?'中文聲音':'English voice'}</label><select id="voice-sel">${list.length?list.map(x=>`<option value="${esc(x.voiceURI)}" ${curV&&x.voiceURI===curV.voiceURI?'selected':''}>${esc(x.name)} · ${esc(x.lang)} · ${x.localService?t('offline'):t('online')}</option>`).join(''):`<option>${lang==='zh'?'系統預設':'System default'}</option>`}</select></div>
-    <div><button class="btn ghost small" id="voice-test">▶ ${t('preview')}</button></div>`:`<p class="muted">Speech is not available in this browser.</p>`}
-    <p class="note">${t('voiceTip')}</p>
-    <div class="field">${t('ambSound')}<div class="seg" id="seg-amb">${['drone','rain','off'].map(a=>`<button aria-pressed="${settings.amb===a}" data-v="${a}">${t(a)}</button>`).join('')}</div></div>
-  </div>
-  <div class="card">
-    <div class="row between"><h3>${t('watch')}</h3>${watchOn?`<span class="chip ok">${t('enabled')}</span>`:`<button class="btn small" id="watch-go">${t('enable')}</button>`}</div>
-    <p class="muted" style="font-size:.88rem">${t('watchDesc')}</p>
-    ${watchMsg?`<p class="status" style="color:var(--warn)">${esc(watchMsg)}</p>`:''}
+  <h2 class="section-h">${t('guided')}</h2>
+  <div class="card outlined" style="padding-block:.25rem"><div class="list">${SESSIONS.map(item).join('')}</div></div>
+  <h2 class="section-h">${t('sitting')}</h2>
+  <div class="card filled">
+    <p class="body-m var">${t('sittingDesc')}</p>
+    <div class="field"><span class="lbl">${t('length')}</span><div class="seg" id="seg-len">${[5,10,15,20,30].map(m=>`<button aria-pressed="${settings.silentMin===m}" data-v="${m}">${m}</button>`).join('')}</div></div>
+    <div class="field"><span class="lbl">${t('interval')}</span><div class="seg" id="seg-int">${[0,5,10].map(m=>`<button aria-pressed="${settings.interval===m}" data-v="${m}">${m?t('every')+' '+m:t('none')}</button>`).join('')}</div></div>
+    <div><button class="btn filled" id="silent-go">${ICON.play}${t('begin')}</button></div>
   </div>`;
- v.querySelectorAll('.sess').forEach(b=>b.onclick=()=>openSession(b.dataset.s));
+ v.querySelectorAll('.li').forEach(b=>b.onclick=()=>openSession(b.dataset.s));
  $('#silent-go').onclick=()=>openSession('silent');
  v.querySelectorAll('#seg-len button').forEach(b=>b.onclick=()=>{settings.silentMin=+b.dataset.v;saveSettings();renderMeditate()});
- v.querySelectorAll('#seg-int button').forEach(b=>b.onclick=()=>{settings.interval=+b.dataset.v;saveSettings();renderMeditate()});
- v.querySelectorAll('#seg-amb button').forEach(b=>b.onclick=()=>{settings.amb=b.dataset.v;saveSettings();renderMeditate()});
- const vs=$('#voice-sel');if(vs)vs.onchange=()=>store.set('voice_'+lang,vs.value);
- const vt=$('#voice-test');if(vt)vt.onclick=()=>{hush();speak(lang==='zh'?'閉上眼睛。慢慢吸一口氣……再慢慢吐出來。':'Close your eyes. Take a slow breath in... and let it go.')};
- const wg=$('#watch-go');if(wg)wg.onclick=enableWatch}
+ v.querySelectorAll('#seg-int button').forEach(b=>b.onclick=()=>{settings.interval=+b.dataset.v;saveSettings();renderMeditate()})}
 
 /* ---------- breathe ---------- */
-let breathSel='coh',breathMin=5,B=null;
-function renderBreathe(){
- const v=$('#v-breathe'),b=BREATHS.find(x=>x.id===breathSel);
+let breathSel='coh',breathMin=5,B=null,W=null;
+function renderBreathe(){const v=$('#v-breathe');
+ if(breathSel==='wim')return renderWim(v);
+ const b=BREATHS.find(x=>x.id===breathSel);
  v.innerHTML=`
-  <h2>${t('breathTitle')}</h2>
-  <div class="seg" id="seg-br">${BREATHS.map(x=>`<button aria-pressed="${x.id===breathSel}" data-v="${x.id}">${esc(L(x.name))}</button>`).join('')}</div>
-  <p class="muted" style="font-size:.88rem">${esc(L(b.use))} · <span class="mono">${b.steps.map(s=>s[1]).join(' · ')}</span></p>
-  <div class="orbstage"><div class="orb" id="orb"></div><div class="orblabel" id="orbl">${t('ready')}</div><div class="orbcount" id="orbc"></div></div>
-  <div class="row between">
-    <div class="seg" id="seg-bm">${[1,3,5,10].map(m=>`<button aria-pressed="${breathMin===m}" data-v="${m}">${m}′</button>`).join('')}</div>
-    <button class="btn gold" id="br-go">${B?t('stop'):t('start')}</button>
-  </div>
-  <div class="card">
-    <h3>${t('toWatch')}</h3>
-    <ol class="steps">${T[lang].watchSteps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>
-    <p class="note">${t('watchNote')}</p>
-  </div>`;
- v.querySelectorAll('#seg-br button').forEach(x=>x.onclick=()=>{stopBreath();breathSel=x.dataset.v;renderBreathe()});
+  ${breathChips()}
+  <p class="body-m var">${esc(L(b.use))} · <span class="num">${b.steps.map(s=>s[1]).join(' · ')}</span></p>
+  <div class="stage"><div class="orb" id="orb"></div><div class="lbl" id="orbl">${t('ready')}</div><div class="tr num" id="orbc"></div></div>
+  <div class="field"><span class="lbl">${t('length')}</span><div class="seg" id="seg-bm">${[1,3,5,10].map(m=>`<button aria-pressed="${breathMin===m}" data-v="${m}">${m} ${t('minutes')}</button>`).join('')}</div></div>
+  <button class="btn filled big" id="br-go">${B?t('stop'):t('start')}</button>`;
+ bindChips(v);
  v.querySelectorAll('#seg-bm button').forEach(x=>x.onclick=()=>{breathMin=+x.dataset.v;renderBreathe()});
  $('#br-go').onclick=()=>B?stopBreath(true):startBreath()}
-function startBreath(){ensureAudio();holdWake();const b=BREATHS.find(x=>x.id===breathSel);B={b,i:-1,end:Date.now()+breathMin*60000,timer:null};$('#br-go').textContent=t('stop');stepBreath()}
+function breathChips(){return `<div class="chips" id="br-chips">${BREATHS.map(x=>`<button class="chip ${x.id===breathSel?'sel':''}" data-v="${x.id}">${esc(L(x.name))}</button>`).join('')}<button class="chip ${breathSel==='wim'?'sel':''}" data-v="wim">${t('wimName')}</button></div>`}
+function bindChips(v){v.querySelectorAll('#br-chips button').forEach(x=>x.onclick=()=>{stopBreath();stopWim(false);breathSel=x.dataset.v;renderBreathe()})}
+async function startBreath(){ensureAudio();holdWake();watchUp();const b=BREATHS.find(x=>x.id===breathSel);
+ B={b,i:-1,n:0,end:Date.now()+breathMin*60000+6000,timer:null,hrs:[]};$('#br-go').textContent=t('stop');
+ speak(L(BREATH_INTRO[b.id]));const lab=$('#orbl');if(lab)lab.textContent='…';B.timer=setTimeout(stepBreath,6000)}
 function stepBreath(){if(!B)return;const orb=$('#orb'),lab=$('#orbl'),cnt=$('#orbc');
- if(Date.now()>=B.end){bell(1);addLog('breath-'+B.b.id,breathMin);stopBreath(true);if(lab)lab.textContent=t('complete');return}
- B.i=(B.i+1)%B.b.steps.length;const [k,sec,sc]=B.b.steps[B.i];
+ if(Date.now()>=B.end){bell(1);speak(L(BREATH_END));addLog('breath-'+B.b.id,breathMin);cue(t('complete'),L(B.b.name));stopBreath(true);if($('#orbl'))$('#orbl').textContent=t('complete');return}
+ B.i=(B.i+1)%B.b.steps.length;if(B.i===0)B.n++;const [k,sec,sc]=B.b.steps[B.i];
  if(orb){orb.style.transitionDuration=sec+'s';orb.style.transform=`scale(${.55+sc*.95})`}
  if(lab)lab.textContent=t(k);if(cnt)cnt.textContent=fmt((B.end-Date.now())/1000);
- if(k==='inhale'||k==='exhale')tone(k==='inhale');
+ if(B.n<=3)speak(t(k));else if(k==='inhale'||k==='exhale')tone(k==='inhale');
  try{navigator.vibrate&&navigator.vibrate(k==='inhale'?60:k==='exhale'?[30,60,30]:0)}catch(e){}
  B.timer=setTimeout(stepBreath,sec*1000)}
-function stopBreath(rerender){if(!B)return;clearTimeout(B.timer);B=null;dropWake();if(rerender&&cur==='breathe'){const keep=$('#orbl')&&$('#orbl').textContent;renderBreathe();if(keep===t('complete'))$('#orbl').textContent=keep}}
+function stopBreath(rerender){if(!B)return;clearTimeout(B.timer);B=null;dropWake();if(rerender&&cur==='breathe'){const keep=$('#orbl')&&$('#orbl').textContent;renderBreathe();if(keep===t('complete')&&$('#orbl'))$('#orbl').textContent=keep}}
+
+/* ---------- power breathing (Wim Hof style) ---------- */
+const PACE={slow:[2.2,1.8],medium:[1.6,1.4],fast:[1.2,1.0]};
+function renderWim(v){const ack=store.get('whAck',false);
+ v.innerHTML=`
+  ${breathChips()}
+  <p class="body-m var">${t('wimSub')}</p>
+  ${ack?'':`<div class="card warn"><h3 class="title-m">${t('safetyT')}</h3><p class="body-m">${t('safety')}</p><div><button class="btn filled" id="wh-ack">${t('understand')}</button></div></div>`}
+  <div class="stage" id="wh-stage"><div class="orb" id="orb"></div><div class="center num" id="whc"></div><div class="tl" id="whr"></div><div class="tr num" id="whhr"></div><div class="lbl" id="orbl">${t('ready')}</div></div>
+  ${W?'':`<div class="field"><span class="lbl">${t('breaths')}</span><div class="seg" id="wh-b">${[30,40].map(n=>`<button aria-pressed="${settings.whBreaths===n}" data-v="${n}">${n}</button>`).join('')}</div></div>
+  <div class="field"><span class="lbl">${t('rounds')}</span><div class="seg" id="wh-r">${[2,3,4].map(n=>`<button aria-pressed="${settings.whRounds===n}" data-v="${n}">${n}</button>`).join('')}</div></div>
+  <div class="field"><span class="lbl">${t('pace')}</span><div class="seg" id="wh-p">${['slow','medium','fast'].map(n=>`<button aria-pressed="${settings.whPace===n}" data-v="${n}">${t(n)}</button>`).join('')}</div></div>`}
+  <button class="btn filled big" id="wh-go" ${ack?'':'disabled'}>${W?t('stop'):t('start')}</button>
+  <div class="results" id="wh-res">${(store.get('whLast',[])).map((s,i)=>`<span class="chip">${t('round')} ${i+1}${lang==='zh'?' 輪':''} · ${fmt(s)}</span>`).join('')}</div>
+  ${ack?`<p class="body-m var">${t('safety')}</p>`:''}`;
+ bindChips(v);
+ const a=$('#wh-ack');if(a)a.onclick=()=>{store.set('whAck',true);renderBreathe()};
+ [['#wh-b','whBreaths',Number],['#wh-r','whRounds',Number],['#wh-p','whPace',String]].forEach(([sel,key,cast])=>v.querySelectorAll(sel+' button').forEach(b=>b.onclick=()=>{settings[key]=cast(b.dataset.v);saveSettings();renderBreathe()}));
+ $('#wh-go').onclick=()=>W?stopWim(true):startWim();
+ $('#wh-stage').onclick=()=>{if(W&&W.stage==='hold')endHold()}}
+const WH={
+ intro:{en:'Power breathing. Sit or lie down, and relax your shoulders. Breathe in deeply through the nose or mouth, and let go without force. Here we go.',zh:'強力呼吸。坐著或躺下，放鬆肩膀。用鼻子或嘴巴深深吸氣，不用力地放掉。我們開始。'},
+ fully:{en:'Fully in... let go.',zh:'吸滿……放掉。'},
+ last:{en:'Last breath. In... and let it all go. Now hold, with empty lungs. Tap the screen when you need to breathe.',zh:'最後一口。吸氣……全部吐掉。現在閉氣，肺是空的。需要呼吸時點一下螢幕。'},
+ recover:{en:'Big breath in... and hold.',zh:'大口吸氣……停住。'},
+ release:{en:'And let go.',zh:'放掉。'},
+ again:{en:'Next round. Breathe in deeply...',zh:'下一輪。深深吸氣……'},
+ end:{en:'That was the last round. Breathe normally and stay still for a minute. Notice the energy in your body.',zh:'這是最後一輪。正常呼吸，靜靜停留一分鐘。感受身體裡的能量。'}};
+function startWim(){ensureAudio();holdWake();watchUp();W={round:1,stage:'intro',n:0,holds:[],hrs:[],timer:null,t0:0,tick:null};
+ $('#wh-go').textContent=t('stop');renderWimRun();speak(L(WH.intro));W.timer=setTimeout(powerPhase,9000)}
+function renderWimRun(){const v=$('#v-breathe');v.querySelectorAll('#wh-b,#wh-r,#wh-p').forEach(n=>n.closest('.field').remove());const r=$('#whr');if(r)r.textContent=`${t('round')} ${W.round}${lang==='zh'?' 輪':''} / ${settings.whRounds}`}
+function powerPhase(){if(!W)return;W.stage='power';W.n=0;renderWimRun();cue(`${t('round')} ${W.round}`,t('wimName'));breathe()}
+function breathe(){if(!W||W.stage!=='power')return;const [inS,outS]=PACE[settings.whPace];const orb=$('#orb'),c=$('#whc'),lab=$('#orbl');
+ W.n++;if(c)c.textContent=W.n;if(lab)lab.textContent=t('inhale');
+ if(orb){orb.style.transitionDuration=inS+'s';orb.style.transform='scale(1.5)'}
+ if(W.n<=3)speak(L(WH.fully));else tone(true,inS);
+ W.timer=setTimeout(()=>{if(!W)return;if(orb){orb.style.transitionDuration=outS+'s';orb.style.transform='scale(.7)'}if(lab)lab.textContent=t('exhale');
+  if(W.n>=settings.whBreaths){W.timer=setTimeout(holdPhase,outS*1000)}else{W.timer=setTimeout(breathe,outS*1000)}},inS*1000)}
+function holdPhase(){if(!W)return;W.stage='hold';W.t0=Date.now();speak(L(WH.last));cue(t('retention'),lang==='zh'?'點螢幕結束閉氣':'Tap the screen when you need to breathe');
+ const orb=$('#orb');if(orb){orb.style.transitionDuration='4s';orb.style.transform='scale(.45)'}
+ $('#orbl').textContent=t('needBreath')+' ↑';
+ W.tick=setInterval(()=>{const s=(Date.now()-W.t0)/1000;const c=$('#whc');if(c)c.textContent=fmt(s);const h=$('#whhr');if(h)h.textContent=hr.bpm?hr.bpm+' '+t('bpm'):'';if(s>=240)endHold()},250)}
+function endHold(){if(!W||W.stage!=='hold')return;clearInterval(W.tick);const s=Math.round((Date.now()-W.t0)/1000);W.holds.push(s);
+ W.stage='recover';speak(L(WH.recover));cue(t('recovery'),'15 s');const orb=$('#orb');if(orb){orb.style.transitionDuration='2s';orb.style.transform='scale(1.5)'}
+ $('#orbl').textContent=t('recovery');let left=15;const c=$('#whc');if(c)c.textContent=left;
+ W.tick=setInterval(()=>{left--;const c2=$('#whc');if(c2)c2.textContent=Math.max(0,left);if(left<=0){clearInterval(W.tick);afterRecovery()}},1000);
+ const res=$('#wh-res');if(res)res.innerHTML=W.holds.map((x,i)=>`<span class="chip sel">${t('round')} ${i+1}${lang==='zh'?' 輪':''} · ${fmt(x)}</span>`).join('')}
+function afterRecovery(){if(!W)return;speak(L(WH.release));bell(1);const orb=$('#orb');if(orb){orb.style.transitionDuration='3s';orb.style.transform='scale(.6)'}
+ if(W.round>=settings.whRounds){W.timer=setTimeout(finishWim,3500);return}
+ W.round++;W.timer=setTimeout(()=>{speak(L(WH.again));W.timer=setTimeout(powerPhase,4000)},3500)}
+function finishWim(){if(!W)return;speak(L(WH.end));bell(2,330);store.set('whLast',W.holds);
+ const min=Math.max(1,Math.round(W.holds.reduce((a,b)=>a+b,0)/60+settings.whRounds*(settings.whBreaths*3/60+.4)));addLog('wim',min,{holds:W.holds,hr:avg(W.hrs)});cue(t('complete'),W.holds.map(fmt).join(' · '));
+ const holds=W.holds;stopWim(false);renderBreathe();const l=$('#orbl');if(l)l.textContent=t('complete');const c=$('#whc');if(c)c.textContent=fmt(Math.max(...holds))}
+function stopWim(rerender){if(!W)return;clearTimeout(W.timer);clearInterval(W.tick);hush();W=null;dropWake();if(rerender&&cur==='breathe')renderBreathe()}
 
 /* ---------- body ---------- */
-function renderBody(){
- const v=$('#v-body'),tk=getTicks()[todayKey()]||[],di=dayIdx();
+function renderBody(){const v=$('#v-body'),tk=getTicks()[todayKey()]||[],di=dayIdx();
  const daysAgo=Math.floor((new Date(todayKey())-new Date(GARMIN.latest))/864e5);
- const dn=lang==='zh'?['一','二','三','四','五','六','日']:['MON','TUE','WED','THU','FRI','SAT','SUN'];
+ const dn=lang==='zh'?['一','二','三','四','五','六','日']:['M','T','W','T','F','S','S'];
  v.innerHTML=`
-  <h2>${lang==='zh'?'身體與恢復':'Body and recovery'}</h2>
-  <div class="card">
-    <div class="row between"><h3>${t('garmin')}</h3><span class="chip warn">${t('lastSync')}: ${GARMIN.latest} · ${daysAgo} ${t('daysAgo')}</span></div>
-    <p class="note">${t('syncWarn')}</p>
-    <div class="eyebrow">${t('recent')}</div>
-    <div class="acts">${GARMIN.acts.map(a=>`<div class="act"><b>${esc(L(a.type))}</b><span class="r">${fmt(a.dur)}</span><span class="muted mono" style="font-size:.78rem">${a.d.slice(5)} · ${a.tm}</span><span class="r">HR ${a.hr}${a.kcal?' · '+a.kcal+' kcal':''}</span></div>`).join('')}</div>
-    <p class="muted" style="font-size:.72rem">${t('sourceG')}</p>
+  <div class="card filled">
+    <div class="row between"><h3 class="title-m">${t('garmin')}</h3><span class="chip err">${t('lastSync')} ${daysAgo} ${t('daysAgo')}</span></div>
+    <p class="body-m">${t('syncWarn')}</p>
   </div>
-  <div class="card"><h3>${t('targets')}</h3>
-    <div class="targets">${TARGETS.map(x=>`<div class="tgt"><span class="eyebrow">${esc(L(x.k))}</span><span class="v">${x.v}</span><span class="s">${esc(L(x.s))}</span></div>`).join('')}</div>
+  <h2 class="section-h">${t('recent')}</h2>
+  <div class="card outlined" style="padding-block:.25rem"><div class="list">${GARMIN.acts.map(a=>`<div class="li" style="grid-template-columns:1fr auto"><span class="txt"><b>${esc(L(a.type))}</b><span class="num">${a.d.slice(5)} · ${a.tm} · HR ${a.hr}${a.kcal?' · '+a.kcal+' kcal':''}</span></span><span class="trail num">${fmt(a.dur)}</span></div>`).join('')}</div></div>
+  <p class="label-m var">${t('sourceG')}</p>
+  <h2 class="section-h">${t('targets')}</h2>
+  <div class="grid2">${TARGETS.map(x=>`<div class="tile"><span>${esc(L(x.k))}</span><b class="num">${x.v}</b><span>${esc(L(x.s))}</span></div>`).join('')}</div>
+  <h2 class="section-h">${t('weekT')}</h2>
+  <div class="week">${WEEK.map((w,i)=>`<div class="day ${i===di?'today':''}"><b>${dn[i]}</b><small>${esc(L(w))}</small></div>`).join('')}</div>
+  <div class="row between"><h2 class="section-h">${t('supT')}</h2><span class="body-m var num">${tk.length}/${SUPS.length}</span></div>
+  <div class="card outlined" style="padding-block:.25rem">
+    ${GROUPS.map(g=>`<p class="label-m" style="color:var(--primary);margin:.75rem 0 0">${esc(T[lang].timings[g])}</p><div class="list">${SUPS.filter(x=>x.g===g).map(x=>{const on=tk.includes(x.id);return `<button class="li" role="checkbox" aria-checked="${on}" data-id="${x.id}"><span class="check">${on?ICON.check:''}</span><span class="txt"><b>${esc(x.n)}</b><span>${esc(L(x.dose))}</span></span><span class="dots">${last7(x.id).map(d=>`<i class="${d?'on':''}"></i>`).join('')}</span></button>`}).join('')}</div>`).join('')}
   </div>
-  <div class="card"><h3>${t('weekT')}</h3>
-    <div class="week">${WEEK.map((w,i)=>`<div class="day ${i===di?'today':''}"><b>${dn[i]}</b><small>${esc(L(w))}</small></div>`).join('')}</div>
+  <p class="note">${t('supNote')}</p>`;
+ v.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>toggleSup(b.dataset.id))}
+
+/* ---------- settings ---------- */
+function renderSettings(){const v=$('#v-settings');const list=langVoices(),curV=pickVoice();
+ const sizes=[[.875,'A−'],[1,'A'],[1.15,'A+'],[1.3,'A++'],[1.5,'A+++']];
+ v.innerHTML=`
+  <h2 class="section-h">${t('textSize')}</h2>
+  <div class="card filled"><div class="seg" id="seg-size">${sizes.map(([s,l])=>`<button aria-pressed="${settings.scale===s}" data-v="${s}" style="font-size:${.75*s}rem">${l}</button>`).join('')}</div>
+   <p class="body-m var">${lang==='zh'?'這是預覽文字。':'This is how text will look.'}</p></div>
+  <h2 class="section-h">${t('language')}</h2>
+  <div class="card filled"><div class="seg" id="seg-lang"><button aria-pressed="${lang==='en'}" data-v="en">English</button><button aria-pressed="${lang==='zh'}" data-v="zh">中文</button></div></div>
+  <h2 class="section-h">${t('watch')}</h2>
+  <div class="card filled">
+    <div class="row between"><h3 class="title-m">${t('watchCard')}</h3><span class="chip ${hr.state==='on'?'ok':''}" id="hr-state">${hr.state==='on'?`${t('watchOn')} · ${hr.bpm||'--'} ${t('bpm')}`:t('watchOff')}</span></div>
+    <ol class="steps">${T[lang].watchHow.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>
+    ${hasBT?'':`<p class="note warn">${t('btNo')}</p>`}
+    <div><button class="btn filled" id="bt-go" ${hasBT?'':'disabled'}>${hr.dev?t('watchReconnect'):t('watchConnect')}</button></div>
+    <div class="setrow"><div class="txt"><p class="title-m">${t('watchCuesT')}</p><p class="body-m var">${t('watchCuesD')}</p></div><button class="switch" role="switch" id="sw-cues" aria-checked="${settings.watchCues}" aria-label="${t('watchCuesT')}"></button></div>
   </div>
-  <div class="card">
-    <div class="row between"><h3>${t('supT')}</h3><span class="mono muted">${tk.length}/${SUPS.length} · ${t('last7')} ●</span></div>
-    ${GROUPS.map(g=>`<div class="supgroup"><h3>${esc(T[lang].timings[g])}</h3>${SUPS.filter(x=>x.g===g).map(x=>{const on=tk.includes(x.id);return `<button class="sup" role="checkbox" aria-checked="${on}" data-id="${x.id}"><span class="box">${on?'✓':''}</span><span class="nm"><span>${esc(x.n)}</span><small>${esc(L(x.dose))}</small></span><span class="dots">${last7(x.id).map(d=>`<i class="${d?'on':''}"></i>`).join('')}</span></button>`}).join('')}</div>`).join('')}
-    <p class="note">${t('supNote')}</p>
-  </div>`;
- v.querySelectorAll('.sup').forEach(b=>b.onclick=()=>toggleSup(b.dataset.id))}
+  <h2 class="section-h">${t('voiceSet')}</h2>
+  <div class="card filled">
+    ${hasTTS?`<div class="field"><label for="voice-sel">${lang==='zh'?'中文聲音':'English voice'}</label><select id="voice-sel">${list.length?list.map(x=>`<option value="${esc(x.voiceURI)}" ${curV&&x.voiceURI===curV.voiceURI?'selected':''}>${esc(x.name)} · ${x.localService?t('offline'):t('online')}</option>`).join(''):`<option>${lang==='zh'?'系統預設':'System default'}</option>`}</select></div>
+    <div><button class="btn tonal" id="voice-test">${ICON.play}${t('preview')}</button></div>`:''}
+    <p class="body-m var">${t('voiceTip')}</p>
+  </div>
+  <h2 class="section-h">${t('ambSound')}</h2>
+  <div class="card filled"><div class="seg" id="seg-amb">${['drone','rain','off'].map(a=>`<button aria-pressed="${settings.amb===a}" data-v="${a}">${t(a)}</button>`).join('')}</div></div>`;
+ v.querySelectorAll('#seg-size button').forEach(b=>b.onclick=()=>{settings.scale=+b.dataset.v;saveSettings();applyScale();renderSettings()});
+ v.querySelectorAll('#seg-lang button').forEach(b=>b.onclick=()=>setLang(b.dataset.v));
+ v.querySelectorAll('#seg-amb button').forEach(b=>b.onclick=()=>{settings.amb=b.dataset.v;saveSettings();renderSettings()});
+ $('#bt-go').onclick=connectWatch;
+ $('#sw-cues').onclick=async()=>{settings.watchCues=!settings.watchCues;saveSettings();if(settings.watchCues)await ensureCues();renderSettings()};
+ const vs=$('#voice-sel');if(vs)vs.onchange=()=>store.set('voice_'+lang,vs.value);
+ const vt=$('#voice-test');if(vt)vt.onclick=()=>{hush();speak(lang==='zh'?'閉上眼睛。慢慢吸一口氣……再慢慢吐出來。':'Close your eyes. Take a slow breath in... and let it go.')}}
 
 /* ---------- player ---------- */
 let P=null,tickT=null,raf=null;
-function buildSilent(){const n=settings.interval?Math.max(1,Math.round(settings.silentMin/settings.interval)):1,d=settings.silentMin*60/n;
- return{id:'silent',name:{en:'Silent timer',zh:'靜坐計時'},phases:Array.from({length:n},(_,i)=>({d,c:i%2?[90,130,170]:[70,105,150],t:{en:n>1?`Sit · ${i+1}`:'Sit',zh:n>1?`靜坐 · ${i+1}`:'靜坐'},cues:[]}))}}
-function openSession(id){
- const s=id==='silent'?buildSilent():SESSIONS.find(x=>x.id===id);
- P={s,idx:0,pe:0,te:0,running:false,started:false,fired:new Set(),total:s.phases.reduce((a,p)=>a+p.d,0),col:s.phases[0].c.slice(),done:false};
- $('#player').hidden=false;document.body.style.overflow='hidden';
- $('#pl-name').textContent=L(s.name);$('#pl-close').textContent=t('close');
+const SIT={open:{en:'Welcome. Sit comfortably, close your eyes, and let your breath settle. I will ring a bell to close.',zh:'歡迎。舒服地坐著，閉上眼睛，讓呼吸安定下來。結束時我會敲鐘。'},
+ mid:{en:'If you have drifted, gently come back to the breath.',zh:'如果思緒飄走了，溫和地回到呼吸。'},
+ close:{en:'Slowly deepen your breath. Move your fingers. Open your eyes when you are ready.',zh:'慢慢加深呼吸，動一動手指。準備好了就睜開眼睛。'}};
+function buildSilent(){const tot=settings.silentMin*60,n=settings.interval?Math.max(1,Math.round(settings.silentMin/settings.interval)):1,d=tot/n;
+ return{id:'silent',name:{en:'Guided sitting',zh:'引導靜坐'},phases:Array.from({length:n},(_,i)=>({d,c:i%2?[70,130,125]:[50,105,100],t:{en:n>1?`Sitting · ${i+1}`:'Sitting',zh:n>1?`靜坐 · ${i+1}`:'靜坐'},
+  cues:[...(i===0?[C(0,SIT.open.en,SIT.open.zh)]:[C(0,SIT.mid.en,SIT.mid.zh)]),...(i===n-1?[C(Math.max(10,d-25),SIT.close.en,SIT.close.zh)]:[])]}))}}
+function openSession(id){const s=id==='silent'?buildSilent():SESSIONS.find(x=>x.id===id);
+ P={s,idx:0,pe:0,te:0,running:false,started:false,fired:new Set(),total:s.phases.reduce((a,p)=>a+p.d,0),col:s.phases[0].c.slice(),done:false,hrs:[],hrStart:null};
+ $('#player').hidden=false;document.body.style.overflow='hidden';$('#pl-name').textContent=L(s.name);
  $('#pl-prog').innerHTML=s.phases.map(p=>`<i style="flex:${p.d}"><b></b></i>`).join('');
  $('#vol-voice').value=settings.voiceVol;$('#vol-amb').value=settings.ambVol;
- restoreMid();updatePlayer();sizeCanvas();loop()}
-function restoreMid(){$('#pl-mid').innerHTML='<div class="ph-n" id="pl-phn"></div><div class="ph-t" id="pl-pht"></div><div class="cue" id="pl-cue" aria-live="polite"></div>'}
+ $('#pl-mid').innerHTML='<div class="ph-n" id="pl-phn"></div><div class="ph-t" id="pl-pht"></div><div class="cue" id="pl-cue" aria-live="polite"></div>';
+ $('#pl-icon').innerHTML=ICON.play.replace(/<\/?svg[^>]*>/g,'');paintWatch();updatePlayer();sizeCanvas();loop()}
 function enterPhase(first){const p=P.s.phases[P.idx];P.pe=0;P.fired=new Set();if(!first)bell(1);
- notify(L(p.t),`${t('phase')} ${P.idx+1} ${t('of')} ${P.s.phases.length} · ${fmt(p.d)}`);$('#pl-cue').textContent=''}
+ cue(L(p.t),`${t('phase')} ${P.idx+1} ${t('of')} ${P.s.phases.length} · ${fmt(p.d)}`);$('#pl-cue').textContent=''}
 function playPause(){if(!P)return;if(P.done){closePlayer();return}
  ensureAudio();
  if(!P.running){P.running=true;P.last=performance.now();holdWake();
-  if(!P.started){P.started=true;startAmbient();if(hasTTS)try{speechSynthesis.speak(new SpeechSynthesisUtterance(''))}catch(e){};bell(1,330);enterPhase(true)}else{fadeAmbient(true)}
+  if(!P.started){P.started=true;watchUp();P.hrStart=hr.bpm;startAmbient();if(hasTTS)try{speechSynthesis.speak(new SpeechSynthesisUtterance(''))}catch(e){};bell(1,330);enterPhase(true)}else fadeAmbient(true);
   tickT=setInterval(tick,250)}
  else{P.running=false;clearInterval(tickT);hush();fadeAmbient(false);dropWake()}
  updatePlayer()}
 function tick(){if(!P||!P.running)return;const now=performance.now(),dt=Math.min(5,(now-P.last)/1000);P.last=now;P.pe+=dt;P.te+=dt;
- const p=P.s.phases[P.idx];p.cues.forEach((c,i)=>{if(!P.fired.has(i)&&P.pe>=c.t){P.fired.add(i);speak(c[lang]);$('#pl-cue').textContent=c[lang]}});
+ const p=P.s.phases[P.idx];p.cues.forEach((c,i)=>{if(!P.fired.has(i)&&P.pe>=c.t){P.fired.add(i);speak(c[lang]);$('#pl-cue').textContent=c[lang].replace(/\.\.\./g,'…')}});
  if(P.pe>=p.d){if(P.idx<P.s.phases.length-1){P.idx++;enterPhase(false)}else{finish();return}}
  updatePlayer()}
 function jump(dir){if(!P||P.done)return;const ni=P.idx+dir;if(ni<0||ni>=P.s.phases.length){if(dir<0){P.te-=P.pe;P.pe=0;P.fired=new Set()}updatePlayer();return}
  hush();P.te=P.s.phases.slice(0,ni).reduce((a,x)=>a+x.d,0);P.idx=ni;if(P.started)enterPhase(false);else P.pe=0;updatePlayer()}
 function finish(){clearInterval(tickT);P.running=false;P.done=true;bell(3,330);fadeAmbient(false);setTimeout(()=>stopAmbient(),6000);dropWake();
- const min=Math.max(1,Math.round(P.te/60));addLog(P.s.id,min);notify(t('complete'),`${min} ${t('minutes')}`);
- $('#pl-mid').innerHTML=`<div class="done"><div class="ph-n">${esc(L(P.s.name))}</div><div class="ph-t">${t('complete')}</div><div class="big">${min}′</div><div class="cue">${t('logged')}</div></div>`;
+ const min=Math.max(1,Math.round(P.te/60));const h0=P.hrStart||P.hrs.slice(0,20).length&&avg(P.hrs.slice(0,20)),h1=P.hrs.length?avg(P.hrs.slice(-20)):null;
+ addLog(P.s.id,min,h0&&h1?{hr0:h0,hr1:h1}:null);cue(t('complete'),`${min} ${t('minutes')}`);
+ $('#pl-mid').innerHTML=`<div class="done"><div class="ph-n">${esc(L(P.s.name))}</div><div class="ph-t">${t('complete')}</div><div class="big num">${min} ${t('minutes')}</div>${h0&&h1?`<div class="cue">${t('hrChange')} ${h0} → ${h1} ${t('bpm')}</div>`:''}<div class="cue">${t('logged')}</div></div>`;
  $('#pl-prog').querySelectorAll('b').forEach(b=>b.style.width='100%');$('#pl-rem').textContent='0:00';
- $('#pl-icon').innerHTML='<path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/>';$('#pl-play').setAttribute('aria-label',t('again'))}
-function updatePlayer(){if(!P||P.done)return;const p=P.s.phases[P.idx];
- const hasIntro=P.s.phases[0].intro?1:0;$('#pl-phn').textContent=P.s.id==='silent'?`${fmt(p.d-P.pe)}`:p.intro?(lang==='zh'?'開場':'Opening'):`${t('phase')} ${P.idx+1-hasIntro} ${t('of')} ${P.s.phases.length-hasIntro}`;
+ $('#pl-icon').innerHTML='<path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>'}
+function updatePlayer(){if(!P||P.done)return;const p=P.s.phases[P.idx];const intro=P.s.phases[0].intro?1:0;
+ $('#pl-phn').textContent=P.s.id==='silent'?fmt(p.d-P.pe):p.intro?(lang==='zh'?'開場':'Opening'):`${t('phase')} ${P.idx+1-intro} ${t('of')} ${P.s.phases.length-intro}`;
  $('#pl-pht').textContent=L(p.t);
- if(!P.started)$('#pl-cue').textContent=lang==='zh'?'戴上耳機，點擊播放。':'Put on headphones and press play.';
+ if(!P.started)$('#pl-cue').textContent=lang==='zh'?'戴上耳機，按下播放。':'Put on headphones and press play.';
  $('#pl-prog').querySelectorAll('b').forEach((b,i)=>b.style.width=(i<P.idx?100:i===P.idx?Math.min(100,P.pe/p.d*100):0)+'%');
  $('#pl-el').textContent=fmt(P.te);$('#pl-rem').textContent='-'+fmt(P.total-P.te);
- $('#pl-icon').innerHTML=P.running?'<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>':'<path d="M8 5v14l11-7z"/>';$('#pl-play').setAttribute('aria-label',P.running?'Pause':'Play')}
+ $('#pl-icon').innerHTML=(P.running?ICON.pause:ICON.play).replace(/<\/?svg[^>]*>/g,'');$('#pl-play').setAttribute('aria-label',P.running?'Pause':'Play')}
 function closePlayer(){clearInterval(tickT);hush();stopAmbient();dropWake();cancelAnimationFrame(raf);
  if(P&&!P.done&&P.te>=120)addLog(P.s.id,Math.round(P.te/60));P=null;$('#player').hidden=true;document.body.style.overflow='';render()}
 $('#pl-play').onclick=playPause;$('#pl-close').onclick=closePlayer;$('#pl-next').onclick=()=>jump(1);$('#pl-back').onclick=()=>jump(-1);
 $('#vol-voice').oninput=e=>{settings.voiceVol=+e.target.value;saveSettings()};
 $('#vol-amb').oninput=e=>{settings.ambVol=+e.target.value;saveSettings();setAmbVol()};
 
-/* ---------- visual: drifting light field + breathing core (6 breaths/min) ---------- */
+/* ---------- visuals ---------- */
 const cv=$('#cv'),cx=cv.getContext('2d');const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let lastDraw=0;
 function sizeCanvas(){const r=Math.min(2,devicePixelRatio||1);cv.width=innerWidth*r;cv.height=innerHeight*r;cx.setTransform(r,0,0,r,0,0)}
 addEventListener('resize',()=>{if(P)sizeCanvas()});
 function loop(ts=0){if(!P)return;raf=requestAnimationFrame(loop);if(reduce&&ts-lastDraw<1000)return;lastDraw=ts;
  const w=innerWidth,h=innerHeight,target=P.s.phases[Math.min(P.idx,P.s.phases.length-1)].c;
  for(let i=0;i<3;i++)P.col[i]+=(target[i]-P.col[i])*.01;const c=P.col.map(Math.round);
- cx.globalCompositeOperation='source-over';cx.fillStyle='#0A1018';cx.fillRect(0,0,w,h);cx.globalCompositeOperation='lighter';
- const m=Math.min(w,h);
+ cx.globalCompositeOperation='source-over';cx.fillStyle='#08100F';cx.fillRect(0,0,w,h);cx.globalCompositeOperation='lighter';const m=Math.min(w,h);
  for(let k=0;k<4;k++){const x=w/2+Math.cos(ts*7e-5*(k+1)+k*1.7)*w*.22,y=h*.42+Math.sin(ts*5e-5*(k+2)+k*2.1)*h*.14,r=m*(.42+.1*Math.sin(ts*3e-4+k));
   const g=cx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(${c},${k%2?.16:.22})`);g.addColorStop(1,'rgba(0,0,0,0)');cx.fillStyle=g;cx.fillRect(0,0,w,h)}
  const br=.5-.5*Math.cos(ts/10000*2*Math.PI),rr=m*(.09+.05*br),gx=w/2,gy=h*.42;
- const g2=cx.createRadialGradient(gx,gy,0,gx,gy,rr*2.6);g2.addColorStop(0,'rgba(245,225,185,.55)');g2.addColorStop(.35,`rgba(${c},.28)`);g2.addColorStop(1,'rgba(0,0,0,0)');
+ const g2=cx.createRadialGradient(gx,gy,0,gx,gy,rr*2.6);g2.addColorStop(0,'rgba(225,245,240,.5)');g2.addColorStop(.35,`rgba(${c},.28)`);g2.addColorStop(1,'rgba(0,0,0,0)');
  cx.fillStyle=g2;cx.beginPath();cx.arc(gx,gy,rr*2.6,0,Math.PI*2);cx.fill()}
 
-/* ---------- language ---------- */
-function setLang(l){lang=l;store.set('lang',l);hush();if(P&&!P.done){$('#pl-name').textContent=L(P.s.name);$('#pl-close').textContent=t('close');updatePlayer()}render()}
-$('#lang-en').onclick=()=>setLang('en');$('#lang-zh').onclick=()=>setLang('zh');
+function setLang(l){lang=l;store.set('lang',l);hush();if(P&&!P.done){$('#pl-name').textContent=L(P.s.name);updatePlayer()}render()}
 
-render();
+render();autoConnect();
 })();
 </script>
 
