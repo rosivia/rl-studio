@@ -1,9 +1,14 @@
 // Stillpoint service worker: full offline use after one online visit, plus notifications (mirrored to Garmin).
-const CACHE='stillpoint-v3';
+const CACHE='stillpoint-v4';
 const FONTS='https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap';
 const SHELL=['./','./index.html','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(async c=>{
   await c.addAll(SHELL);
+  try{ // studio voice clips: all of them, so guided sessions work with no signal
+    const r=await fetch('./audio/en/index.json',{cache:'no-cache'});if(r.ok){const j=await r.clone().json();await c.put('./audio/en/index.json',r);
+      const list=[...Object.values(j.files),...(j.samples||[]).map(x=>x.file)].map(f=>'./audio/en/'+f);
+      for(let i=0;i<list.length;i+=12)await Promise.all(list.slice(i,i+12).map(u=>fetch(u).then(res=>res.ok&&c.put(u,res)).catch(()=>{})))}
+  }catch(err){}
   try{ // fonts are optional: system fonts take over if these are missing
     const css=await fetch(FONTS);await c.put(FONTS,css.clone());
     const text=await css.text();

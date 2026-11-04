@@ -273,7 +273,7 @@ const $=s=>document.querySelector(s);
 const todayKey=d=>(d||new Date()).toLocaleDateString('en-CA');
 let lang=store.get('lang','en');
 let cur='today';
-let settings=Object.assign({amb:'drone',interval:5,silentMin:15,voiceVol:.9,ambVol:.5,scale:1,watchCues:true,whBreaths:30,whRounds:3,whPace:'medium'},store.get('settings',{}));
+let settings=Object.assign({amb:'drone',interval:5,silentMin:15,voiceVol:.9,ambVol:.5,scale:1,watchCues:true,studio:true,whBreaths:30,whRounds:3,whPace:'medium'},store.get('settings',{}));
 const saveSettings=()=>store.set('settings',settings);
 const applyScale=()=>document.documentElement.style.setProperty('--scale',settings.scale);
 applyScale();
@@ -291,6 +291,7 @@ const T={
   btNo:'Bluetooth connection isn’t available here. Open Stillpoint from your home screen icon in Chrome.',
   btFail:'Couldn’t reach the watch. Check Broadcast Heart Rate is on, then tap Reconnect.',
   notifBlocked:'Notifications are blocked. Allow them in Chrome site settings so cues reach your watch.',
+  studioT:'Studio voice (English)',studioD:'Narrated by {v}, a neural studio voice. Saved on the phone and works offline.',studioNone:'Studio voice files not found. The phone voice is used instead.',samples:'Voice samples',samplesD:'Tell me which voice you prefer and I will re-record every session in it.',offStudio:'Studio voice saved',
   textSize:'Text size',language:'Language',voiceSet:'Guide voice',preview:'Preview',ambSound:'Ambient sound',drone:'Drone',rain:'Rain',off:'Off',
   voiceTip:'Android Settings → System → Languages → Text-to-speech output → Speech Services by Google → Install voice data. Download English (US) and Chinese (Taiwan), then pick a deep, calm voice here. Choose one marked offline.',
   online:'online only',offline:'offline',
@@ -316,6 +317,7 @@ const T={
   btNo:'這裡無法使用藍牙連線。請從主畫面的 Stillpoint 圖示（Chrome）開啟。',
   btFail:'連不到手錶。請確認「廣播心率」已開啟，再點重新連線。',
   notifBlocked:'通知已被封鎖。請在 Chrome 網站設定中允許，提示才能傳到手錶。',
+  studioT:'錄音室語音（英文）',studioD:'由神經網路錄音室語音 {v} 朗讀，存在手機上可離線使用。',studioNone:'找不到錄音室語音檔，改用手機語音。',samples:'聲音樣本',samplesD:'告訴我你喜歡哪個聲音，我會用它重新錄製所有練習。',offStudio:'錄音室語音已存',
   textSize:'文字大小',language:'語言',voiceSet:'引導聲音',preview:'試聽',ambSound:'背景音',drone:'低頻',rain:'細雨',off:'關閉',
   voiceTip:'Android 設定 → 系統 → 語言 → 文字轉語音輸出 → Google 語音服務 → 安裝語音資料。下載英文（美國）與中文（台灣），再於此選擇低沉、平穩的聲音，並選標示「離線」的聲音。',
   online:'需網路',offline:'離線',
@@ -484,9 +486,14 @@ const langVoices=()=>voices.filter(v=>lang==='zh'?/^(zh|cmn)/i.test(v.lang):/^en
 function pickVoice(){const saved=store.get('voice_'+lang,null),list=langVoices();const loc=list.filter(v=>v.localService);const pool=loc.length?loc:list;
  return list.find(v=>v.voiceURI===saved)||(lang==='zh'?(pool.find(v=>/TW|Hant/i.test(v.lang))||pool[0]):(pool.find(v=>/male/i.test(v.name)&&!/female/i.test(v.name))||pool.find(v=>/en[-_]US/i.test(v.lang))||pool[0]))||null}
 function utter(text,onend){const u=new SpeechSynthesisUtterance(text);u.lang=lang==='zh'?'zh-TW':'en-US';const v=pickVoice();if(v)u.voice=v;u.rate=lang==='zh'?.82:.78;u.pitch=.82;u.volume=settings.voiceVol;if(onend){u.onend=onend;u.onerror=onend}return u}
-function speak(text){if(!hasTTS||settings.voiceVol<=0)return;try{const gen=speakGen;const parts=String(text).split(/\s*(?:\.\.\.|……)\s*/).filter(Boolean);
+function hkey(x){let h=0x811c9dc5;for(let i=0;i<x.length;i++){h^=x.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0}return h.toString(16).padStart(8,'0')}
+let AUDIO=null;try{fetch('audio/en/index.json').then(r=>r.ok?r.json():null).then(j=>{AUDIO=j;if(cur==='settings')renderSettings();if(cur==='today')offlineCheck()}).catch(()=>{})}catch(e){}
+const clip={el:null,q:[],gen:0};
+function clipUrl(text){if(lang!=='en'||!settings.studio||!AUDIO)return null;const f=AUDIO.files[hkey(text)];return f?'audio/en/'+f:null}
+function playClip(url){const gen=clip.gen;const go=()=>{if(gen!==clip.gen)return;const u=clip.q.shift();if(!u){clip.el=null;return}const a=new Audio(u);a.volume=Math.min(1,settings.voiceVol);clip.el=a;a.onended=()=>setTimeout(go,250);a.onerror=()=>go();a.play().catch(()=>go())};clip.q.push(url);if(!clip.el)go()}
+function speak(text){if(settings.voiceVol<=0)return;const u=clipUrl(text);if(u){playClip(u);return}if(!hasTTS)return;try{const gen=speakGen;const parts=String(text).split(/\s*(?:\.\.\.|……)\s*/).filter(Boolean);
  let i=0;const nx=()=>{if(gen!==speakGen||i>=parts.length)return;const p=parts[i++];speechSynthesis.speak(utter(p,()=>{if(i<parts.length)setTimeout(nx,1400)}))};nx()}catch(e){}}
-const hush=()=>{speakGen++;if(hasTTS)try{speechSynthesis.cancel()}catch(e){}};
+const hush=()=>{speakGen++;clip.gen++;clip.q=[];if(clip.el){try{clip.el.pause()}catch(e){}clip.el=null}if(hasTTS)try{speechSynthesis.cancel()}catch(e){}};
 
 /* ---------- wake lock ---------- */
 let wake=null,wantWake=false;
@@ -544,10 +551,11 @@ function suggestion(){const h=new Date().getHours(),di=dayIdx();
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 async function offlineCheck(){const body=$('#offbody');if(!body)return;
  let app=false;try{if('caches' in window)app=!!(await caches.match(new URL('index.html',location.href).href,{ignoreSearch:true}))}catch(e){}
- const vs=hasTTS?speechSynthesis.getVoices():[];const en=vs.some(v=>/^en/i.test(v.lang)&&v.localService),zh=vs.some(v=>/^(zh|cmn)/i.test(v.lang)&&v.localService);
+ let studio=false;try{if('caches' in window&&AUDIO){const f=Object.values(AUDIO.files);studio=!!(await caches.match(new URL('audio/en/index.json',location.href).href))&&!!(await caches.match(new URL('audio/en/'+f[f.length-1],location.href).href))}}catch(e){}
+ const vs=hasTTS?speechSynthesis.getVoices():[];const en=studio||vs.some(v=>/^en/i.test(v.lang)&&v.localService),zh=vs.some(v=>/^(zh|cmn)/i.test(v.lang)&&v.localService);
  const b2=$('#offbody'),chip=$('#offchip');if(!b2)return;const ok=app&&en&&zh;
  chip.className='chip '+(ok?'ok':'err');chip.textContent=ok?'✓':'!';
- b2.innerHTML=(app?'':`<p class="note warn">${esc(t('offArtifact'))}</p>`)+`<div class="list">${[[app,'offApp'],[en,'offEn'],[zh,'offZh']].map(([v,k])=>`<div class="row" style="gap:.5rem"><b style="color:${v?'var(--ok)':'var(--error)'}">${v?'✓':'✗'}</b><span class="body-m">${esc(t(k))}</span></div>`).join('')}</div><p class="body-m var">${esc(ok?t('offAll'):t('offNot'))}</p>`}
+ b2.innerHTML=(app?'':`<p class="note warn">${esc(t('offArtifact'))}</p>`)+`<div class="list">${[[app,'offApp'],[studio,'offStudio'],[en,'offEn'],[zh,'offZh']].map(([v,k])=>`<div class="row" style="gap:.5rem"><b style="color:${v?'var(--ok)':'var(--error)'}">${v?'✓':'✗'}</b><span class="body-m">${esc(t(k))}</span></div>`).join('')}</div><p class="body-m var">${esc(ok?t('offAll'):t('offNot'))}</p>`}
 
 /* ---------- navigation ---------- */
 let prevTab='today';
@@ -741,6 +749,10 @@ function renderSettings(){const v=$('#v-settings');const list=langVoices(),curV=
   </div>
   <h2 class="section-h">${t('voiceSet')}</h2>
   <div class="card filled">
+    <div class="setrow"><div class="txt"><p class="title-m">${t('studioT')}</p><p class="body-m var">${AUDIO?esc(t('studioD').replace('{v}',AUDIO.label||AUDIO.voice)):esc(t('studioNone'))}</p></div><button class="switch" role="switch" id="sw-studio" aria-checked="${settings.studio&&!!AUDIO}" aria-label="${t('studioT')}" ${AUDIO?'':'disabled'}></button></div>
+    ${AUDIO&&AUDIO.samples?`<div class="field"><span class="lbl">${t('samples')}</span><div class="chips">${AUDIO.samples.map(x=>`<button class="chip ${x.id===AUDIO.voice?'sel':''}" data-sample="${esc(x.file)}">${ICON.play.replace('<svg','<svg style="width:1rem;height:1rem"')}${esc(x.label)}</button>`).join('')}</div><p class="body-m var">${t('samplesD')}</p></div>`:''}
+  </div>
+  <div class="card filled">
     ${hasTTS?`<div class="field"><label for="voice-sel">${lang==='zh'?'中文聲音':'English voice'}</label><select id="voice-sel">${list.length?list.map(x=>`<option value="${esc(x.voiceURI)}" ${curV&&x.voiceURI===curV.voiceURI?'selected':''}>${esc(x.name)} · ${x.localService?t('offline'):t('online')}</option>`).join(''):`<option>${lang==='zh'?'系統預設':'System default'}</option>`}</select></div>
     <div><button class="btn tonal" id="voice-test">${ICON.play}${t('preview')}</button></div>`:''}
     <p class="body-m var">${t('voiceTip')}</p>
@@ -751,6 +763,8 @@ function renderSettings(){const v=$('#v-settings');const list=langVoices(),curV=
  v.querySelectorAll('#seg-lang button').forEach(b=>b.onclick=()=>setLang(b.dataset.v));
  v.querySelectorAll('#seg-amb button').forEach(b=>b.onclick=()=>{settings.amb=b.dataset.v;saveSettings();renderSettings()});
  $('#bt-go').onclick=connectWatch;
+ const ss=$('#sw-studio');if(ss)ss.onclick=()=>{settings.studio=!settings.studio;saveSettings();renderSettings()};
+ v.querySelectorAll('[data-sample]').forEach(b=>b.onclick=()=>{hush();playClip('audio/en/'+b.dataset.sample)});
  $('#sw-cues').onclick=async()=>{settings.watchCues=!settings.watchCues;saveSettings();if(settings.watchCues)await ensureCues();renderSettings()};
  const vs=$('#voice-sel');if(vs)vs.onchange=()=>store.set('voice_'+lang,vs.value);
  const vt=$('#voice-test');if(vt)vt.onclick=()=>{hush();speak(lang==='zh'?'閉上眼睛。慢慢吸一口氣……再慢慢吐出來。':'Close your eyes. Take a slow breath in... and let it go.')}}
@@ -820,6 +834,10 @@ function loop(ts=0){if(!P)return;raf=requestAnimationFrame(loop);if(reduce&&ts-l
 
 function setLang(l){lang=l;store.set('lang',l);hush();if(P&&!P.done){$('#pl-name').textContent=L(P.s.name);updatePlayer()}render()}
 
+window.__spTexts=()=>{const L2=[];const add=x=>{if(x&&!L2.includes(x))L2.push(x)};
+ SESSIONS.forEach(s=>s.phases.forEach(p=>p.cues.forEach(c=>add(c.en))));Object.values(BREATH_INTRO).forEach(x=>add(x.en));add(BREATH_END.en);
+ Object.values(WH).forEach(x=>add(x.en));Object.values(SIT).forEach(x=>add(x.en));['inhale','hold','exhale','topup'].forEach(k=>add(T.en[k]));
+ add('Close your eyes. Take a slow breath in... and let it go.');return L2.map(x=>({key:hkey(x),text:x}))};
 render();autoConnect();
 })();
 </script>
